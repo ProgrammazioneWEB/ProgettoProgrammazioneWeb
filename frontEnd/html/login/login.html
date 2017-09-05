@@ -1,0 +1,33 @@
+<div class="jumbotron text-center blueBackground whiteFont">
+    <h1>{{message}}</h1>
+</div>
+<div class="container">
+    <!--Ricorda che per mostare gli errori bisogna usare i name nell'html e utilizzare gli scope dei nomi/ng-model nel js-->
+    <!--Metto tutti i campi della form con required per fare in modo che vengano riempiti per forza per poter inviare i propri dati-->
+    <!--Login form-->
+    <form class="form-horizontal" ng-model="form" name="form" novalidate>
+        <!--username-->
+        <div class="form-group">
+            <label for="nome">E-mail</label>
+            <input type="e-mail" class="form-control" name="username" ng-model="username" placeholder="(inserisci l'email associata al tuo account)"
+                required ng-blur="controlUsernameField();controlCheckBox();" />
+            <!-- Mostro gli errori nel caso in cui ci sia qualcosa di invalido nei campi-->
+            <span ng-show="form.username.$invalid" class="leftAlignError"> {{usernameError.username}} </span>
+        </div>
+        <!--password-->
+        <div class="form-group">
+            <label for="psw">Password</label>
+            <input type="password" name="password" class="form-control" placeholder="(inserisci la password associata allo username)" ng-model="password"
+                required ng-blur="controlPasswordField();controlCheckBox();" />
+            <span ng-show="form.password.$invalid" class="leftAlignError">{{passwordError.password}}</span>
+        </div>
+        <!--checkbox-->
+        <div class="checkbox">
+            <input type="checkbox" class="checkbox" ng-model="licence" name="licence" required />Ho letto il contratto
+            di licenza
+            <span ng-show="form.licence.$invalid" class="leftAlignError">{{licenceError.licence}}</span>
+        </div>
+        <!--submit button-->
+        <button type="submit" ng-click="login()" class="btn btn-primary" ng-disabled="!form.$valid">Login</button>
+    </form>
+</div>

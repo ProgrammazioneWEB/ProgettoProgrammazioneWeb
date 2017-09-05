@@ -1,0 +1,60 @@
+<html ng-app="indexApp">
+
+<head>
+    <!--Meta data-->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--Not permit to save cache-->
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0">
+    <meta http-equiv="pragma" content="no-cache">
+    <!--Import css files-->
+    <link rel="stylesheet" href="CSS/bootstrap.min.css">
+    <link rel="stylesheet" href="CSS/font-awesome/css/font-awesome.css">
+    <link rel="stylesheet" href="/CSS/user/user.css">
+    <link rel="stylesheet" href="CSS/errors/errors.css">
+    <link rel="stylesheet" href="CSS/index/index.css">
+    <!--Import javascript files-->
+    <script src="js/angular/angular.min.js"></script>
+    <script src="js/angular/angular-route.min.js"></script>
+    <script src="js/angular/angular-animate.min.js"></script>
+    <script src="js/angular/angular-touch.min.js"></script>
+    <script type="text/javascript" src="/js/zingchart/client/zingchart.min.js"></script>
+    <script type="text/javascript" src="/js/ZingChart-AngularJS/src/zingchart-angularjs.js"></script>
+    <script src="js/jquery/jquery-3.2.1.min.js"></script>
+    <script src="js/script.js"></script>
+</head>
+
+<body ng-controller="homeController">
+    <header style="font-family:Lucida Console">
+        <nav class="navbar navbar-default blueBackground">
+            <div class="container">
+                <ul class="nav nav-pills navbar-left">
+                    <li class="nav-item">
+                        <img src="CSS/images/Logos/unicam.png" width: "15%" height="15%"></a>
+                    </li>
+                    <li class="nav-item"><a href="#!/" class="whiteFont"><i class="fa fa-home"></i> Home </a></li>
+                    <li class="nav-item"><a href="#!photoGallery" class="whiteFont"><i class="fa fa-camera"></i> Foto Gallery</a></li>
+                    <li class="nav-item"><a href="#!about" class="whiteFont"><i class="fa fa-book"></i> About us </a></li>
+                    <li class="nav-item"><a href="#!contact" class="whiteFont"><i class="fa fa-share"></i> Contact </a></li>
+                </ul>
+                <ul class="nav nav-pills navbar-right">
+                    <li class="nav-item" ng-show="!controlIfLogin()"><a href="#!signUp" class="whiteFont"><i class="fa fa-sign-in"></i> Sign-Up </a></li>
+                    <li class="nav-item" ng-show="!controlIfLogin()"><a href="#!login" class="whiteFont"><i class="fa fa-user-circle-o"></i> Login</a></li>
+                    <li class="nav-item" ng-show="controlIfLogin()"><a href="#!profile" class="whiteFont"><i class="fa fa-user-circle-o"></i> Profile</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <!-- MAIN CONTENT AND INJECTED VIEWS -->
+    <div id="main">
+        <div ng-view>
+            <!-- angular templating -->
+            <!-- this is where content will be injected -->
+        </div>
+    </div>
+
+</body>
+
+</html>

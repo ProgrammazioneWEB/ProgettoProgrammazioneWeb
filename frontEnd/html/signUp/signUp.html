@@ -1,0 +1,48 @@
+<div class="jumbotron text-center blueBackground whiteFont">
+    <h1>{{message}}</h1>
+    </div>
+    <div class="container">
+        <!--Sign-up form-->
+        <form class="form-horizontal" ng-model="form" name="form" novalidate>
+            <!--E-mail-->
+            <div class="form-group">
+                <label for="email">Inserisci una E-mail valida</label>
+                <input type="email"  class="form-control" ng-blur="controllaMail();controlCheckBox()" 
+                name="email" ng-model="email" placeholder="(Scrivi qui la tua e-mail)" required>
+                <!-- Mostro gli errori nel caso in cui ci sia qualcosa di invalido nei campi-->
+                <span ng-show="form.email.$invalid" class="leftAlignError"> {{emailError.email}}</span>
+            </div>
+            <!--password-->
+            <div class="form-group">
+                <label for="password">Inserisci una password valida</label>
+                <input type="password"  class="form-control" ng-blur="controllaPassword();controlCheckBox()" 
+                placeholder="(Scrivi qui la tua password)"  name="password" ng-model="password" required />
+                <!-- Mostro gli errori nel caso in cui ci sia qualcosa di invalido nei campi-->
+                <span ng-show="form.password.$invalid" class="leftAlignError"> {{passwordError.password}}</span>
+            </div>
+            <!--repeat password-->
+            <div class="form-group">
+                <label for="nome">Ripeti la password</label>
+                <input type="password" class="form-control" ng-blur="controllaPasswordRipetuta();controlCheckBox()" 
+                placeholder="(Ripeti la password scritta sopra)" name="passwordRipetuta" ng-model="passwordRipetuta" required/>
+                <!-- Mostro gli errori nel caso in cui ci sia qualcosa di invalido nei campi-->
+                <span ng-show="form.passwordRipetuta.$invalid" class="leftAlignError"> {{passwordRepeatError.passwordRepeat}}</span>
+            </div>
+            <!--Conto bancario-->
+            <div class="form-group">
+                <label for="nome">Inserisci il pin del conto bancario che ti è stato consegnato all'atto della creazione</label>
+                <input type="number" class="form-control" ng-blur="controllaPin();controlCheckBox()" 
+                placeholder="(Inserisci il pin fornito dalla banca)" name="pin" ng-model="pin" required/>
+                <!-- Mostro gli errori nel caso in cui ci sia qualcosa di invalido nei campi-->
+                <span ng-show="form.pin.$invalid" class="leftAlignError"> {{pinError.pin}} </span>
+            </div>
+            <!--checkbox-->
+            <div class="checkbox">
+                <input type="checkbox" class="checkbox" ng-model="licence" name="licence" required />Ho letto il contratto
+                di licenza
+                <span ng-show="form.licence.$invalid" class="leftAlignError">{{licenceError.licence}}</span>
+            </div>
+            <!--submit button-->
+            <button type="submit" ng-click="sendDates()" class="btn btn-primary" ng-disabled="!form.$valid">Login</button>
+        </form>
+    </div>
