@@ -1,137 +1,146 @@
 <body class="whiteBackground">
-   <!-- bar of user's function-->
-   <div class="userFunction">
-      <div class="imgHolder fillSpaceHorizontally">
-        <img ng-src="{{userImagePath}}" class="leftAlign img-fluid" />
-        <span class="display-bottomleft username">
-            {{username}}
-          </span>
-      </div>
-      <!--user statistic-->
-      <div>
-        <ul class="list-group">
-          <li class="list-group-item statisticsTitle">
-            User statistics <i class="fa fa-bar-chart" aria-hidden="true"></i>
-          </li>
-          <li class="list-group-item statistics">
-            N° conto: {{countNumber}}
-          </li>
-          <li class="list-group-item statistics">
-            Saldo corrente: {{moneyMessage}}
-          </li>
-        </ul>
-      </div>
-    </div>
-  <!-- button function group-->
-  <div role="group" name="buttonGroup">
-      <table class="table" style="text-align: center">
-        <!--First Line-->
-        <tr>
-          <td>
-            <!-- show money movement-->
-            <button type="button" class="btn btn-primary userArea" name="movimentiBancari" ng-style="buttonMovementColor" ng-focus="buttonMovementColor={background:'#6090AA'}"
-              ng-blur="buttonMovementColor={}" ng-click="showMovement()" ng-model="movimentiBancari">
-                <img src="../../CSS/images/iconsForUser/bank_transaction.png" class="img-fluid" alt="Guarda i tuoi movimenti bancari"/> 
-                <br> Guarda i tuoi movimenti bancari </button>
-          </td>
-          <td>
-            <!-- show how spent in one day at average-->
-            <button type="button" class="btn btn-primary userArea" name="averageSpent" ng-model="averageSpent" ng-style="buttonAverageColor"
-              ng-focus="buttonAverageColor={background:'#6090AA'}" ng-blur="buttonAverageColor={}" ng-click="showSpentAtDayAverage()">
-                <img src="../../CSS/images/iconsForUser/Payment.png" class="img-fluid" alt="Guarda la tua spesa media giornaliera"/> 
-              <br> Guarda la tua spesa media giornaliera</button>
-          </td>
-        </tr>
-        <!--Second Line-->
-        <tr>
-          <td>
-            <!--make a payment-->
-            <button type="button" class="btn btn-primary userArea" name="paymentButtonClicked" ng-style="buttonPaymentColor" ng-focus="buttonPaymentColor={background:'#6090AA'}"
-              ng-blur="buttonPaymentColor={}" ng-click="showPayment()" ng-model="paymentButtonClicked"> 
-                <img src="../../CSS/images/iconsForUser/bank_transfer.png"  class="img-fluid" alt="Effettua un bonifico"/> 
-                <br> Esegui un bonifico</button>
-          </td>
-          <td>
-            <!--Watch your stats with  Graphs!-->
-            <button type="button" class="btn btn-primary userArea" name="graphButtonClicked" ng-style="buttonGraphColor" ng-focus="buttonGraphColor={background:'#6090AA'}"
-              ng-blur="buttonGraphColor={}" ng-click="showGraph()" ng-model="graphButtonClicked"> <img src="../../CSS/images/iconsForUser/stats.png"  class="img-fluid" alt="Guarda il grafico del tuo conto"/> 
-                <br> Guarda il grafico del tuo conto</button>
-          </td>
-        </tr>
-      </table>
-      <!-- end button function group-->
-    </div>
-    <!-- end button userArea-->
-  </div>
- 
-  <!-- User statistics -->
-  <div class="userStatistics jumbotron text-center">
-    <!-- context change every time the user click a different button in the user function area-->
-    <h1>{{context}} </h1>
-    <!-- movements showed if specified button was clicked-->
-    <table class="table table-bordered" style="text-align: center" ng-show="buttonMovementsClicked" ng-repeat="movimenti in movimentiBancari">
-      <thead class="thead-inverse">
-        <tr>
-          <th> Data Movimento</th>
-          <th> Spesa/Prelievo </th>
-          <th> Entrata</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <!--Lorenzo-->
-          <td>{{movimenti.data}}</td>
-          <td>{{movimenti.spesa}}</td>
-          <td>{{movimenti.entrata}}</td>
-        </tr>
-      </tbody>
+  <!-- bar of user's function-->
+  <div class="userFunction">
+    <!--table that contains user statistics-->
+    <table class="table center">
+      <tr>
+        <!--user image-->
+        <td>
+
+          <img ng-src="{{userImagePath}}" class="leftAlign img-fluid" />
+
+        </td>
+        <!--user dates-->
+        <td>
+          <ul class="list-group">
+            <li class="list-group-item statisticsTitle">
+              User dates <i class="fa fa-id-card-o" aria-hidden="true"></i>
+            </li>
+            <li class="list-group-item statistics">
+              {{username}}
+            </li>
+        </td>
+        <td>
+          <!--second column-->
+          <!--user statistic-->
+          <ul class="list-group">
+            <li class="list-group-item statisticsTitle">
+              User statistics <i class="fa fa-bar-chart" aria-hidden="true"></i>
+            </li>
+            <li class="list-group-item statistics">
+              N° conto: {{countNumber}}
+            </li>
+            <li class="list-group-item statistics">
+              Saldo corrente: {{moneyMessage}}
+            </li>
+          </ul>
+        </td>
+      </tr>
     </table>
-    <!-- make a payment could be seen only if specified button was clicked-->
-    <div class="container">
-      <form class="form-horizontal" ng-show="paymentButtonClicked" ng-model="form" name="form" novalidate ng-submit="pay()">
-        <!-- Cifra da pagare-->
-        <div class="form-group">
-          <input type="number" class="form-control" ng-model="payment" name="payment" ng-blur="controlPayment()" required placeholder="Inserisci qui la quota del bonifico"
-          />
-          <!--Show error if invalid payment-->
-          <span class="leftAlignError" ng-show="form.payment.$invalid">
-              {{paymentErrors.error}} 
-           </span>
-        </div>
-        <!-- Conto da bonificare -->
-        <div class="form-group">
-          <input type="text" class="form-control" ng-model="iban" name="iban" required ng-blur="controlIban()" placeholder="Inserisci qui l'iban del conto (non lasciare spazi tra un carattere e l'altro!)"
-          />
-          <!--Show error if invalid iban-->
-          <span class="leftAlignError" ng-show="form.iban.$invalid">
-            {{ibanErrors.error}} 
-         </span>
-        </div>
-        <!--Bottone per conferma di invio-->
-        <div class="form-group">
-          <button type="submit" class="btn btn-primary" ng-disabled="form.$invalid || form.iban.$invalid || form.payment.$invalid ">Esegui il bonifico</button>
-        </div>
-      </form>
-    </div>
-    <!-- end of payment section-->
-    <!-- graphs part -->
-    <div class="container Graph" ng-show="graphButtonClicked">
-      <button type="button" class="btn btn-primary" ng-model="entraceGraphClicked" name="exitGraphClicked" ng-click="activeEntranceGraph()">
-        Grafico Entrata
-      </button>
-      <button type="button" class="btn btn-primary" ng-model="exitGraphClicked" name="exitGraphClicked" ng-click="activeExitGraph()">
-        Grafico Uscita
-      </button>
-      <button type="button" class="btn btn-primary" ng-model="versusGraphClicked" name="versusGraphClicked" ng-click="activeVersusGraph()">
-      Grafico Confronto
-       </button>
-      <div zingchart id="chart-Entrance" zc-json="JsonGraphEntrance" zc-width="100%" zc-height="100%" ng-show="entranceBGraphClicked">
-      </div>
-      <div zingchart id="chart-Exit" zc-json="JsonGraphExit" zc-width="100%" zc-height="100%" ng-show="exitBGraphClicked">
-      </div>
-      <div zingchart id="chart-Versus" zc-json="JsonGraphVersus" zc-width="100%" zc-height="100%" ng-show="versusBGraphClicked">
-      </div>
-      <!--end of graphs part-->
-    </div>
   </div>
+  <!-- button function group-->
+  <table class="table center table-bordered">
+    <tr>
+      <!--Left Column-->
+      <td name="buttonGroupLeft">
+        <!-- show money movement-->
+        <button type="button" class="btn btn-primary userArea" name="movimentiBancari" ng-style="buttonMovementColor" ng-focus="buttonMovementColor={background:'#6090AA'}"
+          ng-blur="buttonMovementColor={}" ng-click="showMovement()" ng-model="movimentiBancari">
+                        <img src="../../CSS/images/iconsForUser/bank_transaction.png" class="img-fluid" alt="Guarda i tuoi movimenti bancari"/> 
+                        <br> Guarda i tuoi movimenti bancari </button>
+
+        <!--make a payment-->
+        <button type="button" class="btn btn-primary userArea" name="paymentButtonClicked" ng-style="buttonPaymentColor" ng-focus="buttonPaymentColor={background:'#6090AA'}"
+          ng-blur="buttonPaymentColor={}" ng-click="showPayment()" ng-model="paymentButtonClicked"> 
+                        <img src="../../CSS/images/iconsForUser/bank_transfer.png"  class="img-fluid" alt="Effettua un bonifico"/> 
+                        <br> Esegui un bonifico</button>
+      </td>
+      <!--Center Column-->
+      <td name="body" class="limitSpaceTo70">
+        <!-- User statistics -->
+        <div class="userStatistics jumbotron text-center">
+          <!-- context change every time the user click a different button in the user function area-->
+          <h1>{{context}} </h1>
+          <!-- movements showed if specified button was clicked-->
+          <table class="table table-bordered" style="text-align: center" ng-show="buttonMovementsClicked" ng-repeat="movimenti in movimentiBancari">
+            <thead class="thead-inverse">
+              <tr>
+                <th> Data Movimento</th>
+                <th> Spesa/Prelievo </th>
+                <th> Entrata</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <!--Lorenzo-->
+                <td>{{movimenti.data}}</td>
+                <td>{{movimenti.spesa}}</td>
+                <td>{{movimenti.entrata}}</td>
+              </tr>
+            </tbody>
+          </table>
+          <!-- make a payment could be seen only if specified button was clicked-->
+          <div class="container">
+            <form class="form-horizontal" ng-show="paymentButtonClicked" ng-model="form" name="form" novalidate ng-submit="pay()">
+              <!-- Cifra da pagare-->
+              <div class="form-group">
+                <input type="number" class="form-control" ng-model="payment" name="payment" ng-blur="controlPayment()" required placeholder="Inserisci qui la quota del bonifico"
+                />
+                <!--Show error if invalid payment-->
+                <span class="leftAlignError" ng-show="form.payment.$invalid">
+                     {{paymentErrors.error}} 
+                       </span>
+              </div>
+              <!-- Conto da bonificare -->
+              <div class="form-group">
+                <input type="text" class="form-control" ng-model="iban" name="iban" required ng-blur="controlIban()" placeholder="Inserisci qui l'iban del conto (non lasciare spazi tra un carattere e l'altro!)"
+                />
+                <!--Show error if invalid iban-->
+                <span class="leftAlignError" ng-show="form.iban.$invalid">
+                      {{ibanErrors.error}} 
+                       </span>
+              </div>
+              <!--Bottone per conferma di invio-->
+              <div class="form-group">
+                <button type="submit" class="btn btn-primary" ng-disabled="form.$invalid || form.iban.$invalid || form.payment.$invalid ">Esegui il bonifico</button>
+              </div>
+            </form>
+          </div>
+          <!-- end of payment section-->
+          <!-- graphs part -->
+          <div class="container Graph" ng-show="graphButtonClicked">
+            <button type="button" class="btn btn-primary" ng-model="entraceGraphClicked" name="exitGraphClicked" ng-click="activeEntranceGraph()">
+                 Grafico Entrata
+               </button>
+            <button type="button" class="btn btn-primary" ng-model="exitGraphClicked" name="exitGraphClicked" ng-click="activeExitGraph()">
+               Grafico Uscita
+                 </button>
+            <button type="button" class="btn btn-primary" ng-model="versusGraphClicked" name="versusGraphClicked" ng-click="activeVersusGraph()">
+                 Grafico Confronto
+                 </button>
+            <div zingchart id="chart-Entrance" zc-json="JsonGraphEntrance" zc-width="100%" zc-height="100%" ng-show="entranceBGraphClicked">
+            </div>
+            <div zingchart id="chart-Exit" zc-json="JsonGraphExit" zc-width="100%" zc-height="100%" ng-show="exitBGraphClicked">
+            </div>
+            <div zingchart id="chart-Versus" zc-json="JsonGraphVersus" zc-width="100%" zc-height="100%" ng-show="versusBGraphClicked">
+            </div>
+            <!--end of graphs part-->
+          </div>
+        </div>
+      </td>
+      <!--Right column-->
+      <td name="buttonGroupRight">
+        <!-- show how spent in one day at average-->
+        <button type="button" class="btn btn-primary userArea" name="averageSpent" ng-model="averageSpent" ng-style="buttonAverageColor"
+          ng-focus="buttonAverageColor={background:'#6090AA'}" ng-blur="buttonAverageColor={}" ng-click="showSpentAtDayAverage()">
+                      <img src="../../CSS/images/iconsForUser/Payment.png" class="img-fluid" alt="Guarda la tua spesa media giornaliera"/> 
+                    <br> Guarda la tua spesa media giornaliera</button>
+        <!--Watch your stats with  Graphs!-->
+        <button type="button" class="btn btn-primary userArea" name="graphButtonClicked" ng-style="buttonGraphColor" ng-focus="buttonGraphColor={background:'#6090AA'}"
+          ng-blur="buttonGraphColor={}" ng-click="showGraph()" ng-model="graphButtonClicked"> <img src="../../CSS/images/iconsForUser/stats.png"  class="img-fluid" alt="Guarda il grafico del tuo conto"/> 
+                          <br> Guarda il grafico del tuo conto</button>
+
+      </td>
+    </tr>
+  </table>
 </body>

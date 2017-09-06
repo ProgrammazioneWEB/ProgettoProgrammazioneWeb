@@ -7,26 +7,18 @@ background-color: lightgray;
 padding-top: 3%;
 }
 
-.imgHolder{
-    display: block;
-    position: relative;
-    width:100%;
-    height:50%;
-}
 .fillSpace{
     min-width: 100%;
     max-height: 100%;
 }
 
 img.leftAlign{
-float: left;
 text-align: center;
  min-width: 40%;
-max-height: 100%;
+ max-height: 70%;
+border-style: groove;
 }
-.fillSpaceHorizontally{
-    min-width: 100%;
-}
+
 
 span.username{
 font-family: 'Times New Roman', Times, serif;
@@ -52,12 +44,7 @@ color:  black;
     color:  #3E50F3;
     text-align: center;
 }
-.display-bottomleft{
-    position:absolute;
-    left:0;
-    bottom:0;
-    color: black;
-}
+
 
 span.title{
 text-align: center;
@@ -70,17 +57,18 @@ div.userFunction{
     width:100%; 
     height:25%;
     background-color: white;
-    float: left;
+    float: center;
     border-style: ridge;    
     border-color: #3E50F3;
     align-items: center;
+    text-align: center;    
 }
 
 div.userStatistics{
     width:70%; 
     height:100%;
     background-color: white; 
-    float: right ;
+    float: center ;
     border-style: ridge;   
     color:  #3E50F3	;
     border-color: #3E50F3;
@@ -104,11 +92,22 @@ font-family: Arial, Helvetica, sans-serif;
 
 button.userArea{
     background-color:white;	
+    float: center;
     width: 100%;
-    height: 50%;
+    height: 30%;
     color: black;
 }
+table.center{
+    text-align: center;
+    float: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
 
+td.limitSpaceTo70{
+max-width: 70%;
+}
 .coverAll{
 height: 100%;
 width: 100%;
