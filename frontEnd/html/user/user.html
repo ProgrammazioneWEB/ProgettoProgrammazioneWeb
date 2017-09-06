@@ -1,4 +1,27 @@
 <body class="whiteBackground">
+   <!-- bar of user's function-->
+   <div class="userFunction">
+      <div class="imgHolder fillSpaceHorizontally">
+        <img ng-src="{{userImagePath}}" class="leftAlign img-fluid" />
+        <span class="display-bottomleft username">
+            {{username}}
+          </span>
+      </div>
+      <!--user statistic-->
+      <div>
+        <ul class="list-group">
+          <li class="list-group-item statisticsTitle">
+            User statistics <i class="fa fa-bar-chart" aria-hidden="true"></i>
+          </li>
+          <li class="list-group-item statistics">
+            N° conto: {{countNumber}}
+          </li>
+          <li class="list-group-item statistics">
+            Saldo corrente: {{moneyMessage}}
+          </li>
+        </ul>
+      </div>
+    </div>
   <!-- button function group-->
   <div role="group" name="buttonGroup">
       <table class="table" style="text-align: center">
@@ -40,29 +63,7 @@
     </div>
     <!-- end button userArea-->
   </div>
-  <!-- bar of user's function-->
-  <div class="userFunction">
-    <div class="imgHolder fillSpaceHorizontally">
-      <img ng-src="{{userImagePath}}" class="fillSpace img-fluid" />
-      <span class="display-bottomleft username">
-          {{username}}
-        </span>
-    </div>
-    <!--user statistic-->
-    <div>
-      <ul class="list-group">
-        <li class="list-group-item statisticsTitle">
-          User statistics <i class="fa fa-bar-chart" aria-hidden="true"></i>
-        </li>
-        <li class="list-group-item statistics">
-          N° conto: {{countNumber}}
-        </li>
-        <li class="list-group-item statistics">
-          Saldo corrente: {{moneyMessage}}
-        </li>
-      </ul>
-    </div>
-  </div>
+ 
   <!-- User statistics -->
   <div class="userStatistics jumbotron text-center">
     <!-- context change every time the user click a different button in the user function area-->
