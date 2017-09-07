@@ -1,3 +1,4 @@
+
 // ============================
 // = get the packages we need =
 // ============================
@@ -6,14 +7,14 @@ var app         = express();
 var bodyParser  = require('body-parser');
 var morgan      = require('morgan');
 var mongoose    = require('mongoose');
-var cookieParser = require('cookie-parser'); 
 
 var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('./config'); // get our config file
 var User   = require('./app/models/user'); // get our mongoose model
+var database = require('./database'); // Importo il file per la gestione del database
 
 // =======================
-// ==== configuration ====  Guarda che scritta cool che ho fatto marà, so figo io mica te
+// ==== configuration ====
 // =======================
 var port = 3001 || process.env.PORT; // used to create, sign, and verify tokens
 mongoose.connect(config.database); // connect to database
@@ -24,18 +25,27 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // use morgan to log requests to the console
-app.use(morgan('dev'));// in realtà non serve ad un cazzo, l'ho copiato da un tutorial scarso
+app.use(morgan('dev'));
 
-// use cookie parse to save the token in your browser anus
-app.use(cookieParser());
+// Creo una funzione per abilitare i CORS (sono i permessi per essere acceduti da server web con porta e/o indirizzo diverso)
+var allowCrossDomain = function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*'); // Vanno poi indicate le origini specifiche prima della consegna
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');  // non mi servono tutti
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
 
-// Enabling CORS (sono i permessi per essere acceduti da server web con porta e/o indirizzo diverso)
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*"); //  accetto tutte le origini
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
+  //  Vado avanti solo se non è stata richiesta l'opzione dei cors
+  if ('OPTIONS' === req.method) {
+    res.send(200);//  altrimenti restituisco OK come status di rispsota html
+  } else {
+    next();
+  }
+};
+
+// Abilito i CORS
+app.use(allowCrossDomain);
+
+// Inizializzo il database tramite la funzione init presente in database.js
+database.init();
 
 // =======================
 // routes ================
@@ -43,74 +53,78 @@ app.use(function(req, res, next) {
 
 // basic route (momentaneamente solo di test)
 app.get('/', function(req, res) {
-    res.send('Hello! The API is at http://localhost:' + port + '/api');
-});
-
-//  Setta l'utente, al momento in modo statico (serve una pagina di registrazione front-end)
-app.get('/setup', function(req, res) {
-
-  // create a sample user
-  var nick = new User({ 
-    name: 'nicolo95r@gmail.com', 
+    // creo il nuovo utente con i dati 
+  var user = new User({ 
+    email: 'ruggeri95n@gmail.com', 
     password: 'password',
-    admin: true 
+    meta : {
+      //Nome dell'utente
+      firstName : 'Nicolò',
+      //Cognome dell'utente
+      lastName : 'Ruggeri',
+      //Data di nascita dell'utente
+      dateOfBirth : '24/10/1995',
+      //numero di telefono dell'utente
+      numberOfPhone : '0932740753978',
+      //Residenza dell'utente
+      residence : 'casa mia',
+      //Codice fiscale dell'utente
+      fiscalCode : '097u45032r9yf2f'
+    },
+      numberOfAccount : 1
   });
-
-  // save the sample user
-  nick.save(function(err) {
-    if (err) throw err;
-
-    console.log('User saved successfully');
-    res.json({ success: true });
-  });
+  database.add(user);
 });
+
+//  Registra un nuovo utente
+app.post('/singup', function(req, res) {
+  // creo il nuovo utente con i dati 
+  var user = new User({ 
+    email: req.body.email, 
+    password: req.body.password,
+    meta : req.body.meta,
+    numberOfAccount : req.body.numberOfAccount, 
+  });
+  database.add(user);
+});
+
+// API ROUTES -------------------
+
+// get an instance of the router for api routes
+var apiRoutes = express.Router();
 
 // route to authenticate a user
-app.post('/authenticate', function(req, res) {
-    // find the user
-    User.findOne({
-      name: req.body.name
-    }, function(err, user) {
-  
-      if (err) throw err;
-  
-      // forse è meglio se raggruppo in un unico errore per evitare di dare troppe info a possibili hacker (manco fosse un sito vero)
-      if (!user) { 
-        res.json({ success: false, message: 'Authentication failed. User not found.' });
-      } else if (user) {
-  
-        // check if password matches
-        if (user.password != req.body.password) {
-          res.json({ success: false, message: 'Authentication failed. Wrong password.' });
-        } else {
-  
-          // if user is found and password is right
-          // create a token
-          var token = jwt.sign(user, app.get('superSecret'));
-  
-          // Salvo il token nel browser del utente autenticato (sotto il nome di authToken)
-          res.cookie('authToken',token);          
+apiRoutes.post('/authenticate', function(req, res) {
 
-          // return the information including token as JSON
-          res.json({
-            success: true,
-            message: 'Assaggia il mio token, ASSAGGIAMELO.',
-            token: token
-          });
-        }   
+      var result  = database.autenticate(req.body.email, req.body.password);
+
+      if (result == false) { 
+        res.json({ success: false, message: 'Authentication failed. User not found.' });
+      } 
+      else
+      {
+        // create a token
+        var token = jwt.sign('prova', app.get('superSecret'), {
+          //expiresInMinutes: 1440 // expires in 24 hours (ATTENZIONE non funziona su windows)
+        });
+
+        // Salvo il token nel browser del utente autenticato (sotto il nome di authToken)
+        //res.cookie('authToken',token);          
+
+        // return the information including token as JSON
+        res.json({
+          success: true,
+          message: 'Successfull!',
+          token: token
+        });
+  };
+});
   
-      }
-  
-    });
-  });
-  
-  // route middleware to verify a token
-  app.use("/api/*", function(req, res, next) {
+// route middleware to verify a token
+  apiRoutes.use(function(req, res, next) {
     
       // check header or url parameters or post parameters or cookie 
-      var token = req.headers['token']; //req.cookies.authToken; req.body.token || req.query.token || 
-
-      console.log(token);
+      var token = req.headers['x-access-token'] || req.body.token || req.query.token; // || req.cookies.authToken;
 
       // decode token
       if (token) {
@@ -120,7 +134,7 @@ app.post('/authenticate', function(req, res) {
           if (err) {
             return res.json({ success: false, message: 'Failed to authenticate token.' });    
           } else {
-            // if everything is good, save to request for use in other routes (non so esattamente cosa fa)
+            // if everything is good, save to request for use in other routes
             req.decoded = decoded;    
             next();
           }
@@ -136,19 +150,14 @@ app.post('/authenticate', function(req, res) {
       }
     });
 
-    //  in realtà le api erano gestite da un router express che ho dovuto togliere (dovrei rimetterlo ma crasha tutto diocane)
-
-// route to show a random message (GET http://localhost:8080/api/)
-app.post('/api', function(req, res) {
-  res.json({ message: 'Welcome to the coolest API on earth!' });
-});
-
-// route to return all users (GET http://localhost:8080/api/users)
-app.post('/api/users', function(req, res) {
-  User.find({}, function(err, users) {
-    res.json(users);
+// route to show a random message
+apiRoutes.post('/', function(req, res) {
+  res.json({ message: 'Welcome to the API!',
+             success: true
   });
 });
+
+app.use('/api', apiRoutes);
 
 // =======================
 // start the server ======
