@@ -11,6 +11,7 @@ var mongoose    = require('mongoose');
 var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('./config'); // get our config file
 var User   = require('./app/models/user'); // get our mongoose model
+var Movimento = require('./app/models/movement');
 var database = require('./database'); // Importo il file per la gestione del database
 
 // =======================
@@ -55,7 +56,7 @@ database.init();
 app.get('/', function(req, res) {
     // creo il nuovo utente con i dati 
   var user = new User({ 
-    email: 'ruggeri95n@gmail.com', 
+    email: 'testA@gmail.com', 
     password: 'password',
     meta : {
       //Nome dell'utente
@@ -71,9 +72,50 @@ app.get('/', function(req, res) {
       //Codice fiscale dell'utente
       fiscalCode : '097u45032r9yf2f'
     },
-      numberOfAccount : 1
+      numberOfAccount : 100,
+      availableBalance : 5500
   });
-  database.add(user);
+  database.addUser(user);
+
+  var user2 = new User({ 
+    email: 'testB@gmail.com', 
+    password: 'password',
+    meta : {
+      //Nome dell'utente
+      firstName : 'Matteo',
+      //Cognome dell'utente
+      lastName : 'Lupini',
+      //Data di nascita dell'utente
+      dateOfBirth : 'non lo so',
+      //numero di telefono dell'utente
+      numberOfPhone : '0345753978',
+      //Residenza dell'utente
+      residence : 'casa mia',
+      //Codice fiscale dell'utente
+      fiscalCode : '3g43q4g465g'
+    },
+      numberOfAccount : 200,
+      availableBalance : 5000
+  });
+  database.addUser(user2);
+
+  console.log("Aggiungo la transazione.\n\n");
+
+  today = new Date();
+
+  var mov = new Movimento({
+    from : 100,
+    to : 200,
+    date : today.getDate(),
+    quantity : 500
+  });
+
+  database.addTransaction(mov, function(result, messaggio) {
+    res.json({
+      success: result,
+      message: messaggio
+    })
+  });
 });
 
 //  Registra un nuovo utente
@@ -85,7 +127,7 @@ app.post('/singup', function(req, res) {
     meta : req.body.meta,
     numberOfAccount : req.body.numberOfAccount, 
   });
-  database.add(user);
+  database.addUser(user);
 });
 
 // API ROUTES -------------------
