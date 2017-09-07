@@ -78,7 +78,7 @@ exports.addTransaction = function(movement){
   // ===== CONTO DI CHI FA IL BONIFICO ====== 
   var numberOfAccountFrom = movement.from;
   var quantityToPick = movement.quantity;
-  var userFrom = database.findByNumberOfAccount(numberOfAccountFrom);
+  var userFrom = findByNumberOfAccount(numberOfAccountFrom);
   var availableBalanceFrom = (userFrom.availableBalance) - (quantityToPick);
 
   MongoClient.connect(url, function(err, db) {
@@ -95,7 +95,7 @@ exports.addTransaction = function(movement){
   // === CONTO DI CHI RICEVE IL BONIFICO =====
   var numberOfAccountTo = movement.to;
   var quantityToGive = movement.quantity;
-  var userTo = database.findByNumberOfAccount(numberOfAccountTo);
+  var userTo = findByNumberOfAccount(numberOfAccountTo);
   var availableBalanceTo = (userTo.availableBalance) + (quantityToGive);
 
   MongoClient.connect(url, function(err, db) {
@@ -122,7 +122,7 @@ exports.addTransaction = function(movement){
 }
 
 //this function find an user by the numberOfAccount
-exports.findByNumberOfAccount = function(numberOfAccount){
+var findByNumberOfAccount = function(numberOfAccount){
   MongoClient.connect(url, function(err, db) {
     if (err) throw err;
     db.collection("users").findOne({numberOfAccount : numberOfAccount}, function(err, result) {
