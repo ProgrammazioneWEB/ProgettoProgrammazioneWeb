@@ -64,8 +64,24 @@ div.userFunction{
     text-align: center;    
 }
 
+ul.leftAlign{
+    float: left;
+    width: 19%;
+    height: 100%;
+    border-style: ridge;    
+    border-color: #3E50F3;
+}
+
+ul.rightAlign{
+    float: right;
+    width: 19%;
+    height: 100%;
+    border-style: ridge;    
+    border-color: #3E50F3
+}
+
 div.userStatistics{
-    width:70%; 
+    width:50%; 
     height:100%;
     background-color: white; 
     float: center ;
@@ -94,7 +110,7 @@ button.userArea{
     background-color:white;	
     float: center;
     width: 100%;
-    height: 30%;
+    height: 46.8%;
     color: black;
 }
 

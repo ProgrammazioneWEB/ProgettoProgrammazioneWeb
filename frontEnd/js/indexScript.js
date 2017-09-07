@@ -426,6 +426,9 @@ indexApp.controller("userController", function ($scope) {
     }
 
   };
+ 
+ 
+ 
   //GRAPH AREA
 
 
