@@ -3,7 +3,7 @@ body {
     width:100%;
 }
 body.whiteBackground{
-background-color: lightgray;
+background-color: white;
 padding-top: 3%;
 }
 
@@ -106,8 +106,10 @@ table.center{
     height: 100%;
 }
 
-td.limitSpaceTo70{
+.limitSpaceTo70{
 max-width: 70%;
+border-style: solid;
+border-color: red;
 }
 .coverAll{
 height: 100%;

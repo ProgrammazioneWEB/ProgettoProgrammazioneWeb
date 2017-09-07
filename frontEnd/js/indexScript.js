@@ -1,7 +1,7 @@
-// create the module and name it scotchApp
+// create the module for the index
 var indexApp = angular.module('indexApp', ['ngRoute', 'ngAnimate', 'ngTouch', 'zingchart-angularjs']);
 
-// configure our routes
+// configuring routes
 indexApp.config(function ($routeProvider) {
   $routeProvider
     .when('/', {
@@ -32,8 +32,8 @@ indexApp.config(function ($routeProvider) {
       controller: 'userController'
     })
     .when('/user', {
-      templateUrl: './html/user/indexUser.html',
-      controller: 'userController'
+      templateUrl: './html/login/login.html',
+      controller: 'filterUserController'
     })
 
 });
@@ -240,8 +240,10 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location) {
 
 //controller che filtra se l'utente è loggato o meno
 indexApp.controller("filterUserController", function ($scope, $http, $window, $location) {
-  $window.location.href = './html/user/indexUser.html';
+  //TO DEFINE
+  $window.location.href = '../indexUserProva.html';
 });
+
 //controller della parte dopo il log-in
 indexApp.controller("userController", function ($scope) {
   //INIZIALIZE OF MANY VARIABLES
@@ -321,6 +323,7 @@ indexApp.controller("userController", function ($scope) {
 
   //MESSAGE VARIABLES
   $scope.context = "Benvenuto nel tuo profilo privato!";
+  //profile username
   $scope.username = userProfile.username;
 
   //OTHER VARIABLES

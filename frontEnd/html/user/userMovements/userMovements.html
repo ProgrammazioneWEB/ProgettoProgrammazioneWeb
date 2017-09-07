@@ -16,32 +16,4 @@
       </tr>
     </tbody>
   </table>
-  <!-- make a payment could be seen only if specified button was clicked-->
-  <div class="container">
-    <form class="form-horizontal" ng-show="paymentButtonClicked" ng-model="form" name="form" novalidate ng-submit="pay()">
-      <!-- Cifra da pagare-->
-      <div class="form-group">
-        <input type="number" class="form-control" ng-model="payment" name="payment" ng-blur="controlPayment()" required placeholder="Inserisci qui la quota del bonifico"
-        />
-        <!--Show error if invalid payment-->
-        <span class="leftAlignError" ng-show="form.payment.$invalid">
-             {{paymentErrors.error}} 
-               </span>
-      </div>
-      <!-- Conto da bonificare -->
-      <div class="form-group">
-        <input type="text" class="form-control" ng-model="iban" name="iban" required ng-blur="controlIban()" placeholder="Inserisci qui l'iban del conto (non lasciare spazi tra un carattere e l'altro!)"
-        />
-        <!--Show error if invalid iban-->
-        <span class="leftAlignError" ng-show="form.iban.$invalid">
-              {{ibanErrors.error}} 
-               </span>
-      </div>
-      <!--Bottone per conferma di invio-->
-      <div class="form-group">
-        <button type="submit" class="btn btn-primary" ng-disabled="form.$invalid || form.iban.$invalid || form.payment.$invalid ">Esegui il bonifico</button>
-      </div>
-    </form>
-  </div>
-  <!-- end of payment section-->
-</div>
+ 
