@@ -78,7 +78,14 @@ exports.addTransaction = function(movement){
   // ===== CONTO DI CHI FA IL BONIFICO ====== 
   var numberOfAccountFrom = movement.from;
   var quantityToPick = movement.quantity;
-  var userFrom = findByNumberOfAccount(numberOfAccountFrom);
+  var userFrom;
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    userFrom = db.collection("users").findOne({numberOfAccount : numberOfAccountFrom}, function(err, result) {
+    if (err) throw err;
+    db.close();
+    });
+  });
   var availableBalanceFrom = (userFrom.availableBalance) - (quantityToPick);
 
   MongoClient.connect(url, function(err, db) {
@@ -95,7 +102,14 @@ exports.addTransaction = function(movement){
   // === CONTO DI CHI RICEVE IL BONIFICO =====
   var numberOfAccountTo = movement.to;
   var quantityToGive = movement.quantity;
-  var userTo = findByNumberOfAccount(numberOfAccountTo);
+  var userTo;
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    userTo = db.collection("users").findOne({numberOfAccount : numberOfAccountTo}, function(err, result) {
+    if (err) throw err;
+    db.close();
+    });
+  });
   var availableBalanceTo = (userTo.availableBalance) + (quantityToGive);
 
   MongoClient.connect(url, function(err, db) {
