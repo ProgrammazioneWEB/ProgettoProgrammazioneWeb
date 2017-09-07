@@ -241,7 +241,7 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location) {
 //controller che filtra se l'utente è loggato o meno
 indexApp.controller("filterUserController", function ($scope, $http, $window, $location) {
   //TO DEFINE
-  $window.location.href = '../indexUserProva.html';
+  $window.location.href = '../indexUser.html';
 });
 
 //controller della parte dopo il log-in
