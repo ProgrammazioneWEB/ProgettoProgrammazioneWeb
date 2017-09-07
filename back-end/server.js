@@ -73,7 +73,7 @@ app.get('/', function(req, res) {
     },
       numberOfAccount : 1
   });
-  database.add(user);
+  database.addUser(user);
 });
 
 //  Registra un nuovo utente
@@ -85,7 +85,7 @@ app.post('/singup', function(req, res) {
     meta : req.body.meta,
     numberOfAccount : req.body.numberOfAccount, 
   });
-  database.add(user);
+  database.addUser(user);
 });
 
 // API ROUTES -------------------
