@@ -1,0 +1,19 @@
+<!-- graphs part -->
+<div class="container Graph" ng-show="graphButtonClicked">
+    <button type="button" class="btn btn-primary" ng-model="entraceGraphClicked" name="exitGraphClicked" ng-click="activeEntranceGraph()">
+         Grafico Entrata
+       </button>
+    <button type="button" class="btn btn-primary" ng-model="exitGraphClicked" name="exitGraphClicked" ng-click="activeExitGraph()">
+       Grafico Uscita
+         </button>
+    <button type="button" class="btn btn-primary" ng-model="versusGraphClicked" name="versusGraphClicked" ng-click="activeVersusGraph()">
+         Grafico Confronto
+         </button>
+    <div zingchart id="chart-Entrance" zc-json="JsonGraphEntrance" zc-width="100%" zc-height="100%" ng-show="entranceBGraphClicked">
+    </div>
+    <div zingchart id="chart-Exit" zc-json="JsonGraphExit" zc-width="100%" zc-height="100%" ng-show="exitBGraphClicked">
+    </div>
+    <div zingchart id="chart-Versus" zc-json="JsonGraphVersus" zc-width="100%" zc-height="100%" ng-show="versusBGraphClicked">
+    </div>
+    <!--end of graphs part-->
+</div>

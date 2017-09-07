@@ -32,9 +32,10 @@ indexApp.config(function ($routeProvider) {
       controller: 'userController'
     })
     .when('/user', {
-      templateUrl: './html/user/user.html',
+      templateUrl: './html/user/indexUser.html',
       controller: 'userController'
     })
+
 });
 
 
@@ -227,7 +228,7 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location) {
       if (response.data.success) {
         curToken.value = response.data.token;
         curToken.enable = true;
-         $location.path("/user");
+        $location.path("/user");
       }
       else
         alert("Error! " + response.data.message);
@@ -237,7 +238,10 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location) {
   }
 });
 
-
+//controller che filtra se l'utente è loggato o meno
+indexApp.controller("filterUserController", function ($scope, $http, $window, $location) {
+  $window.location.href = './html/user/indexUser.html';
+});
 //controller della parte dopo il log-in
 indexApp.controller("userController", function ($scope) {
   //INIZIALIZE OF MANY VARIABLES
@@ -546,6 +550,7 @@ indexApp.controller("userController", function ($scope) {
   //save the variabile to show the real countNumber
   $scope.countNumber = userProfile.countNumber;
 });
+
 indexApp.controller("signUp", function ($scope) {
   $scope.message = "Benvenuto nella pagina \n di registrazione!";
   //filter used to filter e-mails
@@ -959,22 +964,22 @@ indexApp.controller("signUp", function ($scope) {
 indexApp.controller('aboutUsController', function ($scope) {
   // Set of userPhotos
   $scope.userPhotos = [
-      {
-          src: './CSS/images/Fondatori/Ls.png',
-          title: 'Lorenzo Stacchio',
-      },
-      {
-          src: './CSS/images/Fondatori/Ml.png',
-          title: 'Matteo Lupini',
-      },
-      {
-          src: './CSS/images/Fondatori/Lm.png',
-          title: 'Luca Marasca',
-      },
-      {
-          src: './CSS/images/Fondatori/Nr.png',
-          title: 'Nicolò Ruggeri',
-      }
+    {
+      src: './CSS/images/Fondatori/Ls.png',
+      title: 'Lorenzo Stacchio',
+    },
+    {
+      src: './CSS/images/Fondatori/Ml.png',
+      title: 'Matteo Lupini',
+    },
+    {
+      src: './CSS/images/Fondatori/Lm.png',
+      title: 'Luca Marasca',
+    },
+    {
+      src: './CSS/images/Fondatori/Nr.png',
+      title: 'Nicolò Ruggeri',
+    }
   ];
   //INDEX
   $scope.indexPhoto = 0;
@@ -986,28 +991,28 @@ indexApp.controller('aboutUsController', function ($scope) {
   $scope.message = "About us";
   //next photo function
   $scope.nextPhotoFunction = function () {
-      //if true, i'm at the last photo
-      if ($scope.indexPhoto === $scope.userPhotos.length - 1) {
-          $scope.nextPhotoDisabled = true;
-      }
-      else {
-          $scope.nextPhotoDisabled = false;
-          $scope.previousPhotoDisabled = false;
-          $scope.indexPhoto++;
-          $scope.presentPhoto = $scope.userPhotos[$scope.indexPhoto];
-      }
+    //if true, i'm at the last photo
+    if ($scope.indexPhoto === $scope.userPhotos.length - 1) {
+      $scope.nextPhotoDisabled = true;
+    }
+    else {
+      $scope.nextPhotoDisabled = false;
+      $scope.previousPhotoDisabled = false;
+      $scope.indexPhoto++;
+      $scope.presentPhoto = $scope.userPhotos[$scope.indexPhoto];
+    }
   };
   //previous photo function
   $scope.previousPhotoFunction = function () {
-      //if true, i'm at the first photo
-      if ($scope.indexPhoto === 0) {
-          $scope.previousPhotoDisabled = true;
-      }
-      else {
-          $scope.previousPhotoDisabled = false;
-          $scope.nextPhotoDisabled = false;
-          $scope.indexPhoto--;
-          $scope.presentPhoto = $scope.userPhotos[$scope.indexPhoto];
-      }
+    //if true, i'm at the first photo
+    if ($scope.indexPhoto === 0) {
+      $scope.previousPhotoDisabled = true;
+    }
+    else {
+      $scope.previousPhotoDisabled = false;
+      $scope.nextPhotoDisabled = false;
+      $scope.indexPhoto--;
+      $scope.presentPhoto = $scope.userPhotos[$scope.indexPhoto];
+    }
   };
 });
