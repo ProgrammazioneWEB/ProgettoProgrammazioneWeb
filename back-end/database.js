@@ -6,8 +6,6 @@ var mongoose    = require('mongoose');
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/mydb1";
 
-var User;
-
 // this function find a user from his number of account
 var findByNumberOfAccount = function(numberOfAccount, callback) {
   MongoClient.connect(url, function(err, db) {
@@ -68,10 +66,7 @@ exports.init = function() {
       db.close();
     });
   });
-  });
- 
-
-  User   = require('./app/models/user'); 
+  }); 
 }
 
 //This function find by email and password one user in Database
@@ -224,7 +219,6 @@ exports.addTransaction = function(movement, callbackRis) {
   });
 }
 
-
 //this function return one user from his email
 exports.findUserByEmail = function(email, callbackRis){
   MongoClient.connect(url, function(err, db) {
@@ -289,6 +283,17 @@ exports.allMovementsReceive = function(numberOfAccount, callbackRis){
     if (err) throw err;
     db.close();
     callbackRis(result);
+    });
+  });
+}
+
+//this function delete the record that administrator want to delete by the number of pin
+exports.deleteRecordPin = function(pin){
+  MongoClient.connect(url, function(err, db) {
+    if (err)  throw err;
+    db.collection("pins").deleteOne({number : pin}, function(err, result) {
+    if (err) throw err;
+    db.close();
     });
   });
 }

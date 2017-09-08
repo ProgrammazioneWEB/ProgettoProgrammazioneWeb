@@ -12,6 +12,7 @@ var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('./config'); // get our config file
 var User   = require('./app/models/user'); // get our mongoose model
 var Movimento = require('./app/models/movement');
+var Pin   = require('./app/models/pin');
 var database = require('./database'); // Importo il file per la gestione del database
 
 // =======================
@@ -124,10 +125,25 @@ app.get('/', function(req, res) {
 //  Registra un nuovo utente
 app.post('/singup', function(req, res) {
   // creo il nuovo utente con i dati 
+  var metadata;
+
+  databse.verifyPin(req.body.pin, function(result) {
+    if (!result)
+    {
+      res.json({
+        success: false,
+        message: 'Pin errato.'
+      });
+      return;
+    }
+    
+    metadata = result.meta;
+  });
+
   var user = new User({ 
     email: req.body.email, 
     password: req.body.password,
-    meta : req.body.meta,
+    meta : metadata,
     numberOfAccount : req.body.numberOfAccount, 
   });
 
