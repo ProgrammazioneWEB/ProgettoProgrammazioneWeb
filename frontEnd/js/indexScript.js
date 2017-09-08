@@ -635,32 +635,27 @@ indexApp.controller("signUp", function ($scope) {
   };
   //function to control pin field
   $scope.controllaPin = function () {
-    //AGGIUSTARE CONTROLLO PIN
-    alert($scope.pin.length);
-    alert($scope.pin);
-    if($scope.pin===undefined){
-      alert("sono qui undefined");
+    //save pin like string
+    var pinNumber = $scope.pin.toString();   
+    if($scope.pin===null){
       $scope.form.pin.$invalid = true;
       $scope.pinErrors = {
         error: "*Non hai scritto il pin"
       };
     }
-    else if ($scope.pin < 10000) {
-      alert("sono qui troppo corto");      
+    else if (pinNumber.length < 5) {
       $scope.form.pin.$invalid = true;
       $scope.pinErrors = {
         error: "*Il pin è troppo corto"
       };
     }
-    else if ($scope.pin > 99999) {
-      alert("sono qui troppo lungo");            
+    else if (pinNumber.length > 5) {
       $scope.form.pin.$invalid = true;
       $scope.pinErrors = {
         error: "*Il pin è troppo lungo"
       };
     }
     else {
-      alert("sono qui ok");                  
       $scope.form.pin.$invalid = false;              
       $scope.pinErrors = {
         error: ""
