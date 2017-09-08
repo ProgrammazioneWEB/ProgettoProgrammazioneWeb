@@ -677,13 +677,27 @@ indexApp.controller("signUp", function ($scope) {
   }
   //function to send dates to server
   $scope.sendData = function () {
-    //TO DEFINE
-    userDate = {
+    var parametri = {
       email: $scope.email,
       password: $scope.password,
-      pin: $scope.pin,
-      contrattoLetto: true
+      pin: $scope.pin
     }
+
+    $http({
+      method: "POST",
+      url: "http://localhost:3001/singup",
+      headers: { 'Content-Type': 'application/json' },
+      data: parametri
+    }).then(function mySuccess(response) {
+      if (response.data.success) {
+        alert(response.data.message);
+        $location.path("/login");
+      }
+      else
+        alert("Error! " + response.data.message);
+    }, function myError(response) {
+      alert("Si è verificato un errore nella richiesta di autenticazione!");
+    });
   }
 
   //controller della parte dopo il log-in
