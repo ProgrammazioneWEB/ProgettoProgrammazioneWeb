@@ -75,7 +75,12 @@ app.get('/', function(req, res) {
       numberOfAccount : 100,
       availableBalance : 5500
   });
-  database.addUser(user);
+  database.addUser(user, function(result, messaggio) {
+    res.json({
+      success: result,
+      message: messaggio
+    })
+  });
 
   var user2 = new User({ 
     email: 'testB@gmail.com', 
@@ -97,7 +102,12 @@ app.get('/', function(req, res) {
       numberOfAccount : 200,
       availableBalance : 5000
   });
-  database.addUser(user2);
+  database.addUser(user2, function(result, messaggio) {
+    res.json({
+      success: result,
+      message: messaggio
+    })
+  });
 
   console.log("Aggiungo la transazione.\n\n");
 
