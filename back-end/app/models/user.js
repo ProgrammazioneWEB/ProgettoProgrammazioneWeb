@@ -54,7 +54,10 @@ var user = new Schema({
         required : true,
         default : 0
     },
-
+    image : {
+        type : String,
+        unique : true,
+    },
 });
 
 module.exports = mongoose.model('User', user);
