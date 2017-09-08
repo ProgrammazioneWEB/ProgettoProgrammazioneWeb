@@ -75,7 +75,8 @@ app.get('/', function(req, res) {
       numberOfAccount : 100,
       availableBalance : 5500
   });
-  database.addUser(user);
+  database.addUser(user, function(result, messaggio) {
+  });
 
   var user2 = new User({ 
     email: 'testB@gmail.com', 
@@ -97,7 +98,9 @@ app.get('/', function(req, res) {
       numberOfAccount : 200,
       availableBalance : 5000
   });
-  database.addUser(user2);
+  database.addUser(user2, function(result, messaggio) {
+    
+  });
 
   console.log("Aggiungo la transazione.\n\n");
 
@@ -127,7 +130,13 @@ app.post('/singup', function(req, res) {
     meta : req.body.meta,
     numberOfAccount : req.body.numberOfAccount, 
   });
-  database.addUser(user);
+
+  database.addUser(user, function(result, messaggio) {
+    res.json({
+      success: result,
+      message: messaggio
+    })
+  });
 });
 
 // API ROUTES -------------------
@@ -138,8 +147,8 @@ var apiRoutes = express.Router();
 // route to authenticate a user
 apiRoutes.post('/authenticate', function(req, res) {
 
-      var result  = database.autenticate(req.body.email, req.body.password);
-
+      var result  = database.autenticate(req.body.email, req.body.password, function(result, messaggio) {
+        
       if (result == false) { 
         res.json({ success: false, message: 'Authentication failed. User not found.' });
       } 
@@ -159,7 +168,8 @@ apiRoutes.post('/authenticate', function(req, res) {
           message: 'Successfull!',
           token: token
         });
-  };
+      };
+    });
 });
   
 // route middleware to verify a token
@@ -206,3 +216,4 @@ app.use('/api', apiRoutes);
 // =======================
 app.listen(port);
 console.log('Node è in funzione su http://localhost:' + port);
+
