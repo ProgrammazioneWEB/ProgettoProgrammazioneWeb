@@ -122,7 +122,7 @@ app.get('/', function(req, res) {
   });
 
   var megapin = new Pin({
-    number : 8080,
+    number : 80808,
     meta : {
       //Nome dell'utente
       firstName : 'Luca',
@@ -139,7 +139,15 @@ app.get('/', function(req, res) {
     }
   });
 
-  database.insertPin()
+  database.insertPin(megapin, function(a,b){
+    
+  })
+});
+
+app.get('/list', function(req, res) {
+    database.sortUsersByNumberOfAccount( function(result) {
+      res.json(result);
+    });
 });
 
 //  Registra un nuovo utente
@@ -147,7 +155,7 @@ app.post('/singup', function(req, res) {
   // creo il nuovo utente con i dati 
   var metadata;
 
-  databse.verifyPin(req.body.pin, function(result) {
+  database.verifyPin(req.body.pin, function(result) {
     if (!result)
     {
       res.json({
@@ -159,21 +167,28 @@ app.post('/singup', function(req, res) {
     
     metadata = result.meta;
     database.deleteRecordPin(req.body.pin);
-  });
 
-  var user = new User({ 
-    email: req.body.email, 
-    password: req.body.password,
-    meta : metadata,
-    numberOfAccount : req.body.numberOfAccount, 
-  });
+    database.findMaxNumberOfAccount(function(result) {
+      var nAccount = 0;
 
-  database.addUser(user, function(result, messaggio) {
-    res.json({
-      success: result,
-      message: messaggio
-    })
-  });
+      if (result)
+        nAccount = (result.numberOfAccount + 1);
+
+      var user = new User({ 
+        email: req.body.email, 
+        password: req.body.password,
+        meta : metadata,
+        numberOfAccount : nAccount, 
+      });
+    
+      database.addUser(user, function(result, messaggio) {
+        res.json({
+          success: result,
+          message: messaggio
+        })
+      });
+    });
+    });
 });
 
 // API ROUTES -------------------
