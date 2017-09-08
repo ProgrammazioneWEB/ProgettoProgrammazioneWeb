@@ -34,7 +34,7 @@
             <tr>
                 <!--user image-->
                 <td>
-                    <img ng-src="{{userImagePath}}" class="leftAlign img-fluid"/>
+                    <img ng-src="{{userImagePath}}" class="leftAlign img-fluid" />
                 </td>
                 <!--user dates-->
                 <td>
@@ -68,7 +68,7 @@
     <br>
     <!--Button zone and dinamic zone-->
     <ul class="list-group leftAlign">
-        <li class="previous">
+        <li class="list-group-item previous">
             <!-- show money movement-->
             <a href="#!/movements" class="whiteFont">
                 <button type="button" class="btn btn-primary userArea" name="movimentiBancari" ng-style="buttonMovementColor" ng-focus="buttonMovementColor={background:'#6090AA'}"
@@ -79,8 +79,7 @@
                     </button>
                 </a>
         </li>
-        <li class="previous">
-
+        <li class=" list-group-item previous">
             <!--make a payment-->
             <a href="#!/transaction" class="whiteFont"> 
                     <button type="button" class="btn btn-primary userArea" name="paymentButtonClicked" ng-style="buttonPaymentColor" ng-focus="buttonPaymentColor={background:'#6090AA'}"
@@ -92,22 +91,22 @@
                         </a>
         </li>
     </ul>
-    
+
     <!-- Right column or other half button area-->
     <!--Button zone and dinamic zone-->
     <ul class="list-group rightAlign">
-        <li class="next">
+        <li class="list-group-item next">
             <!-- show how spent in one day at average-->
             <a href="#!/average" class="whiteFont"> 
                 <button type="button" class="btn btn-primary userArea" name="averageSpent" ng-model="averageSpent" ng-style="buttonAverageColor"
                     ng-focus="buttonAverageColor={background:'#6090AA'}" ng-blur="buttonAverageColor={}">
                                     <img src="../../CSS/images/iconsForUser/Payment.png" class="img-fluid" alt="Guarda la tua spesa media giornaliera"/> 
-                                  <br> Guarda la tua spesa media giornaliera
+                                  <br> Guarda la tua spesa  <br>media giornaliera
                 </button>
                 </a>
         </li>
         <!--Watch your stats with  Graphs!-->
-        <li class="next">
+        <li class=" list-group-item next">
 
             <a href="#!/graph" class="whiteFont">                     
                 <button type="button" class="btn btn-primary userArea" name="graphButtonClicked" ng-style="buttonGraphColor" ng-focus="buttonGraphColor={background:'#6090AA'}"
@@ -119,7 +118,7 @@
     </ul>
     <!--Center column or dynamic areas-->
     <div ng-view class="userStatistics" style:="text-align:center">
-        </div>
+    </div>
 </body>
 
 </html>
