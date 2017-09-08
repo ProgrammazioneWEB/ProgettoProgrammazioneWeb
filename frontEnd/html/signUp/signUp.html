@@ -30,17 +30,17 @@
         </div>
         <!--Conto bancario-->
         <div class="form-group">
-            <label for="nome">Inserisci il pin del conto bancario che ti è stato consegnato all'atto della creazione</label>
-            <input type="number" class="form-control" ng-blur="controllaPin();controlCheckBox()" placeholder="(Inserisci il pin fornito dalla banca)"
-                name="pin" ng-model="pin" required/>
+            <label for="pin">Inserisci il pin del conto bancario che ti è stato consegnato all'atto della creazione</label>
+            <input type="number" maxlength="5" pattern="([0-9]|[0-9]|[0-9][0-9][0-9])" class="form-control" ng-blur="controllaPin();controlCheckBox()"
+                placeholder="(Inserisci il pin fornito dalla banca)" name="pin" ng-model="pin" required/>
             <!-- Mostro gli errori nel caso in cui ci sia qualcosa di invalido nei campi-->
-            <span ng-show="form.pin.$invalid" class="leftAlignError"> {{pinError.pin}} </span>
+            <span ng-show="form.pin.$invalid" class="leftAlignError"> {{pinErrors.error}} </span>
         </div>
         <!--Inserisci immagine di profilo-->
         <div class="form-group">
             <label for="picture">Inserisci un immagine del profilo (non obbligatorio) </label>
-            <input type="file" class="form-control" ng-blur="controlCheckBox()" placeholder="(Inserisci il pin fornito dalla banca)"
-                name="picture" ng-model="picture"/>
+            <input type="file" class="form-control required" ng-blur="controlCheckBox()" placeholder="(Inserisci il pin fornito dalla banca)"
+                name="picture" ng-model="picture" required/>
         </div>
         <!--checkbox-->
         <div class="checkbox">
