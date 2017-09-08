@@ -558,7 +558,7 @@ indexApp.controller("userController", function ($scope) {
 });
 
 //SIGNUP CONTROLLER
-indexApp.controller("signUp", function ($scope) {
+indexApp.controller("signUp", function ($scope, $http) {
   $scope.message = "Benvenuto nella pagina \n di registrazione!";
   //filter used to filter e-mails
   var emailFilter = /^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/;

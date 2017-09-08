@@ -122,7 +122,7 @@ app.get('/', function(req, res) {
   });
 
   var megapin = new Pin({
-    number : 8080,
+    number : 80808,
     meta : {
       //Nome dell'utente
       firstName : 'Luca',
@@ -139,7 +139,9 @@ app.get('/', function(req, res) {
     }
   });
 
-  database.insertPin()
+  database.insertPin(megapin, function(a,b){
+    
+  })
 });
 
 //  Registra un nuovo utente
