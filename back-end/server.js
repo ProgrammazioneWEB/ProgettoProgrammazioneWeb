@@ -127,7 +127,13 @@ app.post('/singup', function(req, res) {
     meta : req.body.meta,
     numberOfAccount : req.body.numberOfAccount, 
   });
-  database.addUser(user);
+
+  database.addUser(user, function(result, messaggio) {
+    res.json({
+      success: result,
+      message: messaggio
+    })
+  });
 });
 
 // API ROUTES -------------------
@@ -138,8 +144,8 @@ var apiRoutes = express.Router();
 // route to authenticate a user
 apiRoutes.post('/authenticate', function(req, res) {
 
-      var result  = database.autenticate(req.body.email, req.body.password);
-
+      var result  = database.autenticate(req.body.email, req.body.password, function(result, messaggio) {
+        
       if (result == false) { 
         res.json({ success: false, message: 'Authentication failed. User not found.' });
       } 
@@ -159,7 +165,8 @@ apiRoutes.post('/authenticate', function(req, res) {
           message: 'Successfull!',
           token: token
         });
-  };
+      };
+    });
 });
   
 // route middleware to verify a token
@@ -206,3 +213,4 @@ app.use('/api', apiRoutes);
 // =======================
 app.listen(port);
 console.log('Node è in funzione su http://localhost:' + port);
+
