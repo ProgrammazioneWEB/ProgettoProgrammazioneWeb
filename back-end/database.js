@@ -3,13 +3,12 @@
 // ===================================================================================
 
 var mongoose    = require('mongoose');
-var time = require('sleep');
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/mydb1";
 
 var User;
 
-// Cerca un account utente dato il suo numero account
+// this function find a user from his number of account
 var findByNumberOfAccount = function(numberOfAccount, callback) {
   MongoClient.connect(url, function(err, db) {
     if (err)
@@ -34,10 +33,6 @@ var findByNumberOfAccount = function(numberOfAccount, callback) {
     });
   });
 };
-
-var findByNumberOfTwoAccount = function(numberOfAccountFrom, numberOfAccountTo, callback) {
-  
-}
 
 // this function inizialize database and create all the collections
 exports.init = function() {
@@ -70,30 +65,40 @@ exports.init = function() {
 }
 
 //This function find by email and password one user in Database
-exports.autenticate = function(email, password) {
+exports.autenticate = function(email, password, callbackRis) {
     MongoClient.connect(url, function(err, db) {
-    if (err) throw err;
-
+    if (err){
+      callbackRis(false, "Impossibile connettersi al Database");
+      throw err;
+    }
     db.collection("users").findOne({email : email, password : password}, function(err, result) {
-      if (err) throw err;
-
+      if (err){
+        callbackRis(false, "Impossibile trovare lo schema del Database");
+        throw err;
+      }
       db.close();
 
-      if (!result)
-        return false;
-
-      return true;
+      if (!result){
+        callbackRis(false, "Utente o password errati");
+      }
+        callbackRis(true, "Login Effettuato");
     });
   });
 }
 
 //this function insert the new user passed by server in Database
-exports.addUser = function(user){
+exports.addUser = function(user, callbackRis){
   MongoClient.connect(url, function(err, db) {
-    if (err) throw err;
+    if (err){
+      callbackRis(false, "Impossibile connettersi al Database");
+      throw err;
+    }
     var myobj = user;
     db.collection("users").insertOne(myobj, function(err, res) {
-      if (err) throw err;
+      if (err){
+        callbackRis(false, "Impossibile trovare lo schema del Database")
+        throw err;
+      }
       console.log("1 user inserted");
       db.close();
       return res;
@@ -122,7 +127,7 @@ exports.addTransaction = function(movement, callbackRis) {
     {
       availableBalanceFrom = (result1.availableBalance) - (quantity);
 
-      //  Una volta trovat cerco l'account a cui far arrivare il bonifico
+      //  Una volta trovato cerco l'account a cui far arrivare il bonifico
       findByNumberOfAccount(numberOfAccountTo, function(result2, errore2) {
         if (errore2)
           callbackRis(false, 'Numero account inesistente.');
