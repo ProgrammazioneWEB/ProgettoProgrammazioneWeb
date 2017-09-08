@@ -310,3 +310,33 @@ exports.findMaxNumberOfAccount = function(callbackRis){
     });
   });
 }
+
+//this function pick an email and control if the email is in the DB
+exports.verifyEmail = function(email, callbackRis){
+  MongoClient.connect(url, function(err, db) {
+    if (err)  throw err;
+    db.collection("users").findOne({email : email}, function(err, result) {
+    if (err) throw err;
+    db.close();
+    if(result)
+      //se non è salvabile torna false
+    callbackRis(false);
+    else
+      //se è salvabile torna true
+    callbackRis(true);
+    });
+  });
+}
+
+//this function return a list of users sort by number of account
+exports.sortUsersByNumberOfAccount = function(){
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    var mysort = { numberOfAccount: 1 };
+    db.collection("users").find().sort(mysort).toArray(function(err, result) {
+      if (err) throw err;
+      db.close();
+      callbackRis(result);
+    });
+  });
+}
