@@ -34,11 +34,11 @@
             <tr>
                 <!--user image-->
                 <td>
-                    <img ng-src="{{userImagePath}}" class="leftAlign img-fluid" />
+                    <img ng-src="{{userImagePath}}" class="leftAlign img-fluid"/>
                 </td>
                 <!--user dates-->
                 <td>
-                    <ul class="list-group">
+                    <ul class="list-group limitSpace">
                         <li class="list-group-item statisticsTitle">
                             User dates <i class="fa fa-id-card-o" aria-hidden="true"></i>
                         </li>
@@ -49,7 +49,7 @@
                 <td>
                     <!--second column-->
                     <!--user statistic-->
-                    <ul class="list-group">
+                    <ul class="list-group limitSpace">
                         <li class="list-group-item statisticsTitle">
                             User statistics <i class="fa fa-bar-chart" aria-hidden="true"></i>
                         </li>
@@ -92,8 +92,6 @@
     </ul>
     <!--Center column or dynamic areas-->
     <div ng-view class="userStatistics">
-
-
     </div>
     <!-- Right column or other half button area-->
     <!--Button zone and dinamic zone-->
