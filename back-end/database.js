@@ -101,7 +101,7 @@ exports.addUser = function(user, callbackRis){
       }
       console.log("1 user inserted");
       db.close();
-      return res;
+      callbackRis(true, "Utente Aggiunto");
     });
   });
 }
