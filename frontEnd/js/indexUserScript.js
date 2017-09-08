@@ -276,6 +276,7 @@ var userProfile = {
     username: "Lorenzo Stacchio",
     saldo: 50,
     countNumber: 15268151,
+    pin: 15523, 
     dataCreazioneConto: "10/5/2017",
     movimenti: [
         {
