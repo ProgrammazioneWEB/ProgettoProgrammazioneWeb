@@ -66,25 +66,23 @@ div.userFunction{
     border-style: ridge;    
     border-color: #3E50F3;
     align-items: center;
-    text-align: center;    
+    text-align: center;
+    
+   
 }
 
 ul.leftAlign{
     float: left;
     width: 19%;
     height: 100%;
-    border-style: ridge;    
-    border-color: #3E50F3;
-    border-radius: 3%;            
+               
 }
 
 ul.rightAlign{
     float: right;
     width: 19%;
     height: 100%;
-    border-style: ridge;    
-    border-color: #3E50F3;
-    border-radius: 3%;            
+          
 }
 
 ul.limitSpace{
@@ -92,13 +90,16 @@ ul.limitSpace{
     max-width: 100%;
     min-height: 20%;
     max-height: 100%;
-    border-radius: 3%;
-    border-style: ridge;
-    border-color:blue;
+  
 }
 
 div.userStatistics{
-    width:50%; 
+    position: static;
+    top: 40%;
+    left: 25%;
+    
+
+
     height:100%;
     border-radius: 3%;    
     background-color: white; 
@@ -128,7 +129,7 @@ button.userArea{
     background-color:white;	
     float: center;
     width: 100%;
-    height: 46.8%;
+    height: 50%;
     color: black;
 }
 

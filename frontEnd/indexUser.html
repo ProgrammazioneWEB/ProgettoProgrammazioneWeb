@@ -64,9 +64,11 @@
             </tr>
         </table>
     </div>
+    <br>
+    <br>
     <!--Button zone and dinamic zone-->
     <ul class="list-group leftAlign">
-        <li class="list-group-item">
+        <li class="previous">
             <!-- show money movement-->
             <a href="#!/movements" class="whiteFont">
                 <button type="button" class="btn btn-primary userArea" name="movimentiBancari" ng-style="buttonMovementColor" ng-focus="buttonMovementColor={background:'#6090AA'}"
@@ -77,26 +79,24 @@
                     </button>
                 </a>
         </li>
-        <li class="list-group-item">
+        <li class="previous">
 
             <!--make a payment-->
             <a href="#!/transaction" class="whiteFont"> 
                     <button type="button" class="btn btn-primary userArea" name="paymentButtonClicked" ng-style="buttonPaymentColor" ng-focus="buttonPaymentColor={background:'#6090AA'}"
                     ng-blur="buttonPaymentColor={}"  ng-model="paymentButtonClicked">          
                         <img src="../../CSS/images/iconsForUser/bank_transfer.png"  class="img-fluid" alt="Effettua un bonifico"/> 
-                               <br> 
+<br> 
                                     Esegui un bonifico 
-                    </button>
+                                                   </button>
                         </a>
         </li>
     </ul>
-    <!--Center column or dynamic areas-->
-    <div ng-view class="userStatistics">
-    </div>
+    
     <!-- Right column or other half button area-->
     <!--Button zone and dinamic zone-->
     <ul class="list-group rightAlign">
-        <li class="list-group-item">
+        <li class="next">
             <!-- show how spent in one day at average-->
             <a href="#!/average" class="whiteFont"> 
                 <button type="button" class="btn btn-primary userArea" name="averageSpent" ng-model="averageSpent" ng-style="buttonAverageColor"
@@ -107,7 +107,7 @@
                 </a>
         </li>
         <!--Watch your stats with  Graphs!-->
-        <li class="list-group-item">
+        <li class="next">
 
             <a href="#!/graph" class="whiteFont">                     
                 <button type="button" class="btn btn-primary userArea" name="graphButtonClicked" ng-style="buttonGraphColor" ng-focus="buttonGraphColor={background:'#6090AA'}"
@@ -117,6 +117,9 @@
                 </a>
         </li>
     </ul>
+    <!--Center column or dynamic areas-->
+    <div ng-view class="userStatistics" style:="text-align:center">
+        </div>
 </body>
 
 </html>
