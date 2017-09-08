@@ -95,7 +95,8 @@ indexApp.controller("signUp", function ($scope) {
       email: $scope.email,
       password: $scope.password,
       pin: $scope.pin,
-      contrattoLetto: true
+      picture: $scope.picture,
+      contrattoLetto: $scope.licenceError
     }
   }
 
