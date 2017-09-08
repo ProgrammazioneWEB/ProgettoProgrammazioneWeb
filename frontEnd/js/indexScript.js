@@ -646,7 +646,7 @@ indexApp.controller("signUp", function ($scope) {
     }
   }
   //function to send dates to server
-  $scope.sendDates = function () {
+  $scope.sendData = function () {
     //TO DEFINE
     userDate = {
       email: $scope.email,

@@ -35,7 +35,7 @@ indexUserApp.controller('userHomeController', function ($scope) {
        * This path it's useless at this level of file, but this path will be used in indexUser.html
        * which is at the right level 
        */
-    $scope.userImagePath = "../../CSS/images/Fondatori/Ls.png";
+    $scope.userImagePath = userProfile.picture;
     //stats area
     //save the variable to show the real saldo
     $scope.moneyMessage = userProfile.saldo + " €";
@@ -277,6 +277,7 @@ var userProfile = {
     saldo: 50,
     countNumber: 15268151,
     pin: 15523, 
+    picture: "../../CSS/images/Fondatori/Ls.png",
     dataCreazioneConto: "10/5/2017",
     movimenti: [
         {
