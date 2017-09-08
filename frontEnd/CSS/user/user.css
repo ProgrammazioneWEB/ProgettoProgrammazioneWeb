@@ -3,8 +3,7 @@ body {
     width:100%;
 }
 body.whiteBackground{
-background-color: white;
-padding-top: 3%;
+background-color: #3E50F3;
 }
 
 .fillSpace{
@@ -18,7 +17,6 @@ text-align: center;
  max-width: 70%;
  min-height: 20%;
  max-height: 70%;
- 
 }
 
 
@@ -59,7 +57,6 @@ font-weight:bold;
 div.userFunction{
     width:100%; 
     height:30%;
-    border-radius: 3%;    
     background-color: white;
     float: center;
     border: solid;
@@ -67,8 +64,6 @@ div.userFunction{
     border-color: #3E50F3;
     align-items: center;
     text-align: center;
-    
-   
 }
 
 ul.leftAlign{
@@ -98,7 +93,6 @@ div.userStatistics{
     left: 25%;
     width: auto;
     height:100%;
-    border-radius: 3%;    
     background-color: white; 
     float: center ;
     border-style: ridge;   
@@ -114,6 +108,12 @@ div.Graph{
     height: 100%;
     text-align: center;
     align-items: center;
+}
+div.formElementCenter{
+    width:100%; 
+    padding-left:5%;    
+    padding-right:1%;    
+    text-align:center; 
 }
 div.graphEntrance{
     width: 30%;

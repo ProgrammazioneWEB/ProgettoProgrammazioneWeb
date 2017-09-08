@@ -24,6 +24,10 @@ indexUserApp.config(function ($routeProvider) {
             templateUrl: './html/user/userGraph/userGraph.html',
             controller: 'userGraphController'
         })
+        .when('/mainHome', {
+            templateUrl: './html/user/userHome/userHome.html',
+            controller: 'changeSite'
+        })
 });
 
 //user home controller
@@ -49,6 +53,10 @@ indexUserApp.controller('userMovementsController', function ($scope) {
     $scope.movimentiBancari = userProfile.movimenti;
 });
 
+//controller that will change the page
+indexUserApp.controller('changeSite',function($scope, $window){
+    $window.location.href ="../index.html";
+});
 
 //user movements controller
 indexUserApp.controller('userTransactionController', function ($scope) {

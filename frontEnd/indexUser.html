@@ -32,15 +32,21 @@
         <!--table that contains user statistics-->
         <table class="table center">
             <tr>
+                <!--route per -->
+                <td>
+                        <a href="#!/mainHome" class="whiteFont">
+                            <img class="img-fluid" style="width:40%;height:40%"src="./CSS/images/Logos/unicam.png"/>
+                        </a>
+                </td>
                 <!--user image-->
                 <td>
                     <img ng-src="{{userImagePath}}" class="leftAlign img-fluid" />
                 </td>
-                <!--user dates-->
+                <!--user data-->
                 <td>
                     <ul class="list-group limitSpace">
                         <li class="list-group-item statisticsTitle">
-                            User dates <i class="fa fa-id-card-o" aria-hidden="true"></i>
+                            User data <i class="fa fa-id-card-o" aria-hidden="true"></i>
                         </li>
                         <li class="list-group-item statistics">
                             {{username}}
@@ -85,7 +91,7 @@
                     <button type="button" class="btn btn-primary userArea" name="paymentButtonClicked" ng-style="buttonPaymentColor" ng-focus="buttonPaymentColor={background:'#6090AA'}"
                     ng-blur="buttonPaymentColor={}"  ng-model="paymentButtonClicked">          
                         <img src="../../CSS/images/iconsForUser/bank_transfer.png"  class="img-fluid" alt="Effettua un bonifico"/> 
-<br> 
+                            <br> 
                                     Esegui un bonifico 
                                                    </button>
                         </a>
