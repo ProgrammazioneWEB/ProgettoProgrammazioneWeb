@@ -297,3 +297,16 @@ exports.deleteRecordPin = function(pin){
     });
   });
 }
+
+//this function must return the max of number of account
+exports.findMaxNumberOfAccount = function(callbackRis){
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    var mysort = { numberOfAccount: -1 };
+    db.collection("users").find().sort(mysort).limit(1 , function(err, result) {
+      if (err) throw err;
+      db.close();
+      callbackRis(result);
+    });
+  });
+}
