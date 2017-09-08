@@ -426,9 +426,9 @@ indexApp.controller("userController", function ($scope) {
     }
 
   };
- 
- 
- 
+
+
+
   //GRAPH AREA
 
 
@@ -557,6 +557,7 @@ indexApp.controller("userController", function ($scope) {
   $scope.countNumber = userProfile.countNumber;
 });
 
+//SIGNUP CONTROLLER
 indexApp.controller("signUp", function ($scope) {
   $scope.message = "Benvenuto nella pagina \n di registrazione!";
   //filter used to filter e-mails
@@ -628,9 +629,43 @@ indexApp.controller("signUp", function ($scope) {
       $scope.passwordRepeatError = { passwordRepeat: "" };
     }
   };
-  //functio to control pin field
+  //pin errors
+  $scope.pinErrors = {
+    error: ""
+  };
+  //function to control pin field
   $scope.controllaPin = function () {
-    //TO DEFINE
+    //AGGIUSTARE CONTROLLO PIN
+    alert($scope.pin.length);
+    alert($scope.pin);
+    if($scope.pin===undefined){
+      alert("sono qui undefined");
+      $scope.form.pin.$invalid = true;
+      $scope.pinErrors = {
+        error: "*Non hai scritto il pin"
+      };
+    }
+    else if ($scope.pin < 10000) {
+      alert("sono qui troppo corto");      
+      $scope.form.pin.$invalid = true;
+      $scope.pinErrors = {
+        error: "*Il pin è troppo corto"
+      };
+    }
+    else if ($scope.pin > 99999) {
+      alert("sono qui troppo lungo");            
+      $scope.form.pin.$invalid = true;
+      $scope.pinErrors = {
+        error: "*Il pin è troppo lungo"
+      };
+    }
+    else {
+      alert("sono qui ok");                  
+      $scope.form.pin.$invalid = false;              
+      $scope.pinErrors = {
+        error: ""
+      };
+    }
   };
   //function to control checkbox field 
   $scope.controlCheckBox = function () {
