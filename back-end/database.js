@@ -41,25 +41,35 @@ exports.init = function() {
     if (err) throw err;
     console.log("Database created!");
     db.close();
-  });
-  // Collections users
+     // Collections users
   MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    db.createCollection("users", function(err, res) {
       if (err) throw err;
-      db.createCollection("users", function(err, res) {
-        if (err) throw err;
-        console.log("Collection users created!");
-        db.close();
-      });
+      console.log("Collection users created!");
+      db.close();
+    });
   });
   //Collection movements
   MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    db.createCollection("movements", function(err, res) {
       if (err) throw err;
-      db.createCollection("movements", function(err, res) {
-        if (err) throw err;
-        console.log("Collection movements created!");
-        db.close();
-      });
+      console.log("Collection movements created!");
+      db.close();
+    });
   });
+  //Collection pins
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    db.createCollection("pins", function(err, res) {
+      if (err) throw err;
+      console.log("Collection pins created!");
+      db.close();
+    });
+  });
+  });
+ 
 
   User   = require('./app/models/user'); 
 }
@@ -126,7 +136,10 @@ exports.addTransaction = function(movement, callbackRis) {
     else
     {
       availableBalanceFrom = (result1.availableBalance) - (quantity);
-
+      if(availableBalanceFrom <= 0){
+        callbackRis(false, 'Soldi non disponibili');
+        return;
+      }
       //  Una volta trovato cerco l'account a cui far arrivare il bonifico
       findByNumberOfAccount(numberOfAccountTo, function(result2, errore2) {
         if (errore2)
@@ -208,5 +221,74 @@ exports.addTransaction = function(movement, callbackRis) {
         }
       });
     }
+  });
+}
+
+
+//this function return one user from his email
+exports.findUserByEmail = function(email, callbackRis){
+  MongoClient.connect(url, function(err, db) {
+      if (err)  throw err;
+      db.collection("users").findOne({email : email, password : password}, function(err, result) {
+      if (err) throw err;
+      db.close();
+      callbackRis(result);
+    });
+  });
+}
+
+//this function return the information about user if the pin insert is correct
+exports.verifyPin = function(pin, callbackRis){
+   MongoClient.connect(url, function(err, db) {
+    if (err)  throw err;
+    db.collection("pins").findOne({number : pin}, function(err, result) {
+    if (err) throw err;
+    db.close();
+    callbackRis(result);
+    });
+  });
+}
+
+//this function only can be use by administrator insert pin and the meta about user
+exports.insertPin = function(pin, callbackRis){
+  MongoClient.connect(url, function(err, db) {
+    if (err){
+      callbackRis(false, "Impossibile connettersi al Database");
+      throw err;
+    }
+    var myobj = pin;
+    db.collection("pins").insertOne(myobj, function(err, res) {
+      if (err){
+        callbackRis(false, "Impossibile trovare lo schema del Database")
+        throw err;
+      }
+      console.log("1 pin and meta inserted");
+      db.close();
+      callbackRis(true, "Pin Aggiunto");
+    });
+  });
+}
+
+//this function return all the movements send about one number of account
+exports.allMovementsSend = function(numberOfAccount, callbackRis){
+  MongoClient.connect(url, function(err, db) {
+    if (err)  throw err;
+    db.collection("movements").find({ from : numberOfAccount}, function(err, result) {
+    if (err) throw err;
+    db.close();
+    callbackRis(result);
+    });
+  });
+}
+
+//this function return all the movements received about one number of account
+exports.allMovementsReceive = function(numberOfAccount, callbackRis){
+  MongoClient.connect(url, function(err, db) {
+    if (err)  throw err;
+    db.collection("movements").find({ to : numberOfAccount}, function(err, result) {
+    if (err) throw err;
+    db.close();
+    callbackRis(result);
+    });
   });
 }
