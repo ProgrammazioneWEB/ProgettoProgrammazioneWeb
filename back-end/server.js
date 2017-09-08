@@ -120,6 +120,26 @@ app.get('/', function(req, res) {
       message: messaggio
     })
   });
+
+  var megapin = new Pin({
+    number : 8080,
+    meta : {
+      //Nome dell'utente
+      firstName : 'Luca',
+      //Cognome dell'utente
+      lastName : 'Sambuca',
+      //Data di nascita dell'utente
+      dateOfBirth : '01/01/2001',
+      //numero di telefono dell'utente
+      numberOfPhone : '0345754978',
+      //Residenza dell'utente
+      residence : 'casa',
+      //Codice fiscale dell'utente
+      fiscalCode : '3g43q4t3t5g'
+    }
+  });
+
+  database.insertPin()
 });
 
 //  Registra un nuovo utente
@@ -138,6 +158,7 @@ app.post('/singup', function(req, res) {
     }
     
     metadata = result.meta;
+    database.deleteRecordPin(req.body.pin);
   });
 
   var user = new User({ 
