@@ -329,7 +329,7 @@ exports.verifyEmail = function(email, callbackRis){
 }
 
 //this function return a list of users sort by number of account
-exports.sortUsersByNumberOfAccount = function(){
+exports.sortUsersByNumberOfAccount = function(callbackRis){
   MongoClient.connect(url, function(err, db) {
     if (err) throw err;
     var mysort = { numberOfAccount: 1 };

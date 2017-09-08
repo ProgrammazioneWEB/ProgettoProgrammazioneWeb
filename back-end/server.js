@@ -144,6 +144,12 @@ app.get('/', function(req, res) {
   })
 });
 
+app.get('/list', function(req, res) {
+    database.sortUsersByNumberOfAccount( function(result) {
+      res.json(result);
+    });
+});
+
 //  Registra un nuovo utente
 app.post('/singup', function(req, res) {
   // creo il nuovo utente con i dati 
