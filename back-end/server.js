@@ -76,10 +76,6 @@ app.get('/', function(req, res) {
       availableBalance : 5500
   });
   database.addUser(user, function(result, messaggio) {
-    res.json({
-      success: result,
-      message: messaggio
-    })
   });
 
   var user2 = new User({ 
@@ -103,10 +99,7 @@ app.get('/', function(req, res) {
       availableBalance : 5000
   });
   database.addUser(user2, function(result, messaggio) {
-    res.json({
-      success: result,
-      message: messaggio
-    })
+    
   });
 
   console.log("Aggiungo la transazione.\n\n");
