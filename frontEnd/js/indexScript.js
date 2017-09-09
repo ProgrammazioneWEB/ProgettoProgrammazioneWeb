@@ -35,6 +35,10 @@ indexApp.config(function ($routeProvider) {
       templateUrl: './html/login/login.html',
       controller: 'filterUserController'
     })
+    .when('/admin',{
+      templateUrl: './html/login/login.html',
+      controller: 'filterAdminController'
+    })
 
 });
 
@@ -242,6 +246,12 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location) {
 indexApp.controller("filterUserController", function ($scope, $http, $window, $location) {
   //TO DEFINE
   $window.location.href = '../indexUser.html';
+});
+
+//controller che filtra se l'utente è loggato o meno
+indexApp.controller("filterAdminController", function ($scope, $http, $window, $location) {
+  //TO DEFINE
+  $window.location.href = '../indexAdmin.html';
 });
 
 //controller della parte dopo il log-in

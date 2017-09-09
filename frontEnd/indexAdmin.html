@@ -24,7 +24,7 @@
     <script type="text/javascript" src="js/zingchart/client/zingchart.min.js"></script>
     <script type="text/javascript" src="js/ZingChart-AngularJS/src/zingchart-angularjs.js"></script>
     <script src="js/jquery/jquery-3.2.1.min.js"></script>
-    <script src="js/indexUserScript.js"></script>
+    <script src="js/indexAdminScript.js"></script>
 </head>
 
 <body ng-controller="adminHomeController" class="whiteBackground">
@@ -38,40 +38,33 @@
                         <a href="#!/mainHome" class="whiteFont">
                                 <img class="iconUnicam"  src="./CSS/images/Logos/unicam.png"/>
                         </a>
-                        <h2 class="hint" name="hint">
-                                Clicca sullo stemma
-                                <br>
-                                Unicam per tornare
-                                <br> al sito principale!
-                        </h2>
                     </td>
-    
                     <!--user image-->
                     <td >
-                        <img ng-src="{{userImagePath}}" class="userImage" />
+                        <img ng-src="{{adminImagePath}}" class="userImage" />
                     </td>
                     <!--user data-->
                     <td>
                         <ul class="list-group limitSpace">
                             <li class="list-group-item statisticsTitle">
-                                User data <i class="fa fa-id-card-o" aria-hidden="true"></i>
+                                Admin data <i class="fa fa-id-card-o" aria-hidden="true"></i>
                             </li>
                             <li class="list-group-item statistics">
-                                {{username}}
+                                {{name}}
                             </li>
+                            <li class="list-group-item statistics">
+                                    {{surname}}
+                                </li>
                     </td>
                     <td>
                         <!--second column-->
                         <!--user statistic-->
                         <ul class="list-group limitSpace">
                             <li class="list-group-item statisticsTitle">
-                                User statistics <i class="fa fa-bar-chart" aria-hidden="true"></i>
+                                Admin statistics <i class="fa fa-bar-chart" aria-hidden="true"></i>
                             </li>
                             <li class="list-group-item statistics">
-                                N° conto: {{countNumber}}
-                            </li>
-                            <li class="list-group-item statistics">
-                                Saldo corrente: {{moneyMessage}}
+                                N° admin: {{idNumber}}
                             </li>
                         </ul>
                     </td>
@@ -84,23 +77,23 @@
         <ul class="list-group leftAlign">
             <li class="list-group-item previous">
                 <!-- show money movement-->
-                <a href="#!/movements" class="whiteFont">
+                <a href="#!/" class="whiteFont">
                     <button type="button" class="btn btn-primary userArea" name="movimentiBancari" ng-style="buttonMovementColor" ng-focus="buttonMovementColor={background:'#6090AA'}"
                         ng-blur="buttonMovementColor={}" ng-model="movimentiBancari">
-                            <img src="../../CSS/images/iconsForUser/bank_transaction.png" class="img-fluid" alt="Guarda i tuoi movimenti bancari"/> 
+                            <img src="../../CSS/images/iconsForAdmin/alert.png" class="img-fluid" alt="Crea un avviso"/> 
                             <br> 
-                            Guarda i tuoi movimenti bancari
+                           Crea un avviso
                         </button>
                     </a>
             </li>
             <li class=" list-group-item previous">
                 <!--make a payment-->
-                <a href="#!/transaction" class="whiteFont"> 
+                <a href="#!/" class="whiteFont"> 
                         <button type="button" class="btn btn-primary userArea" name="paymentButtonClicked" ng-style="buttonPaymentColor" ng-focus="buttonPaymentColor={background:'#6090AA'}"
                         ng-blur="buttonPaymentColor={}"  ng-model="paymentButtonClicked">          
-                            <img src="../../CSS/images/iconsForUser/bank_transfer.png"  class="img-fluid" alt="Effettua un bonifico"/> 
+                            <img src="../../CSS/images/iconsForAdmin/user.jpg"  class="img-fluid" alt="D/A utente"/> 
                                 <br> 
-                                        Esegui un bonifico 
+                                        Abilita/Disabilita utente
                                                        </button>
                             </a>
             </li>
@@ -111,21 +104,20 @@
         <ul class="list-group rightAlign">
             <li class="list-group-item next">
                 <!-- show how spent in one day at average-->
-                <a href="#!/average" class="whiteFont"> 
+                <a href="#!/" class="whiteFont"> 
                     <button type="button" class="btn btn-primary userArea" name="averageSpent" ng-model="averageSpent" ng-style="buttonAverageColor"
                         ng-focus="buttonAverageColor={background:'#6090AA'}" ng-blur="buttonAverageColor={}">
-                                        <img src="../../CSS/images/iconsForUser/Payment.png" class="img-fluid" alt="Guarda la tua spesa media giornaliera"/> 
-                                      <br> Guarda la tua spesa  <br>media giornaliera
+                                        <img src="../../CSS/images/iconsForAdmin/transaction.png" class="img-fluid" alt="Effettua bonifico tra due utenti"/> 
+                                      <br> Effettua bonifico tra  <br>due utenti
                     </button>
                     </a>
             </li>
             <!--Watch your stats with  Graphs!-->
             <li class=" list-group-item next">
-    
-                <a href="#!/graph" class="whiteFont">                     
+                <a href="#!/" class="whiteFont">                     
                     <button type="button" class="btn btn-primary userArea" name="graphButtonClicked" ng-style="buttonGraphColor" ng-focus="buttonGraphColor={background:'#6090AA'}"
-                        ng-blur="buttonGraphColor={}" ng-model="graphButtonClicked"> <img src="../../CSS/images/iconsForUser/stats.png"  class="img-fluid" alt="Guarda il grafico del tuo conto"/> 
-                                            <br> Guarda il grafico del tuo conto
+                        ng-blur="buttonGraphColor={}" ng-model="graphButtonClicked"> <img src="../../CSS/images/iconsForAdmin/userStats.png"  class="img-fluid" alt="Visiona stato di un utente"/> 
+                                            <br> Visiona stato di<br> un utente
                     </button>
                     </a>
             </li>
