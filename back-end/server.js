@@ -76,7 +76,6 @@ app.get('/', function (req, res) {
     numberOfAccount: 100,
     availableBalance: 5500
   });
-  //database.addUser(user, function(result, messaggio) {});
 
   var user2 = new User({
     email: 'testB@gmail.com',
@@ -98,9 +97,6 @@ app.get('/', function (req, res) {
     numberOfAccount: 200,
     availableBalance: 5000
   });
-  //database.addUser(user2, function(result, messaggio) {});
-
-  console.log("Aggiungo la transazione.\n\n");
 
   today = new Date();
 
@@ -111,14 +107,51 @@ app.get('/', function (req, res) {
     quantity: 500
   });
 
-  /*database.addTransaction(mov, function (result, messaggio) {
-    res.json({
-      success: result,
-      message: messaggio
+  database.addUser(user, function (result, messaggio) {
+    console.log(messaggio);
+    database.addUser(user2, function (result, messaggio) {
+      console.log(messaggio);
+      database.sortUsersByNumberOfAccount(function (result) {
+        console.log(result);
+      });
+      database.addTransaction(mov, function (result, messaggio) {
+        console.log(messaggio);
+        database.allMovementsSend(100, function (result) {
+          console.log(result);
+        });
+        mov = new Movimento({
+          from: 200,
+          to: 100,
+          date: today.getDate(),
+          quantity: 1500
+        });
+        database.addTransaction(mov, function (result, messaggio) {
+          console.log(messaggio);
+          database.allMovementsSend(200, function (result) {
+            console.log(result);
+          });
+          mov = new Movimento({
+            from: 100,
+            to: 200,
+            date: today.getDate(),
+            quantity: 500
+          });
+          database.addTransaction(mov, function (result, messaggio) {
+            console.log(messaggio);
+            database.allMovementsSend(100, function (result) {
+              console.log(result);
+            });
+            res.json({
+              success: result,
+              message: messaggio
+            });
+          });
+        });
+      });
     });
-  });*/
+  });
 
-  var megapin = new Pin({
+  /*var megapin = new Pin({
     number: 55555,
     meta: {
       //Nome dell'utente
@@ -141,11 +174,23 @@ app.get('/', function (req, res) {
       success: result,
       message: messaggio
     });
-  });
+  });*/
 });
 
 app.get('/list', function (req, res) {
   database.sortUsersByNumberOfAccount(function (result) {
+    res.json(result);
+  });
+});
+
+app.get('/movimenti-out', function (req, res) {
+  database.allMovementsSend(100, function (result) {
+    res.json(result);
+  });
+});
+
+app.get('/movimenti-in', function (req, res) {
+  database.allMovementsReceive(100, function (result) {
     res.json(result);
   });
 });

@@ -4,7 +4,7 @@
 
 var mongoose = require('mongoose');
 var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://localhost:27017/mydbTEST";
+var url = "mongodb://localhost:27017/mydbTESTA";
 
 // this function find a user from his number of account
 var findByNumberOfAccount = function (numberOfAccount, callback) {
@@ -129,6 +129,9 @@ exports.addTransaction = function (movement, callbackRis) {
   var availableBalanceTo;
   // === VALORE BONIFICO ===
   var quantity = movement.quantity;
+  // === PERSONE COINVOLTE ===
+  var userFrom;
+  var userTo;
 
   //  Cerco l'account da cui far partire il bonifico
   findByNumberOfAccount(numberOfAccountFrom, function (result1, errore1) {
@@ -140,12 +143,17 @@ exports.addTransaction = function (movement, callbackRis) {
         callbackRis(false, 'Soldi non disponibili');
         return;
       }
+      //  Salvo i dati dell' utente
+      userFrom = result1;
       //  Una volta trovato cerco l'account a cui far arrivare il bonifico
       findByNumberOfAccount(numberOfAccountTo, function (result2, errore2) {
         if (errore2)
           callbackRis(false, 'Numero account inesistente.');
         else {
           availableBalanceTo = (result2.availableBalance) + (quantity);
+
+          //  Salvo i dati dell' utente
+          userTo = result2;
 
           //  ho trovato entrambi quindi aggiorno il saldo del primo
           MongoClient.connect(url, function (err, db) {
@@ -156,8 +164,9 @@ exports.addTransaction = function (movement, callbackRis) {
             }
 
             var myquery = { numberOfAccount: numberOfAccountFrom };
-            var newvalues = { availableBalance: availableBalanceFrom };
-            db.collection("users").updateOne(myquery, newvalues, function (err, res) {
+            //  new values
+            userFrom.availableBalance = availableBalanceFrom;
+            db.collection("users").updateOne(myquery, userFrom, function (err, res) {
               if (err) {
                 //  Rispondo al front-end che qualcosa è andato storto
                 callbackRis(false, err);
@@ -175,8 +184,9 @@ exports.addTransaction = function (movement, callbackRis) {
                 }
 
                 var myquery = { numberOfAccount: numberOfAccountTo };
-                var newvalues = { availableBalance: availableBalanceTo };
-                db.collection("users").updateOne(myquery, newvalues, function (err, res) {
+                // new values
+                userTo.availableBalance = availableBalanceTo;
+                db.collection("users").updateOne(myquery, userTo, function (err, res) {
                   if (err) {
                     //  Rispondo al front-end che qualcosa è andato storto
                     callbackRis(false, err);
@@ -200,7 +210,7 @@ exports.addTransaction = function (movement, callbackRis) {
                         callbackRis(false, err);
                         throw err;
                       }
-                      console.log("1 Transaction inserted");
+                      console.log("Transaction inserted");
                       db.close();
 
                       //  Chiamo la callback di risposta al front-end per informarlo della transazione avvenuta
@@ -254,7 +264,6 @@ exports.insertPin = function (pin, callbackRis) {
         callbackRis(false, "Impossibile trovare lo schema del Database")
         throw err;
       }
-      console.log("1 pin and meta inserted");
       db.close();
       callbackRis(true, "Pin Aggiunto");
     });
@@ -265,7 +274,7 @@ exports.insertPin = function (pin, callbackRis) {
 exports.allMovementsSend = function (numberOfAccount, callbackRis) {
   MongoClient.connect(url, function (err, db) {
     if (err) throw err;
-    db.collection("movements").find({ from: numberOfAccount }, function (err, result) {
+    db.collection("movements").find({ from: numberOfAccount }).toArray(function (err, result) {
       if (err) throw err;
       db.close();
       callbackRis(result);
@@ -277,7 +286,7 @@ exports.allMovementsSend = function (numberOfAccount, callbackRis) {
 exports.allMovementsReceive = function (numberOfAccount, callbackRis) {
   MongoClient.connect(url, function (err, db) {
     if (err) throw err;
-    db.collection("movements").find({ to: numberOfAccount }, function (err, result) {
+    db.collection("movements").find({ to: numberOfAccount }).toArray(function (err, result) {
       if (err) throw err;
       db.close();
       callbackRis(result);
