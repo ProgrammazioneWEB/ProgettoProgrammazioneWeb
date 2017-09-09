@@ -2,17 +2,17 @@
 // ============================
 // = get the packages we need =
 // ============================
-var express     = require('express');
-var app         = express();
-var bodyParser  = require('body-parser');
-var morgan      = require('morgan');
-var mongoose    = require('mongoose');
+var express = require('express');
+var app = express();
+var bodyParser = require('body-parser');
+var morgan = require('morgan');
+var mongoose = require('mongoose');
 
-var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
+var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('./config'); // get our config file
-var User   = require('./app/models/user'); // get our mongoose model
+var User = require('./app/models/user'); // get our mongoose model
 var Movimento = require('./app/models/movement');
-var Pin   = require('./app/models/pin');
+var Pin = require('./app/models/pin');
 var database = require('./database'); // Importo il file per la gestione del database
 
 // =======================
@@ -30,7 +30,7 @@ app.use(bodyParser.json());
 app.use(morgan('dev'));
 
 // Creo una funzione per abilitare i CORS (sono i permessi per essere acceduti da server web con porta e/o indirizzo diverso)
-var allowCrossDomain = function(req, res, next) {
+var allowCrossDomain = function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*'); // Vanno poi indicate le origini specifiche prima della consegna
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');  // non mi servono tutti
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
@@ -54,109 +54,106 @@ database.init();
 // =======================
 
 // basic route (momentaneamente solo di test)
-app.get('/', function(req, res) {
-    // creo il nuovo utente con i dati 
-  var user = new User({ 
-    email: 'testA@gmail.com', 
+app.get('/', function (req, res) {
+  // creo il nuovo utente con i dati 
+  var user = new User({
+    email: 'testA@gmail.com',
     password: 'password',
-    meta : {
+    meta: {
       //Nome dell'utente
-      firstName : 'Nicolò',
+      firstName: 'Nicolò',
       //Cognome dell'utente
-      lastName : 'Ruggeri',
+      lastName: 'Ruggeri',
       //Data di nascita dell'utente
-      dateOfBirth : '24/10/1995',
+      dateOfBirth: '24/10/1995',
       //numero di telefono dell'utente
-      numberOfPhone : '0932740753978',
+      numberOfPhone: '0932740753978',
       //Residenza dell'utente
-      residence : 'casa mia',
+      residence: 'casa mia',
       //Codice fiscale dell'utente
-      fiscalCode : '097u45032r9yf2f'
+      fiscalCode: '097u45032r9yf2f'
     },
-      numberOfAccount : 100,
-      availableBalance : 5500
+    numberOfAccount: 100,
+    availableBalance: 5500
   });
-  database.addUser(user, function(result, messaggio) {
-  });
+  //database.addUser(user, function(result, messaggio) {});
 
-  var user2 = new User({ 
-    email: 'testB@gmail.com', 
+  var user2 = new User({
+    email: 'testB@gmail.com',
     password: 'password',
-    meta : {
+    meta: {
       //Nome dell'utente
-      firstName : 'Matteo',
+      firstName: 'Matteo',
       //Cognome dell'utente
-      lastName : 'Lupini',
+      lastName: 'Lupini',
       //Data di nascita dell'utente
-      dateOfBirth : 'non lo so',
+      dateOfBirth: 'non lo so',
       //numero di telefono dell'utente
-      numberOfPhone : '0345753978',
+      numberOfPhone: '0345753978',
       //Residenza dell'utente
-      residence : 'casa mia',
+      residence: 'casa mia',
       //Codice fiscale dell'utente
-      fiscalCode : '3g43q4g465g'
+      fiscalCode: '3g43q4g465g'
     },
-      numberOfAccount : 200,
-      availableBalance : 5000
+    numberOfAccount: 200,
+    availableBalance: 5000
   });
-  database.addUser(user2, function(result, messaggio) {
-    
-  });
+  //database.addUser(user2, function(result, messaggio) {});
 
   console.log("Aggiungo la transazione.\n\n");
 
   today = new Date();
 
   var mov = new Movimento({
-    from : 100,
-    to : 200,
-    date : today.getDate(),
-    quantity : 500
+    from: 100,
+    to: 200,
+    date: today.getDate(),
+    quantity: 500
   });
 
-  database.addTransaction(mov, function(result, messaggio) {
+  /*database.addTransaction(mov, function (result, messaggio) {
     res.json({
       success: result,
       message: messaggio
-    })
-  });
+    });
+  });*/
 
   var megapin = new Pin({
-    number : 80808,
-    meta : {
+    number: 55555,
+    meta: {
       //Nome dell'utente
-      firstName : 'Luca',
+      firstName: 'Nome',
       //Cognome dell'utente
-      lastName : 'Sambuca',
+      lastName: 'Cognome',
       //Data di nascita dell'utente
-      dateOfBirth : '01/01/2001',
+      dateOfBirth: '1950-01-01',
       //numero di telefono dell'utente
-      numberOfPhone : '0345754978',
+      numberOfPhone: '059239845',
       //Residenza dell'utente
-      residence : 'casa',
+      residence: 'Casa',
       //Codice fiscale dell'utente
-      fiscalCode : '3g43q4t3t5g'
+      fiscalCode: 'NCGM01B0150'
     }
   });
 
-  database.insertPin(megapin, function(a,b){
-    
-  })
+  database.insertPin(megapin, function (result, messaggio) {
+    res.json({
+      success: result,
+      message: messaggio
+    });
+  });
 });
 
-app.get('/list', function(req, res) {
-    database.sortUsersByNumberOfAccount( function(result) {
-      res.json(result);
-    });
+app.get('/list', function (req, res) {
+  database.sortUsersByNumberOfAccount(function (result) {
+    res.json(result);
+  });
 });
 
 //  Registra un nuovo utente
-app.post('/singup', function(req, res) {
-  // creo il nuovo utente con i dati 
-  var metadata;
-
-  database.verifyPin(req.body.pin, function(result) {
-    if (!result)
+app.post('/singup', function (req, res) {
+  database.verifyPin(req.body.pin, function (result) {
+    if (!result)  // Se il pin non esiste rispondo con un errore
     {
       res.json({
         success: false,
@@ -164,31 +161,55 @@ app.post('/singup', function(req, res) {
       });
       return;
     }
-    
-    metadata = result.meta;
-    database.deleteRecordPin(req.body.pin);
 
-    database.findMaxNumberOfAccount(function(result) {
-      var nAccount = 0;
+    //  Se invece il pin esiste, prelevo i dati personali dell' utente da associare all' email
+    var metadata = result.meta;
 
-      if (result)
-        nAccount = (result.numberOfAccount + 1);
-
-      var user = new User({ 
-        email: req.body.email, 
-        password: req.body.password,
-        meta : metadata,
-        numberOfAccount : nAccount, 
-      });
-    
-      database.addUser(user, function(result, messaggio) {
+    //  Controllo che l'email non sia già stata registrata
+    database.findUserByEmail(req.body.email, function (result) {
+      //  Se è già registrata non posso registrarla nuovamente
+      if (result) {
         res.json({
-          success: result,
-          message: messaggio
-        })
+          success: false,
+          message: 'Email già in uso.'
+        });
+        return;
+      }
+
+      //  Se non è registrata procedo
+      //  Calcolo il numero del conto del nuovo utente
+      database.findMaxNumberOfAccount(function (result) {
+        var nAccount = 0; //  Se non esistono altri conti sarà il numero 0
+
+        if (result.length > 0)
+          if (result[0].numberOfAccount != undefined)
+            nAccount = (result[0].numberOfAccount + 1);
+
+        //  Creo il nuovo utente
+        var user = new User({
+          email: req.body.email,
+          password: req.body.password,
+          meta: metadata,
+          numberOfAccount: nAccount,
+          availableBalance: 1000
+        });
+
+        //  Lo aggiungo al database
+        database.addUser(user, function (result, messaggio) {
+          if (result) {
+            //  Elimino il pin dalla lista
+            database.deleteRecordPin(req.body.pin);
+          }
+
+          //  Rispondo con un messaggio di operazione riuscita (se va a buon fine)
+          res.json({
+            success: result,
+            message: messaggio
+          });
+        });
       });
     });
-    });
+  });
 });
 
 // API ROUTES -------------------
@@ -197,67 +218,67 @@ app.post('/singup', function(req, res) {
 var apiRoutes = express.Router();
 
 // route to authenticate a user
-apiRoutes.post('/authenticate', function(req, res) {
+apiRoutes.post('/authenticate', function (req, res) {
 
-      var result  = database.autenticate(req.body.email, req.body.password, function(result, messaggio) {
-        
-      if (result == false) { 
-        res.json({ success: false, message: 'Authentication failed. User not found.' });
-      } 
-      else
-      {
-        // create a token
-        var token = jwt.sign('prova', app.get('superSecret'), {
-          //expiresInMinutes: 1440 // expires in 24 hours (ATTENZIONE non funziona su windows)
-        });
+  var result = database.autenticate(req.body.email, req.body.password, function (result, messaggio) {
 
-        // Salvo il token nel browser del utente autenticato (sotto il nome di authToken)
-        //res.cookie('authToken',token);          
+    if (result == false) {
+      res.json({ success: false, message: 'Authentication failed. User not found.' });
+    }
+    else {
+      // create a token
+      var token = jwt.sign('prova', app.get('superSecret'), {
+        //expiresInMinutes: 1440 // expires in 24 hours (ATTENZIONE non funziona su windows)
+      });
 
-        // return the information including token as JSON
-        res.json({
-          success: true,
-          message: 'Successfull!',
-          token: token
-        });
-      };
-    });
+      // Salvo il token nel browser del utente autenticato (sotto il nome di authToken)
+      //res.cookie('authToken',token);          
+
+      // return the information including token as JSON
+      res.json({
+        success: true,
+        message: 'Successfull!',
+        token: token
+      });
+    };
+  });
 });
-  
-// route middleware to verify a token
-  apiRoutes.use(function(req, res, next) {
-    
-      // check header or url parameters or post parameters or cookie 
-      var token = req.headers['x-access-token'] || req.body.token || req.query.token; // || req.cookies.authToken;
 
-      // decode token
-      if (token) {
-    
-        // verifies secret and checks exp (controllo che non sia tarocco)
-        jwt.verify(token, app.get('superSecret'), function(err, decoded) {      
-          if (err) {
-            return res.json({ success: false, message: 'Failed to authenticate token.' });    
-          } else {
-            // if everything is good, save to request for use in other routes
-            req.decoded = decoded;    
-            next();
-          }
-        });
-    
+// route middleware to verify a token
+apiRoutes.use(function (req, res, next) {
+
+  // check header or url parameters or post parameters or cookie 
+  var token = req.headers['x-access-token'] || req.body.token || req.query.token; // || req.cookies.authToken;
+
+  // decode token
+  if (token) {
+
+    // verifies secret and checks exp (controllo che non sia tarocco)
+    jwt.verify(token, app.get('superSecret'), function (err, decoded) {
+      if (err) {
+        return res.json({ success: false, message: 'Failed to authenticate token.' });
       } else {
-        // if there is no token
-        // return an error
-        return res.status(403).send({ 
-            success: false, 
-            message: 'No token provided.' 
-        });
+        // if everything is good, save to request for use in other routes
+        req.decoded = decoded;
+        next();
       }
     });
 
+  } else {
+    // if there is no token
+    // return an error
+    return res.status(403).send({
+      success: false,
+      message: 'No token provided.'
+    });
+  }
+});
+
 // route to show a random message
-apiRoutes.post('/', function(req, res) {
-  res.json({ message: 'Welcome to the API!',
-             success: true
+apiRoutes.post('/', function (req, res) {
+  res.json({
+    message: 'Welcome to the API!',
+    success: true
   });
 });
 
