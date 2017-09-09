@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="CSS/font-awesome/css/font-awesome.css">
     <link rel="stylesheet" href="CSS/user/user.css">
     <link rel="stylesheet" href="CSS/errors/errors.css">
+    <link rel="stylesheet" href="CSS/loading/loading.css">
     <link rel="stylesheet" href="CSS/index/index.css">
     <!--Import javascript files-->
     <script src="js/angular/angular.min.js"></script>
@@ -32,15 +33,22 @@
         <!--table that contains user statistics-->
         <table class="table center">
             <tr>
-                <!--route per -->
-                <td>
-                        <a href="#!/mainHome" class="whiteFont">
-                            <img class="img-fluid" style="width:40%;height:40%"src="./CSS/images/Logos/unicam.png"/>
-                        </a>
+                <!--route per index -->
+                <td >
+                    <a href="#!/mainHome" class="whiteFont">
+                            <img class="iconUnicam"  src="./CSS/images/Logos/unicam.png"/>
+                    </a>
+                    <h2 class="hint" name="hint">
+                            Clicca sullo stemma
+                            <br>
+                            Unicam per tornare
+                            <br> al sito principale!
+                    </h2>
                 </td>
+
                 <!--user image-->
-                <td>
-                    <img ng-src="{{userImagePath}}" class="leftAlign img-fluid" />
+                <td >
+                    <img ng-src="{{userImagePath}}" class="userImage" />
                 </td>
                 <!--user data-->
                 <td>

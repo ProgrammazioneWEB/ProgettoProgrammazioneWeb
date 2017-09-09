@@ -25,13 +25,13 @@ indexUserApp.config(function ($routeProvider) {
             controller: 'userGraphController'
         })
         .when('/mainHome', {
-            templateUrl: './html/user/userHome/userHome.html',
+            templateUrl: './html/loading/loading.html',
             controller: 'changeSite'
         })
 });
 
 //user home controller
-indexUserApp.controller('userHomeController', function ($scope) {
+indexUserApp.controller('userHomeController', function ($scope,$interval) {
     $scope.message = "Benvenuto nel tuo profilo privato!";
     //profile area
     $scope.username = userProfile.username;

@@ -44,11 +44,14 @@
         </div>
         <!--checkbox-->
         <div class="checkbox">
-            <input type="checkbox" class="checkbox" ng-model="licence" name="licence" required />Ho letto il contratto di
-            licenza
+            <input type="checkbox" class="checkbox" ng-model="licence" name="licence" required>
+            Ho letto il contratto di licenza
+            </input>
             <span ng-show="form.licence.$invalid" class="leftAlignError">{{licenceError.licence}}</span>
         </div>
         <!--submit button-->
-        <button type="submit" ng-click="sendData()" class="btn btn-primary" ng-disabled="!form.$valid">SignUp</button>
+        <div style="text-align:center;">
+            <button type="submit" ng-click="sendData()" class="btn btn-primary" ng-disabled="!form.$valid">SignUp</button>
+        </div>
     </form>
 </div>
