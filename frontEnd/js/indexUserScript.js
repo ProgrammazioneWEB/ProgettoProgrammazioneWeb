@@ -25,7 +25,7 @@ indexUserApp.config(function ($routeProvider) {
             controller: 'userGraphController'
         })
         .when('/mainHome', {
-            templateUrl: './html/loading/loading.html',
+            templateUrl: './html/user/userHome/userHome.html',            
             controller: 'changeSite'
         })
 });
@@ -53,8 +53,17 @@ indexUserApp.controller('userMovementsController', function ($scope) {
     $scope.movimentiBancari = userProfile.movimenti;
 });
 
+//function written to show the loading page
+var stopTime = setInterval(function($window){ 
+    $window.location.href ="../index.html";
+},100);
+
 //controller that will change the page
-indexUserApp.controller('changeSite',function($scope, $window){
+indexUserApp.controller('changeSite',function($scope, $window, $interval){
+    $window.location.href ="../html/loading/loading.html";
+    //simulo un delay
+     //stopTime();
+    //parte per salvare il token
     $window.location.href ="../index.html";
 });
 
