@@ -1,0 +1,47 @@
+<!--page for admin's alerta -->
+<form name="form" class="form-group" invalid>
+    <h1>
+        {{message}}
+    </h1>
+    <!--iban ordinante -->
+    <div class="form-group">
+        <label class="adminTitle"> 
+                    Scrivi qui l'iban dell'ordinante
+        </label>
+        <input type="text" name="ibanOrd" class="form-control" ng-model="ibanOrd" placeholder="Scrivi qui l'Iban dell'ordinante"
+            required ng-blur="controlIbanOrd()">
+        </input>
+        <span class="leftAlignError" ng-show="form.ibanOrd.$invalid">
+                {{ibanOrdErrors.error}} 
+        </span>
+    </div>
+    <!--iban beneficiante -->
+    <div class="form-group">
+        <label class="adminTitle"> 
+                    Scrivi qui l'iban del beneficiario
+        </label>
+        <input type="text" name="ibanBen" class="form-control" ng-model="ibanBen" placeholder="Scrivi qui l'Iban del beneficiante"
+            required ng-blur="controlIbanBen()">
+        </input>
+        <span class="leftAlignError" ng-show="form.ibanBen.$invalid">
+                {{ibanBenErrors.error}} 
+        </span>
+    </div>
+    <!--importo -->
+    <div class="form-group">
+        <label class="adminTitle"> 
+                    Scrivi qui l'importo del bonifico (non inferiore a 50 euro)
+                </label>
+        <input type="number" name="payment" class="form-control" ng-model="payment" placeholder=" Scrivi qui l'importo del bonifico"
+            required ng-blur="checkImport()">
+        </input>
+        <span class="leftAlignError" ng-show="form.payment.$invalid">
+                {{paymentErrors.error}} 
+        </span>
+    </div>
+    <!--submit button -->
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary" ng-click="makeTransaction()" ng-disabled="ibanInvalidi()">Esegui Bonifico</button>
+    </div>
+</form>

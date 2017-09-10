@@ -1,0 +1,95 @@
+//define module
+var indexAdminApp = angular.module('indexAdminApp', ['ngRoute']);
+//controller for transaction
+indexAdminApp.controller('adminBonificoController', function ($scope) {
+    //message
+    $scope.message = "Benvenuto admin, da qui potrai effettuare un bonifico tra due utenti, per accertarti che la somma del bonifico possa essere effettivamente pagata vai nella sezione" +
+        "Visiona stato di un utente";
+    //ItalianIbanFilter
+    var ibanFilter = /^IT\d{2}[A-Z]\d{10}[0-9A-Z]{12}$/;
+    //errors that could be thrown
+    $scope.ibanOrdErrors =
+        {
+            error: ""
+        };
+    //errors that could be thrown
+    $scope.ibanBenErrors =
+        {
+            error: ""
+        };
+    //errors that could be thrown
+    $scope.paymentErrors =
+        {
+            error: ""
+        };
+
+    //function that control validity of iban
+    $scope.controlIbanOrd = function () {
+        if ($scope.ibanOrd == undefined) {
+            //user didn't write nothing yet, it' not an error
+            $scope.form.ibanOrd.$invalid = true;
+            $scope.ibanOrdErrors.error = "";
+        }
+        // alert(ibanFilter.test($scope.iban));
+        else if (!(ibanFilter.test($scope.ibanOrd))) {
+            //error
+            //alert("iban scorretto");
+            $scope.form.ibanOrd.$invalid = true;
+            $scope.ibanOrdErrors.error = "*Iban in formato errato";
+        }
+        else {
+            //error
+            //alert("iban corretto");             
+            $scope.form.ibanOrd.$invalid = false;
+            $scope.ibanOrdErrors.error = "";
+        }
+
+    };
+
+    //function that control validity of iban
+    $scope.controlIbanBen = function () {
+        if ($scope.ibanBen == undefined) {
+            //user didn't write nothing yet, it' not an error
+            $scope.form.ibanBen.$invalid = true;
+            $scope.ibanBenErrors.error = "";
+        }
+        // alert(ibanFilter.test($scope.iban));
+        else if (!(ibanFilter.test($scope.ibanBen))) {
+            //error
+            //alert("iban scorretto");
+            $scope.form.ibanBen.$invalid = true;
+            $scope.ibanBenErrors.error = "*Iban in formato errato";
+        }
+        else {
+            //error
+            //alert("iban corretto");             
+            $scope.form.ibanBen.$invalid = false;
+            $scope.ibanBenErrors.error = "";
+        }
+
+    };
+
+    //function that control impor
+    $scope.checkImport = function () {
+       alert("sonoquiImport");
+        if ($scope.payment == undefined) {
+            //user didn't write nothing yet, it' not an error
+            $scope.form.payment.$invalid = true;
+            $scope.paymentErrors.error = "";
+        }
+        else if ($scope.payment < 50) {
+            //error
+            //alert("iban scorretto");
+            $scope.form.payment.$invalid = true;
+            $scope.paymentErrors.error = "*Importo non sufficiente";
+        }
+        else {
+            //error
+            //alert("iban corretto");             
+            $scope.form.payment.$invalid = false;
+            $scope.paymentErrors.error = "";
+        }
+
+    };
+
+});
