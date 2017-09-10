@@ -31,11 +31,11 @@ min-height: 10%;
 }
 
 img.leftArrow{
-    width:25%;
-    height:25%; 
+    width:80%;
+    height:80%; 
     float:center;
-    min-width: 5%;
-    min-height: 5%;
+    min-width: 15%;
+    min-height: 15%;
 }
 
 img.userImage{
@@ -172,6 +172,12 @@ button.userArea{
     min-height: 10%;
     min-width: 20%;
     color: black;
+}
+
+button.leftArrow{
+float: left;
+width: 15%;
+height: 20%;
 }
 
 table.center{

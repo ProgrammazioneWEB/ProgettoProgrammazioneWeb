@@ -1,0 +1,59 @@
+<!--adminAbilitaPage-->
+<h1>{{message}}</h1>
+<div ng-show="decisioneAbilitaNonPresa() && decisioneDisabilitaNonPresa()">
+    <table class="table center">
+        <tr>
+            <td>
+                <button type="button" class="btn btn-default" name="showAbilita" ng-model="showAbilita" ng-click="showAbilita()">
+                    <img src="../../../CSS/images/iconsForAdmin/checked_user.png"> <br>Abilita utente
+                    </button>
+            </td>
+            <td>
+                <button type="button" class="btn btn-default" name="showDisabilita" ng-model="showDisabilita" ng-click="showDisabilita()">
+                        <img src="../../../CSS/images/iconsForAdmin/banned_user.png"> <br>Disabilita utente
+                        </button>
+            </td>
+        </tr>
+    </table>
+</div>
+<!--active user section-->
+<div ng-show="!decisioneAbilitaNonPresa()">
+    <form class="form-horizontal" name="form" invalid>
+        <div class="form-group formElementCenter">
+            <label class="adminTitle">
+                                Inserisci il numero di conto del correntista da abilitare
+                        </label>
+            <input type="number" class="form-control" name="countNumberDaAbilitare" ng-model="countNumberDaAbilitare" required placeholder="Inserisci qui il numero di conto da abilitare"
+            />
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary" name="abilitaUser" ng-model="abilitaUser" ng-click="abilitaUser()" />            Abilita utente
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-default leftArrow" name="resetShow" ng-model="resetShow" ng-click="resetShow()"> 
+                            <img src="../../../CSS/images/arrows/blue_arrow.png" class="leftArrow">
+                    </button>
+        </div>
+    </form>
+</div>
+<!--block user section-->
+<div ng-show="!decisioneDisabilitaNonPresa()">
+    <form class="form-horizontal" name="form" invalid>
+        <div class="form-group formElementCenter">
+            <label class="adminTitle">
+                                Inserisci il numero di conto del correntista da disabilitare
+                        </label>
+            <input type="number" class="form-control" name="countNumberDaDisbilitare" ng-model="countNumberDaDisabilitare" required placeholder="Inserisci qui il numero di conto da disabilitare"
+            />
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary" name="disabilitaUser" ng-model="disabilitaUser" ng-click="disabilitaUser()"
+            /> Disabilita utente
+        </div>
+        <div class="form-group">
+                <button type="submit" class="btn btn-default leftArrow" name="resetShow" ng-model="resetShow" ng-click="resetShow()"> 
+                                <img src="../../../CSS/images/arrows/blue_arrow.png" class="leftArrow">
+                        </button>
+            </div>
+    </form>
+</div>

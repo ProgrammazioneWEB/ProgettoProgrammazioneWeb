@@ -10,7 +10,7 @@
             required/>
     </div>
     <div class="form-group">
-        <button type="submit" class="btn btn-primary" name="searchUser" ng-model="searchUser" ng-click="getUserData()"/>        Cerca utente
+        <button type="submit" class="btn btn-primary" name="searchUser" ng-model="searchUser" ng-click="getUserData()" />        Cerca utente
     </div>
 </form>
 
@@ -21,8 +21,13 @@
             {{data}}
         </li>
     </ul>
-    <button type="submit" class="btn btn-default" name="resetUser" ng-model="resetUser" ng-click="resetUser()"> 
-            <img src="../../../CSS/images/arrows/blue_arrow.png" class="leftArrow">
-        <br>Cerca un altro utente
-    </button>
+    <!--form per dare un giusto layout al button-->
+    <form class="form-horizontal" name="form" invalid>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary leftArrow" name="resetUser" ng-model="resetUser" ng-click="resetUser()"> 
+             <img src="../../../CSS/images/arrows/blue_arrow.png" class="leftArrow">
+                <br>Cerca un altro utente
+            </button>
+        </div>
+    </form>
 </div>
