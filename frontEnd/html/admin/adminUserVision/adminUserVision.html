@@ -1,0 +1,28 @@
+<!--adminUserVisionPage-->
+<h1> {{message}}</h1>
+<!--form-->
+<form class="form-horizontal" name="form" ng-show="informazioniUserVuote()" invalid>
+    <div class="form-group formElementCenter">
+        <label class="adminTitle">
+            Inserisci il numero di conto del correntista
+        </label>
+        <input type="number" class="form-control" name="countNumber" ng-model="countNumber" placeholder="Inserisci il numero di conto del correntista"
+            required/>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary" name="searchUser" ng-model="searchUser" ng-click="getUserData()"/>        Cerca utente
+    </div>
+</form>
+
+<!--userData-->
+<div ng-show="!informazioniUserVuote()">
+    <ul class="list-group" ng-repeat="data in userData">
+        <li class="list-group-item">
+            {{data}}
+        </li>
+    </ul>
+    <button type="submit" class="btn btn-default" name="resetUser" ng-model="resetUser" ng-click="resetUser()"> 
+            <img src="../../../CSS/images/arrows/blue_arrow.png" class="leftArrow">
+        <br>Cerca un altro utente
+    </button>
+</div>

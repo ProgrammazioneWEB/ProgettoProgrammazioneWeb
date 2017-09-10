@@ -91,9 +91,9 @@ indexAdminApp.controller('adminBonificoController', function ($scope) {
         };
     //errors that could be thrown
     $scope.ibanBenErrors =
-    {
-        error: ""
-    };
+        {
+            error: ""
+        };
     //errors that could be thrown
     $scope.paymentErrors =
         {
@@ -147,25 +147,72 @@ indexAdminApp.controller('adminBonificoController', function ($scope) {
 
     };
 
- //function that control import
- $scope.checkImport = function () {
-    if ($scope.payment == undefined) {
-        //user didn't write nothing yet, it' not an error
-        $scope.form.payment.$invalid = true;
-        $scope.paymentErrors.error = "";
-    }
-    else if ($scope.payment < 50) {
-        //error
-        $scope.form.payment.$invalid = true;
-        $scope.paymentErrors.error = "*Importo non sufficiente";
-    }
-    else {
-        //ok
-        $scope.form.payment.$invalid = false;
-        $scope.paymentErrors.error = "";
+    //function that control import
+    $scope.checkImport = function () {
+        if ($scope.payment == undefined) {
+            //user didn't write nothing yet, it' not an error
+            $scope.form.payment.$invalid = true;
+            $scope.paymentErrors.error = "";
+        }
+        else if ($scope.payment < 50) {
+            //error
+            $scope.form.payment.$invalid = true;
+            $scope.paymentErrors.error = "*Importo non sufficiente";
+        }
+        else {
+            //ok
+            $scope.form.payment.$invalid = false;
+            $scope.paymentErrors.error = "";
+        }
+        //function to make the transaction
+        $scope.makeTransaction = function () {
+            var transaction = {
+                ordinante: $scope.ibanOrd,
+                beneficiario: $scope.ibanBen,
+                importo: $scope.importo
+            }
+        };
+    };
+});
+
+
+
+
+//define userVisionController
+indexAdminApp.controller('adminUserVisionController', function ($scope) {
+    //message
+    $scope.message = "Benvenuto admin, da qui potrai controllare lo stato di un correntista";
+    //count number insert by admin
+    $scope.countNumber;
+    //user data
+    $scope.userData = null;
+    //function to get userData from server
+    $scope.getUserData = function () {
+        //request http get with countNumber
+        $scope.userData = {
+            name: "Lorenzo",
+            surname: "Stacchio",
+            saldo: 50
+        }
+        //change message
+        $scope.message = "Ecco qui i dati di" + userData.name + " " + userData.surname;
+    };
+
+    //function to check if user data were gotten or not 
+    $scope.informazioniUserVuote = function () {
+        if ($scope.userData === null) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    };
+
+    //function to resetUserSearch
+    $scope.resetUser = function () {
+        //change message
+        $scope.userData = null;
+        $scope.message = "Benvenuto admin, da qui potrai controllare lo stato di un correntista";
     }
 
-};
-
-    
 });
