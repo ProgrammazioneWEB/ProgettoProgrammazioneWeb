@@ -77,9 +77,9 @@
         <ul class="list-group leftAlign">
             <li class="list-group-item previous">
                 <!-- show money movement-->
-                <a href="#!/" class="whiteFont">
-                    <button type="button" class="btn btn-primary userArea" name="movimentiBancari" ng-style="buttonMovementColor" ng-focus="buttonMovementColor={background:'#6090AA'}"
-                        ng-blur="buttonMovementColor={}" ng-model="movimentiBancari">
+                <a href="#!/alert" class="whiteFont">
+                    <button type="button" class="btn btn-primary userArea" name="creaAvviso" ng-style="buttonMovementColor" ng-focus="buttonMovementColor={background:'#6090AA'}"
+                        ng-blur="buttonMovementColor={}" ng-model="creaAvviso">
                             <img src="../../CSS/images/iconsForAdmin/alert.png" class="img-fluid" alt="Crea un avviso"/> 
                             <br> 
                            Crea un avviso
@@ -88,9 +88,9 @@
             </li>
             <li class=" list-group-item previous">
                 <!--make a payment-->
-                <a href="#!/" class="whiteFont"> 
-                        <button type="button" class="btn btn-primary userArea" name="paymentButtonClicked" ng-style="buttonPaymentColor" ng-focus="buttonPaymentColor={background:'#6090AA'}"
-                        ng-blur="buttonPaymentColor={}"  ng-model="paymentButtonClicked">          
+                <a href="#!/activeUser" class="whiteFont"> 
+                        <button type="button" class="btn btn-primary userArea" name="abiDisUser" ng-style="buttonPaymentColor" ng-focus="buttonPaymentColor={background:'#6090AA'}"
+                        ng-blur="buttonPaymentColor={}"  ng-model="abiDisUser">          
                             <img src="../../CSS/images/iconsForAdmin/user.jpg"  class="img-fluid" alt="D/A utente"/> 
                                 <br> 
                                         Abilita/Disabilita utente
@@ -104,8 +104,8 @@
         <ul class="list-group rightAlign">
             <li class="list-group-item next">
                 <!-- show how spent in one day at average-->
-                <a href="#!/" class="whiteFont"> 
-                    <button type="button" class="btn btn-primary userArea" name="averageSpent" ng-model="averageSpent" ng-style="buttonAverageColor"
+                <a href="#!/transaction" class="whiteFont"> 
+                    <button type="button" class="btn btn-primary userArea" name="transaction" ng-model="transaction" ng-style="buttonAverageColor"
                         ng-focus="buttonAverageColor={background:'#6090AA'}" ng-blur="buttonAverageColor={}">
                                         <img src="../../CSS/images/iconsForAdmin/transaction.png" class="img-fluid" alt="Effettua bonifico tra due utenti"/> 
                                       <br> Effettua bonifico tra  <br>due utenti
@@ -114,9 +114,9 @@
             </li>
             <!--Watch your stats with  Graphs!-->
             <li class=" list-group-item next">
-                <a href="#!/" class="whiteFont">                     
-                    <button type="button" class="btn btn-primary userArea" name="graphButtonClicked" ng-style="buttonGraphColor" ng-focus="buttonGraphColor={background:'#6090AA'}"
-                        ng-blur="buttonGraphColor={}" ng-model="graphButtonClicked"> <img src="../../CSS/images/iconsForAdmin/userStats.png"  class="img-fluid" alt="Visiona stato di un utente"/> 
+                <a href="#!/userStats" class="whiteFont">                     
+                    <button type="button" class="btn btn-primary userArea" name="userStats" ng-style="buttonGraphColor" ng-focus="buttonGraphColor={background:'#6090AA'}"
+                        ng-blur="buttonGraphColor={}" ng-model="userStats"> <img src="../../CSS/images/iconsForAdmin/userStats.png"  class="img-fluid" alt="Visiona stato di un utente"/> 
                                             <br> Visiona stato di<br> un utente
                     </button>
                     </a>

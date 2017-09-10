@@ -8,9 +8,21 @@ indexAdminApp.config(function ($routeProvider) {
             templateUrl: "/html/admin/adminHome/adminHome.html",
             controller: "adminHomeController"
         })
-        .when("/mainHome", {
-            templateUrl: "/html/admin/adminHome/adminHome.html",
-            controller: "changeSite"
+        .when("/alert", {
+            templateUrl: "/html/admin/adminAlert/adminAlert.html",
+            controller: "adminAlertController"
+        }) 
+        .when("/transaction", {
+            templateUrl: "/html/admin/adminBonifico/adminBonifico.html",
+            controller: "adminBonificoController"
+        })
+        .when("/userStats", {
+            templateUrl: "/html/admin/adminUserVision/adminUserVision.html",
+            controller: "adminUserVisionController"
+        })
+        .when("/activeUser", {
+            templateUrl: "/html/admin/adminAbilita/adminAbilita.html",
+            controller: "adminAbilitaController"
         })
 });
 
