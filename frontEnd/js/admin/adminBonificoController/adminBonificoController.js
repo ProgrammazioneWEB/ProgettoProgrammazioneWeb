@@ -69,9 +69,8 @@ indexAdminApp.controller('adminBonificoController', function ($scope) {
 
     };
 
-    //function that control impor
+    //function that control import
     $scope.checkImport = function () {
-       alert("sonoquiImport");
         if ($scope.payment == undefined) {
             //user didn't write nothing yet, it' not an error
             $scope.form.payment.$invalid = true;
@@ -79,17 +78,24 @@ indexAdminApp.controller('adminBonificoController', function ($scope) {
         }
         else if ($scope.payment < 50) {
             //error
-            //alert("iban scorretto");
             $scope.form.payment.$invalid = true;
             $scope.paymentErrors.error = "*Importo non sufficiente";
         }
         else {
-            //error
-            //alert("iban corretto");             
+            //ok
             $scope.form.payment.$invalid = false;
             $scope.paymentErrors.error = "";
         }
 
+    };
+
+    //function to make the transaction
+    $scope.makeTransaction = function () {
+        var transaction = {
+            ordinante: $scope.ibanOrd,
+            beneficiario: $scope.ibanBen,
+            importo: $scope.importo
+        }
     };
 
 });

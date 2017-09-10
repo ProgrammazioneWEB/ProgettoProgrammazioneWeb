@@ -147,6 +147,25 @@ indexAdminApp.controller('adminBonificoController', function ($scope) {
 
     };
 
+ //function that control import
+ $scope.checkImport = function () {
+    if ($scope.payment == undefined) {
+        //user didn't write nothing yet, it' not an error
+        $scope.form.payment.$invalid = true;
+        $scope.paymentErrors.error = "";
+    }
+    else if ($scope.payment < 50) {
+        //error
+        $scope.form.payment.$invalid = true;
+        $scope.paymentErrors.error = "*Importo non sufficiente";
+    }
+    else {
+        //ok
+        $scope.form.payment.$invalid = false;
+        $scope.paymentErrors.error = "";
+    }
+
+};
 
     
 });
