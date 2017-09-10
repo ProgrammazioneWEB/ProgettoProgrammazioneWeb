@@ -6,6 +6,9 @@ body.whiteBackground{
 background-color: #3E50F3;
 }
 
+adminTextArea{
+   width: 90%;
+}
 .fillSpace{
     min-width: 100%;
     max-height: 100%;

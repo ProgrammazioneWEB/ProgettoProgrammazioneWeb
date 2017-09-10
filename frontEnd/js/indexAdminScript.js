@@ -51,3 +51,26 @@ indexAdminApp.controller('changeSite', function ($window) {
     $window.location.href="../index.html";
 
 });
+
+
+//define alert controller
+indexAdminApp.controller('adminAlertController', function ($scope) {
+        //alert to create
+        $scope.alert = "";
+        //Define function that create alert
+        $scope.createAlert = function () {
+            var alert = {
+                alert: $scope.alert
+            };
+        };
+        //define function that control if text area is null
+        $scope.textAreaInvalida=function(){
+            console.log($scope.alert.length);
+            if($scope.alert.length<20){
+                return true;
+            }
+            else{
+                return false;
+            }
+        };
+    });
