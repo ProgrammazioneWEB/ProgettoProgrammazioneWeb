@@ -35,7 +35,7 @@ indexApp.config(function ($routeProvider) {
       templateUrl: './html/login/login.html',
       controller: 'filterUserController'
     })
-    .when('/admin',{
+    .when('/admin', {
       templateUrl: './html/login/login.html',
       controller: 'filterAdminController'
     })
@@ -126,7 +126,7 @@ indexApp.controller('photoGalleryController', function ($scope) {
 /**
  * Username is the e-mail of the persone who want to access in it's personal profile
  */
-indexApp.controller('gestisciLogin', function ($scope, $http, $location, $window,  $localStorage) {
+indexApp.controller('gestisciLogin', function ($scope, $http, $location, $window, $localStorage) {
   //messaggio di entrata
   $scope.message = "Login page";
   //errori rilevabili nei campi
@@ -231,6 +231,7 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location, $window
         curToken.value = response.data.token;
         curToken.enable = true;
         $localStorage.XToken = curToken;
+        $localStorage.Email = $scope.username;
         alert(curToken.value);
         $window.location.href = './indexUser.html';
       }
@@ -643,8 +644,8 @@ indexApp.controller("signUp", function ($scope, $http) {
   //function to control pin field
   $scope.controllaPin = function () {
     //save pin like string
-    var pinNumber = $scope.pin.toString();   
-    if($scope.pin===null){
+    var pinNumber = $scope.pin.toString();
+    if ($scope.pin === null) {
       $scope.form.pin.$invalid = true;
       $scope.pinErrors = {
         error: "*Non hai scritto il pin"
@@ -663,7 +664,7 @@ indexApp.controller("signUp", function ($scope, $http) {
       };
     }
     else {
-      $scope.form.pin.$invalid = false;              
+      $scope.form.pin.$invalid = false;
       $scope.pinErrors = {
         error: ""
       };

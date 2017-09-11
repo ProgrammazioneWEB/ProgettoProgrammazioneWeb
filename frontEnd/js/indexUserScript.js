@@ -25,7 +25,7 @@ indexUserApp.config(function ($routeProvider) {
             controller: 'userGraphController'
         })
         .when('/mainHome', {
-            templateUrl: './html/user/userHome/userHome.html',            
+            templateUrl: './html/user/userHome/userHome.html',
             controller: 'changeSite'
         })
 });
@@ -37,10 +37,19 @@ var curToken = { value: "", enable: false };
 indexUserApp.controller('userHomeController', function ($scope, $interval, $window, $localStorage) {
     $scope.message = "Benvenuto nel tuo profilo privato!";
 
+    var Utente;
 
-    curToken = $localStorage.XToken;
+    //  Se il token è salvato in locale lo prelevo (sarà sempre salvato in locale dopo il login)
+    if ($localStorage.XToken)
+        curToken = $localStorage.XToken;
 
-    alert(curToken.value);
+    //  Tutti i dati sottostanti vanno richiesti al server di node (bisogna passargli l'email)
+    if ($localStorage.Email) {
+        //  TO DO richiedere dati per Utente
+    }
+
+
+
     //profile area
     $scope.username = userProfile.username;
     /**
@@ -62,17 +71,17 @@ indexUserApp.controller('userMovementsController', function ($scope) {
 });
 
 //function written to show the loading page
-var stopTime = setInterval(function($window){ 
-    $window.location.href ="../index.html";
-},100);
+var stopTime = setInterval(function ($window) {
+    $window.location.href = "../index.html";
+}, 100);
 
 //controller that will change the page
-indexUserApp.controller('changeSite',function($scope, $window, $interval){
-    $window.location.href ="../html/loading/loading.html";
+indexUserApp.controller('changeSite', function ($scope, $window, $interval) {
+    $window.location.href = "../html/loading/loading.html";
     //simulo un delay
-     //stopTime();
+    //stopTime();
     //parte per salvare il token
-    $window.location.href ="../index.html";
+    $window.location.href = "../index.html";
 });
 
 //user movements controller
@@ -98,11 +107,11 @@ indexUserApp.controller('userTransactionController', function ($scope) {
         this.pagamento = Number($scope.payment);
         //limite minimo per effettuare un bonifico
         //limite massimo dato dai soldi che l'utente ha nel conto
-       if(this.pagamento===undefined){
-         //error
-         $scope.form.payment.$invalid = true;
-         $scope.paymentErrors.error = "*Non hai scritto alcuna cifra!";
-       }
+        if (this.pagamento === undefined) {
+            //error
+            $scope.form.payment.$invalid = true;
+            $scope.paymentErrors.error = "*Non hai scritto alcuna cifra!";
+        }
         else if (this.pagamento < 50) {
             //error
             $scope.form.payment.$invalid = true;
@@ -296,12 +305,11 @@ indexUserApp.controller('userGraphController', function ($scope) {
 
 
 //user dates
-
 var userProfile = {
     username: "Lorenzo Stacchio",
     saldo: 50,
     countNumber: 15268151,
-    pin: 15523, 
+    pin: 15523,
     picture: "../../CSS/images/Fondatori/Ls.png",
     dataCreazioneConto: "10/5/2017",
     movimenti: [
