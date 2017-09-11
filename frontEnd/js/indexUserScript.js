@@ -34,34 +34,48 @@ indexUserApp.config(function ($routeProvider) {
 var curToken = { value: "", enable: false };
 
 //user home controller
-indexUserApp.controller('userHomeController', function ($scope, $interval, $window, $localStorage) {
-    $scope.message = "Benvenuto nel tuo profilo privato!";
-
-    var Utente;
-
+indexUserApp.controller('userHomeController', function ($scope, $http, $window, $localStorage) {
     //  Se il token è salvato in locale lo prelevo (sarà sempre salvato in locale dopo il login)
-    if ($localStorage.XToken)
+    if ($localStorage.XToken) {
         curToken = $localStorage.XToken;
-
+        alert("sono al token vero" + curToken);
+    }
     //  Tutti i dati sottostanti vanno richiesti al server di node (bisogna passargli l'email)
     if ($localStorage.Email) {
-        //  TO DO richiedere dati per Utente
+        $http({
+            method: "POST",
+            url: "http://localhost:3001/api/userData",
+            headers: { 'Content-Type': 'application/json' },
+            data: {
+                'email': $localStorage.Email,
+                'token': curToken.value
+            }
+        }).then(function (response) {
+            if (response.data.success) {
+                userProfile = response.data.result;
+                alert(userProfile.email);
+                //assign datas
+                $scope.message = "Benvenuto nel tuo profilo privato!";
+                //profile area
+                $scope.username = userProfile.meta.firstName + " " +userProfile.meta.lastName;
+                /**
+                   * This path it's useless at this level of file, but this path will be used in indexUser.html
+                   * which is at the right level 
+                   */
+                $scope.userImagePath = userProfile.image;
+                //stats area
+                //save the variable to show the real saldo
+                $scope.moneyMessage = userProfile.availableBalance + " €";
+                //save the variabile to show the real countNumber
+                $scope.countNumber =userProfile.meta.numberOfAccount;
+            }
+            else {
+                alert("Nessun utente trovato! ");
+                $window.location.href = "../indexUser.html";
+            }
+
+        });
     }
-
-
-
-    //profile area
-    $scope.username = userProfile.username;
-    /**
-       * This path it's useless at this level of file, but this path will be used in indexUser.html
-       * which is at the right level 
-       */
-    $scope.userImagePath = userProfile.picture;
-    //stats area
-    //save the variable to show the real saldo
-    $scope.moneyMessage = userProfile.saldo + " €";
-    //save the variabile to show the real countNumber
-    $scope.countNumber = userProfile.countNumber;
 });
 
 //user movements controller
@@ -70,16 +84,11 @@ indexUserApp.controller('userMovementsController', function ($scope) {
     $scope.movimentiBancari = userProfile.movimenti;
 });
 
-//function written to show the loading page
-var stopTime = setInterval(function ($window) {
-    $window.location.href = "../index.html";
-}, 100);
 
 //controller that will change the page
 indexUserApp.controller('changeSite', function ($scope, $window, $interval) {
     $window.location.href = "../html/loading/loading.html";
     //simulo un delay
-    //stopTime();
     //parte per salvare il token
     $window.location.href = "../index.html";
 });
@@ -306,64 +315,7 @@ indexUserApp.controller('userGraphController', function ($scope) {
 
 //user dates
 var userProfile = {
-    username: "Lorenzo Stacchio",
-    saldo: 50,
-    countNumber: 15268151,
-    pin: 15523,
-    picture: "../../CSS/images/Fondatori/Ls.png",
-    dataCreazioneConto: "10/5/2017",
-    movimenti: [
-        {
-            data: "12/05/2017",
-            spesa: 0,
-            entrata: 0,
-        },
-        {
-            data: "5/05/2017",
-            spesa: -20,
-            entrata: 10,
-        },
-        {
-            data: "20/07/2017",
-            spesa: -30,
-            entrata: 40,
-        },
-        {
-            data: "12/05/2017",
-            spesa: -10,
-            entrata: 50,
-        },
-        {
-            data: "5/05/2017",
-            spesa: 0,
-            entrata: 30,
-        },
-        {
-            data: "12/05/2017",
-            spesa: 0,
-            entrata: 0,
-        },
-        {
-            data: "5/05/2017",
-            spesa: -20,
-            entrata: 10,
-        },
-        {
-            data: "20/07/2017",
-            spesa: -30,
-            entrata: 40,
-        },
-        {
-            data: "12/05/2017",
-            spesa: -10,
-            entrata: 50,
-        },
-        {
-            data: "5/05/2017",
-            spesa: 0,
-            entrata: 30,
-        }
-    ]
 };
+
 
 

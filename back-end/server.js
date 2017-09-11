@@ -355,10 +355,8 @@ apiRoutes.post('/userData', function (req, res) {
       success: false,
       result: result1
     };
-
     if (result1)
       risposta.success = true;
-
     res.json(risposta);
   });
 });
