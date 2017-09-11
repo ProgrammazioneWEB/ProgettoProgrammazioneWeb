@@ -1,5 +1,5 @@
 // create the module for the indexUser
-var indexUserApp = angular.module('indexUserApp', ['ngRoute', 'ngAnimate', 'ngTouch', 'zingchart-angularjs']);
+var indexUserApp = angular.module('indexUserApp', ['ngRoute', 'ngAnimate', 'ngTouch', 'zingchart-angularjs', 'ngStorage']);
 
 // configuring routes
 indexUserApp.config(function ($routeProvider) {
@@ -30,9 +30,17 @@ indexUserApp.config(function ($routeProvider) {
         })
 });
 
+//  variabile contenente il token
+var curToken = { value: "", enable: false };
+
 //user home controller
-indexUserApp.controller('userHomeController', function ($scope,$interval) {
+indexUserApp.controller('userHomeController', function ($scope, $interval, $window, $localStorage) {
     $scope.message = "Benvenuto nel tuo profilo privato!";
+
+
+    curToken = $localStorage.XToken;
+
+    alert(curToken.value);
     //profile area
     $scope.username = userProfile.username;
     /**

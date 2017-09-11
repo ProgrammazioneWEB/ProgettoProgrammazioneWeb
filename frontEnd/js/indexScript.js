@@ -1,5 +1,5 @@
 // create the module for the index
-var indexApp = angular.module('indexApp', ['ngRoute', 'ngAnimate', 'ngTouch', 'zingchart-angularjs']);
+var indexApp = angular.module('indexApp', ['ngRoute', 'ngAnimate', 'ngTouch', 'zingchart-angularjs', 'ngStorage']);
 
 // configuring routes
 indexApp.config(function ($routeProvider) {
@@ -39,7 +39,6 @@ indexApp.config(function ($routeProvider) {
       templateUrl: './html/login/login.html',
       controller: 'filterAdminController'
     })
-
 });
 
 
@@ -127,7 +126,7 @@ indexApp.controller('photoGalleryController', function ($scope) {
 /**
  * Username is the e-mail of the persone who want to access in it's personal profile
  */
-indexApp.controller('gestisciLogin', function ($scope, $http, $location) {
+indexApp.controller('gestisciLogin', function ($scope, $http, $location, $window,  $localStorage) {
   //messaggio di entrata
   $scope.message = "Login page";
   //errori rilevabili nei campi
@@ -158,7 +157,6 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location) {
     }).then(function SuccessoInfinito(response) {
       if (response.data.success) {
         alert(response.data.message);
-        //  Qui bisogna reindirizzare verso la pagina dell' user loggato
       }
       else
         alert("Error! " + response.data.message);
@@ -232,7 +230,9 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location) {
       if (response.data.success) {
         curToken.value = response.data.token;
         curToken.enable = true;
-        $location.path("/user");
+        $localStorage.XToken = curToken;
+        alert(curToken.value);
+        $window.location.href = './indexUser.html';
       }
       else
         alert("Error! " + response.data.message);
@@ -437,10 +437,7 @@ indexApp.controller("userController", function ($scope) {
 
   };
 
-
-
   //GRAPH AREA
-
 
   //GRAPH VARIABLES 
   //Function to show graph
