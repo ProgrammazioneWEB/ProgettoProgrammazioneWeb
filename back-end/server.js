@@ -196,20 +196,20 @@ app.get('/movimenti-in', function (req, res) {
   });
 });
 //Test invio avvisi
-app.get('/invio-avviso', function(req,res){
+app.get('/invio-avviso', function (req, res) {
   var data = new Date();
   var avviso = new Advise({
-  title : req.body.title,
-  text : req.body.text,
-  date : data.getDate()
+    title: req.body.title,
+    text: req.body.text,
+    date: data.getDate()
   });
-  database.addAdvise(avviso, function(result, messaggio) {
+  database.addAdvise(avviso, function (result, messaggio) {
     res.json(messaggio);
   });
 });
 
 //Test arrivo avvisi
-app.get('/get-avvisi', function(req,res){
+app.get('/get-avvisi', function (req, res) {
   database.returnLastFiveAdvises(function (result) {
     res.json(result);
   });
@@ -349,10 +349,19 @@ apiRoutes.post('/', function (req, res) {
 
 //Ritorna alla parte front-end l'utente corrispondente al token
 apiRoutes.post('/userData', function (req, res) {
-  database.findUserByEmail(req.body.email,function(result){
-    res.json(result);
+  database.findUserByEmail(req.body.email, function (result) {
+    //  Creo la variabile con i parametri di risposta al front-end
+    var risposta = {
+      'success': false,
+      'result': result
+    };
+
+    if (result)
+      risposta.success = true;
+
+    res.json(risposta);
   });
- });
+});
 
 app.use('/api', apiRoutes);
 
