@@ -347,7 +347,12 @@ apiRoutes.post('/', function (req, res) {
   });
 });
 
-
+//Ritorna alla parte front-end l'utente corrispondente al token
+apiRoutes.post('/userData', function (req, res) {
+  database.findUserByEmail(req.body.email,function(result){
+    res.json(result);
+  });
+ });
 
 app.use('/api', apiRoutes);
 
