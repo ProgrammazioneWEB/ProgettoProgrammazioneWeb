@@ -34,6 +34,10 @@ indexUserApp.config(function ($routeProvider) {
 var curToken = { value: "", enable: false };
 
 //user home controller
+/**
+ * Dato che questo è il primo controller utilizzato richiamerò tutte le funzioni del server per salvare
+ * tutte le informazioni dell'utente.
+ */
 indexUserApp.controller('userHomeController', function ($scope, $http, $window, $localStorage) {
     //  Se il token è salvato in locale lo prelevo (sarà sempre salvato in locale dopo il login)
     if ($localStorage.XToken) {
@@ -57,7 +61,7 @@ indexUserApp.controller('userHomeController', function ($scope, $http, $window, 
                 //assign datas
                 $scope.message = "Benvenuto nel tuo profilo privato!";
                 //profile area
-                $scope.username = userProfile.meta.firstName + " " +userProfile.meta.lastName;
+                $scope.username = userProfile.meta.firstName + " " + userProfile.meta.lastName;
                 /**
                    * This path it's useless at this level of file, but this path will be used in indexUser.html
                    * which is at the right level 
@@ -67,7 +71,7 @@ indexUserApp.controller('userHomeController', function ($scope, $http, $window, 
                 //save the variable to show the real saldo
                 $scope.moneyMessage = userProfile.availableBalance + " €";
                 //save the variabile to show the real countNumber
-                $scope.countNumber =userProfile.meta.numberOfAccount;
+                $scope.countNumber = userProfile.meta.numberOfAccount;
             }
             else {
                 alert("Nessun utente trovato! ");
@@ -76,6 +80,15 @@ indexUserApp.controller('userHomeController', function ($scope, $http, $window, 
 
         });
     }
+    //se sono qui l'utente è loggato richiamo varie funzioni
+    $http({
+        method: "POST",
+        url: "http://localhost:3001/api/movimenti-out",
+        headers: { 'Content-Type': 'application/json' },
+    }).then(function (response) {
+        userMovement = response;
+        alert(userMovement[1]);
+    })
 });
 
 //user movements controller
@@ -315,6 +328,10 @@ indexUserApp.controller('userGraphController', function ($scope) {
 
 //user dates
 var userProfile = {
+};
+//user movements
+var userMovement = {
+
 };
 
 
