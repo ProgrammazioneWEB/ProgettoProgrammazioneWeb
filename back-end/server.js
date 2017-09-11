@@ -195,6 +195,20 @@ app.get('/movimenti-in', function (req, res) {
     res.json(result);
   });
 });
+//Test invio avvisi
+app.get('/invio-avviso', function(req,res){
+  var data = new Date();
+  var avviso = new Advise({
+  title : req.body.title,
+  text : req.body.text,
+  date : data.getDate()
+  });
+  database.addAdvise(avviso, function(result, messaggio) {
+    res.json(messaggio);
+  });
+});
+
+
 
 //  Registra un nuovo utente
 app.post('/singup', function (req, res) {
@@ -328,6 +342,8 @@ apiRoutes.post('/', function (req, res) {
   });
 });
 
+
+
 app.use('/api', apiRoutes);
 
 // =======================
@@ -335,4 +351,6 @@ app.use('/api', apiRoutes);
 // =======================
 app.listen(port);
 console.log('Node è in funzione su http://localhost:' + port);
+
+
 
