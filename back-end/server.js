@@ -208,7 +208,12 @@ app.get('/invio-avviso', function(req,res){
   });
 });
 
-
+//Test arrivo avvisi
+app.get('/get-avvisi', function(req,res){
+  database.returnLastFiveAdvises(function (result) {
+    res.json(result);
+  });
+});
 
 //  Registra un nuovo utente
 app.post('/singup', function (req, res) {
