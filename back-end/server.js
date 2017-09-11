@@ -13,6 +13,7 @@ var config = require('./config'); // get our config file
 var User = require('./app/models/user'); // get our mongoose model
 var Movimento = require('./app/models/movement');
 var Pin = require('./app/models/pin');
+var Advise = require('./app/models/advise');
 var database = require('./database'); // Importo il file per la gestione del database
 
 // =======================
