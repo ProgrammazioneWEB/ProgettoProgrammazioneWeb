@@ -83,18 +83,35 @@ indexUserApp.controller('userHomeController', function ($scope, $http, $window, 
     //se sono qui l'utente è loggato richiamo varie funzioni
     $http({
         method: "POST",
-        url: "http://localhost:3001/api/movimenti-out",
+        url: "http://localhost:3001/api/movements",
         headers: { 'Content-Type': 'application/json' },
+        data: {
+            'token': curToken.value
+        }
     }).then(function (response) {
-        userMovement = response;
-        alert(userMovement[1]);
+        if(response.data.success){
+            userMovement = response.data.result;
+            alert(userMovement[1]);
+        }
+        else{
+            alert("Nessun Movimento trovato");
+        }
+       
     })
 });
 
 //user movements controller
 indexUserApp.controller('userMovementsController', function ($scope) {
     $scope.message = "Benvenuto nella pagina dei movimenti bancari";
-    $scope.movimentiBancari = userProfile.movimenti;
+    $scope.movimentiBancari = userMovement;
+    $scope.movimenti.forEach(function(movimento){
+        if(movimento.entrata===0){
+            movimento.entrata="/";
+        }
+        else if(movimento.uscita===0){
+            movimento.uscita="/";
+        }
+    });
 });
 
 
