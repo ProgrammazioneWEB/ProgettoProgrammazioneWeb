@@ -291,8 +291,8 @@ apiRoutes.post('/authenticate', function (req, res) {
       res.json({ success: false, message: 'Authentication failed. User not found.' });
     }
     else {
-      // create a token
-      var token = jwt.sign('prova', app.get('superSecret'), {
+      // create a token (come dato di creazione del token viene utilizzata l'email associata)
+      var token = jwt.sign(req.body.email, app.get('superSecret'), {
         //expiresInMinutes: 1440 // expires in 24 hours (ATTENZIONE non funziona su windows)
       });
 
@@ -324,7 +324,7 @@ apiRoutes.use(function (req, res, next) {
         return res.json({ success: false, message: 'Failed to authenticate token.' });
       } else {
         // if everything is good, save to request for use in other routes
-        req.decoded = decoded;
+        req.decoded = decoded;  //  Salvo l'email del possessore del token in memoria
         next();
       }
     });
@@ -360,6 +360,86 @@ apiRoutes.post('/userData', function (req, res) {
       risposta.success = true;
 
     res.json(risposta);
+  });
+});
+
+//  Restituisce la lista di tutti i movimenti di un utente (non necessita di parametri in ingresso)
+apiRoutes.post('/movements', function (req, res) {
+  // req.decoded  Contiene l'email di chi ha fatto la richiesta
+  database.findUserByEmail(req.decoded, function (result) {
+    if (result) {
+      var nAccount = result.numberOfAccount;
+      //  Richiedo i movimenti in uscita
+      database.allMovementsReceive(nAccount, function (result) {
+        var movIn;
+
+        if (result) {
+          movIn = result;
+          database.allMovementsSend(nAccount, function (result) {
+            var movOut;
+
+            //  Se tutto va a buon fine formatto i dati e li restituisco
+            if (result) {
+              movOut = result;
+
+              var allMov = [];
+              var i = 0;
+
+              //  Prendo tutti i movimenti in ingresso
+              while (i < movIn.length) {
+                allMov[i] = {
+                  data: movIn[i].data,
+                  entrata: movIn[i].quantity,
+                  uscita: 0,
+                  conto: movIn[i].from
+                };
+                i++;
+              }
+
+              var j = 0;
+
+              //  Prendo tutti i movimenti in uscita
+              while (j < movOut.length) {
+                allMov[i] = {
+                  data: movOut[j].data,
+                  entrata: 0,
+                  uscita: movOut[j].quantity,
+                  conto: movOut[j].to
+                };
+                i++;
+                j++;
+              }
+
+              //  Ritorno la lista dei movimenti all' utente
+              res.json({
+                success: true,
+                result: allMov
+              });
+
+            }
+            else {
+              res.json({
+                message: 'Errore, ci sono problemi con il tuo numero di conto.',
+                success: false
+              });
+            }
+          });
+        }
+        else {
+          res.json({
+            message: 'Errore, ci sono problemi con il tuo numero di conto.',
+            success: false
+          });
+        }
+      });
+    }
+    else  //  Questo errore si verifica solo in caso di perdida di dati nel db 
+    {
+      res.json({
+        message: 'Errore interno, la tua email non è più presente nel database.',
+        success: false
+      });
+    }
   });
 });
 
