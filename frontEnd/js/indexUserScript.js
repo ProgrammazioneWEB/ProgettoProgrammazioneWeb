@@ -79,37 +79,39 @@ indexUserApp.controller('userHomeController', function ($scope, $http, $window, 
             }
 
         });
+        //se sono qui l'utente è loggato richiamo varie funzioni
+        //prendo i movimenti bancari
+        $http({
+            method: "POST",
+            url: "http://localhost:3001/api/movements",
+            headers: { 'Content-Type': 'application/json' },
+            data: {
+                'token': curToken.value
+            }
+        }).then(function (response) {
+            if (response.data.success) {
+                userMovements = response.data.result;
+                alert("user Movemtts 1 data:" + userMovements[1].entrata);
+            }
+            else {
+                alert("Nessun Movimento trovato");
+            }
+
+        })
     }
-    //se sono qui l'utente è loggato richiamo varie funzioni
-    $http({
-        method: "POST",
-        url: "http://localhost:3001/api/movements",
-        headers: { 'Content-Type': 'application/json' },
-        data: {
-            'token': curToken.value
-        }
-    }).then(function (response) {
-        if(response.data.success){
-            userMovement = response.data.result;
-            alert(userMovement[1]);
-        }
-        else{
-            alert("Nessun Movimento trovato");
-        }
-       
-    })
+
 });
 
 //user movements controller
 indexUserApp.controller('userMovementsController', function ($scope) {
     $scope.message = "Benvenuto nella pagina dei movimenti bancari";
-    $scope.movimentiBancari = userMovement;
-    $scope.movimenti.forEach(function(movimento){
-        if(movimento.entrata===0){
-            movimento.entrata="/";
+    $scope.movimentiBancari = userMovements;
+    $scope.movimentiBancari.forEach(function (movimento) {
+        if (movimento.entrata === 0) {
+            movimento.entrata = "/";
         }
-        else if(movimento.uscita===0){
-            movimento.uscita="/";
+        else if (movimento.uscita === 0) {
+            movimento.uscita = "/";
         }
     });
 });
@@ -347,7 +349,7 @@ indexUserApp.controller('userGraphController', function ($scope) {
 var userProfile = {
 };
 //user movements
-var userMovement = {
+var userMovements = {
 
 };
 
