@@ -19,6 +19,10 @@ var user = new Schema({
         type : Boolean,
         default : false,
     },
+    dateOfCreation : {
+        type : Date,
+        required : true,
+    },
     meta : {
         firstName : {
             type : String,
