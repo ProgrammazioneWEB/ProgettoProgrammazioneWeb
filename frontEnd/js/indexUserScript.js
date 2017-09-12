@@ -106,14 +106,6 @@ indexUserApp.controller('userHomeController', function ($scope, $http, $window, 
 indexUserApp.controller('userMovementsController', function ($scope) {
     $scope.message = "Benvenuto nella pagina dei movimenti bancari";
     $scope.movimentiBancari = userMovements;
-    $scope.movimentiBancari.forEach(function (movimento) {
-        if (movimento.entrata === 0) {
-            movimento.entrata = "/";
-        }
-        else if (movimento.uscita === 0) {
-            movimento.uscita = "/";
-        }
-    });
 });
 
 
@@ -232,8 +224,8 @@ indexUserApp.controller('userGraphController', function ($scope) {
 
     //Function to show activeEntranceGraph
     $scope.activeEntranceGraph = function () {
-        for (i = 0; i < userProfile.movimenti.length; i++) {
-            $scope.userEntrance[i] = userProfile.movimenti[i].entrata;
+        for (i = 0; i < userMovements.length; i++) {
+            $scope.userEntrance[i] = userMovements[i].entrata;
         }
         $scope.exitBGraphClicked = false;
         $scope.versusBGraphClicked = false;
@@ -268,8 +260,8 @@ indexUserApp.controller('userGraphController', function ($scope) {
     $scope.exitBGraphClicked = false;
     //Function to show activeExitGraph
     $scope.activeExitGraph = function () {
-        for (i = 0; i < userProfile.movimenti.length; i++) {
-            $scope.userExit[i] = userProfile.movimenti[i].spesa * -1;
+        for (i = 0; i < userMovements.length; i++) {
+            $scope.userExit[i] =userMovements[i].uscita * -1;
         }
         $scope.entranceBGraphClicked = false;
         $scope.versusBGraphClicked = false;
@@ -305,9 +297,9 @@ indexUserApp.controller('userGraphController', function ($scope) {
     $scope.versusBGraphClicked = false;
     //Function to show activeExitGraph
     $scope.activeVersusGraph = function () {
-        for (i = 0; i < userProfile.movimenti.length; i++) {
-            $scope.userEntrance[i] = userProfile.movimenti[i].entrata;
-            $scope.userExit[i] = userProfile.movimenti[i].spesa * -1;
+        for (i = 0; i < userMovements.length; i++) {
+            $scope.userEntrance[i] = userMovements[i].entrata;
+            $scope.userExit[i] = userMovements[i].uscita * -1;
         }
         $scope.entranceBGraphClicked = false;
         $scope.exitBGraphClicked = false;
