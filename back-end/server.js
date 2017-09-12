@@ -388,7 +388,7 @@ apiRoutes.post('/movements', function (req, res) {
               //  Prendo tutti i movimenti in ingresso
               while (i < movIn.length) {
                 allMov[i] = {
-                  data: movIn[i].data,
+                  data: movIn[i].date,
                   entrata: movIn[i].quantity,
                   uscita: 0,
                   conto: movIn[i].from
@@ -401,7 +401,7 @@ apiRoutes.post('/movements', function (req, res) {
               //  Prendo tutti i movimenti in uscita
               while (j < movOut.length) {
                 allMov[i] = {
-                  data: movOut[j].data,
+                  data: movOut[j].date,
                   entrata: 0,
                   uscita: movOut[j].quantity,
                   conto: movOut[j].to
