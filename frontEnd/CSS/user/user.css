@@ -137,7 +137,7 @@ div.userStatistics{
     border-style: ridge;   
     color:  #3E50F3	;
     border-color: #3E50F3;
-    overflow-y: auto;    
+    overflow: auto;    
     text-align: center;
     align-items: center;
     align-content: center;

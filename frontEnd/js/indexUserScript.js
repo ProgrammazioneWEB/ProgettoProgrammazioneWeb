@@ -42,9 +42,17 @@ indexUserApp.controller('userHomeController', function ($scope, $http, $window, 
     //  Se il token è salvato in locale lo prelevo (sarà sempre salvato in locale dopo il login)
     if ($localStorage.XToken) {
         curToken = $localStorage.XToken;
-        alert("sono al token vero" + curToken);
+    }
+    //se i dati dell'utente sono già salvati li prelevo
+    if($localStorage.userProfile){
+        userProfile = $localStorage.userProfile;
+    }
+     //se i dati sui movimenti dell'utente sono già salvati li prelevo
+     if($localStorage.userMovements){
+        userMovements = $localStorage.userMovements;
     }
     //  Tutti i dati sottostanti vanno richiesti al server di node (bisogna passargli l'email)
+    //in sostanza ho appena fatto login!
     if ($localStorage.Email) {
         $http({
             method: "POST",
@@ -57,7 +65,7 @@ indexUserApp.controller('userHomeController', function ($scope, $http, $window, 
         }).then(function (response) {
             if (response.data.success) {
                 userProfile = response.data.result;
-                alert(userProfile.email);
+                $localStorage.userProfile =userProfile;
                 //assign datas
                 $scope.message = "Benvenuto nel tuo profilo privato!";
                 //profile area
@@ -91,7 +99,7 @@ indexUserApp.controller('userHomeController', function ($scope, $http, $window, 
         }).then(function (response) {
             if (response.data.success) {
                 userMovements = response.data.result;
-                alert("user Movemtts 1 data:" + userMovements[1].entrata);
+                $localStorage.userMovements= userMovements;
             }
             else {
                 alert("Nessun Movimento trovato");
@@ -261,7 +269,7 @@ indexUserApp.controller('userGraphController', function ($scope) {
     //Function to show activeExitGraph
     $scope.activeExitGraph = function () {
         for (i = 0; i < userMovements.length; i++) {
-            $scope.userExit[i] =userMovements[i].uscita * -1;
+            $scope.userExit[i] =userMovements[i].uscita;
         }
         $scope.entranceBGraphClicked = false;
         $scope.versusBGraphClicked = false;
@@ -299,7 +307,7 @@ indexUserApp.controller('userGraphController', function ($scope) {
     $scope.activeVersusGraph = function () {
         for (i = 0; i < userMovements.length; i++) {
             $scope.userEntrance[i] = userMovements[i].entrata;
-            $scope.userExit[i] = userMovements[i].uscita * -1;
+            $scope.userExit[i] = userMovements[i].uscita;
         }
         $scope.entranceBGraphClicked = false;
         $scope.exitBGraphClicked = false;
