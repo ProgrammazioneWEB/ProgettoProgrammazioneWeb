@@ -251,7 +251,7 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location, $window
         $localStorage.Email = $scope.username;
         alert(curToken.value);
         //at this point will be the choose of page
-        $window.location.href = './indexUser.html';
+        $location.path("/profile");
       }
       else
         alert("Error! " + response.data.message);

@@ -187,7 +187,7 @@ indexUserApp.controller('userTransactionController', function ($scope) {
         }
         else {
             //error
-            //alert("iban corretto");             
+            //alert("iban corretto");              
             $scope.form.iban.$invalid = false;
             $scope.ibanErrors.error = "";
         }
