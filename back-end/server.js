@@ -327,10 +327,14 @@ apiRoutes.post('/authenticate', function (req, res) {
       //res.cookie('authToken',token);          
 
       // return the information including token as JSON
-      res.json({
-        success: true,
-        message: 'Successfull!',
-        token: token
+      database.findUserByEmail(req.body.email, function(risultato){
+        // return the information including token as JSON
+        res.json({
+          success: true,
+          message: 'Successfull!',
+          token: token,
+          admin: risultato.admin
+        });
       });
     };
   });
