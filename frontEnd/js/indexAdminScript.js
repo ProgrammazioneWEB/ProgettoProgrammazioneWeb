@@ -24,6 +24,10 @@ indexAdminApp.config(function ($routeProvider) {
             templateUrl: "/html/admin/adminAbilita/adminAbilita.html",
             controller: "adminAbilitaController"
         })
+        .when("/mainHome", {
+            templateUrl: "/html/admin/adminHome/adminHome.html",
+            controller: 'changeSite'
+        })
 });
 
 //global variable of admin data
@@ -45,13 +49,11 @@ indexAdminApp.controller('adminHomeController', function ($scope) {
 
 });
 
-//controller for admin
-indexAdminApp.controller('changeSite', function ($window) {
-    //admin image path
+//controller that will change the page
+indexAdminApp.controller('changeSite', function ($scope, $window) {
+    //parte per salvare il token
     $window.location.href = "../index.html";
-
 });
-
 
 //define alert controller
 indexAdminApp.controller('adminAlertController', function ($scope) {

@@ -118,9 +118,7 @@ indexUserApp.controller('userMovementsController', function ($scope) {
 
 
 //controller that will change the page
-indexUserApp.controller('changeSite', function ($scope, $window, $interval) {
-    $window.location.href = "../html/loading/loading.html";
-    //simulo un delay
+indexUserApp.controller('changeSite', function ($scope, $window) {
     //parte per salvare il token
     $window.location.href = "../index.html";
 });

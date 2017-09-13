@@ -167,6 +167,7 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location, $window
   }
   //function to control username field and show the errors if user wrong to type 
   $scope.controlUsernameField = function () {
+   // alert("sono nel controllo username, la password è:"+$scope.password);    
     //if length is 0 user has type nothing
     if ($scope.username === undefined) {
       //username value is empty
@@ -188,6 +189,7 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location, $window
   }
   //function to control password field and show the errors if user wrong to type 
   $scope.controlPasswordField = function () {
+    //alert("sono nel controllo password, la password è:"+$scope.password);    
     //if length is 0 user has type nothing
     if ($scope.password === undefined) {
       //input value is empty
@@ -195,14 +197,17 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location, $window
       $scope.form.password.$invalid = true;
     }
     else {
+      /** 
+       * parte da riscrivere una volta definito il filtro
       if (!passwordFilter.test($scope.username)) {
         $scope.passwordError = { password: "*Password in formato errato" };
         $scope.form.password.$invalid = true;
       }
       else {
-        $scope.passwordError = { password: "" };
-        $scope.form.password.$invalid = false;
-      }
+        }
+        */
+      $scope.passwordError = { password: "" };
+      $scope.form.password.$invalid = false;
     }
   }
   //function to control checkbox field 
@@ -251,15 +256,13 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location, $window
         $localStorage.Email = $scope.username;
         alert(curToken.value);
         alert(response.data.admin);
-        if(response.data.admin == true)
-        {
+        if (response.data.admin == true) {
           $window.location.href = './indexAdmin.html';
         }
-        else
-        {
+        else {
           $window.location.href = './indexUser.html';
         }
-       
+
       }
       else
         alert("Error! " + response.data.message);
