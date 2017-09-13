@@ -215,8 +215,19 @@ app.get('/get-avvisi', function (req, res) {
   });
 });
 
-//Test transazione e bonifico
-
+//Test transazione e bonifico da amministratore
+app.post('/invio-bonifico', function (req, res) {
+  var data = new Date();
+  var bonifico = new Movimento({
+    from: req.body.from,
+    to: req.body.to,
+    date: data.getDate(),
+    quantity: req.body.quantity
+  });
+  database.addTransaction(bonifico, function (result, messaggio) {
+    res.json(messaggio);
+  });
+});
 //  Registra un nuovo utente
 app.post('/singup', function (req, res) {
   database.verifyPin(req.body.pin, function (result) {
