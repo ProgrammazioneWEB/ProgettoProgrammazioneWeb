@@ -358,33 +358,33 @@ exports.sortUsersByNumberOfAccount = function (callbackRis) {
 }
 
 //this function insert an advise on the database advises
-exports.addAdvise = function(advise, callbackRis) {
+exports.addAdvise = function (advise, callbackRis) {
   if (!advise)  //  Controllo che l'advise che sto per aggiungere non sia null
-    {
-      callbackRis(false, "Impossibile registrare un avviso che non esiste");
-      return;
+  {
+    callbackRis(false, "Impossibile registrare un avviso che non esiste");
+    return;
+  }
+
+  MongoClient.connect(url, function (err, db) {
+    if (err) {
+      callbackRis(false, "Impossibile connettersi al Database");
+      throw err;
     }
-  
-    MongoClient.connect(url, function (err, db) {
+    var myobj = advise;
+    db.collection("advises").insertOne(myobj, function (err, res) {
       if (err) {
-        callbackRis(false, "Impossibile connettersi al Database");
+        callbackRis(false, "Impossibile trovare lo schema del Database")
         throw err;
       }
-      var myobj = advise;
-      db.collection("advises").insertOne(myobj, function (err, res) {
-        if (err) {
-          callbackRis(false, "Impossibile trovare lo schema del Database")
-          throw err;
-        }
-        db.close();
-        console.log("1 advise inserted");
-        callbackRis(true, "Avviso Aggiunto");
-      });
+      db.close();
+      console.log("1 advise inserted");
+      callbackRis(true, "Avviso Aggiunto");
     });
+  });
 }
 
 //this function return the last five advises based on date in the database
-exports.returnLastFiveAdvises = function(callbackRis){
+exports.returnLastFiveAdvises = function (callbackRis) {
   MongoClient.connect(url, function (err, db) {
     if (err) throw err;
     var mysort = { date: 1 };

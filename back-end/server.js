@@ -99,6 +99,27 @@ app.get('/', function (req, res) {
     availableBalance: 5000
   });
 
+  var admin = new User({
+    email: 'testAdmin@gmail.com',
+    password: 'password',
+    admin: true,
+    meta: {
+      //Nome dell'utente
+      firstName: 'Luca',
+      //Cognome dell'utente
+      lastName: 'Marasca',
+      //Data di nascita dell'utente
+      dateOfBirth: 'non lo so',
+      //numero di telefono dell'utente
+      numberOfPhone: '0345753978',
+      //Residenza dell'utente
+      residence: 'casa mia',
+      //Codice fiscale dell'utente
+      fiscalCode: '3g43q4g465g'
+    },
+    numberOfAccount: 201,
+    availableBalance: 7000
+  });
   today = new Date();
 
   var mov = new Movimento({
@@ -112,46 +133,48 @@ app.get('/', function (req, res) {
     console.log(messaggio);
     database.addUser(user2, function (result, messaggio) {
       console.log(messaggio);
-      database.sortUsersByNumberOfAccount(function (result) {
-        console.log(result);
-      });
-      database.addTransaction(mov, function (result, messaggio) {
+      database.addUser(admin, function (result, messaggio) {
         console.log(messaggio);
-        database.allMovementsSend(100, function (result) {
+        database.sortUsersByNumberOfAccount(function (result) {
           console.log(result);
-        });
-        mov = new Movimento({
-          from: 200,
-          to: 100,
-          date: today.getDate(),
-          quantity: 1500
         });
         database.addTransaction(mov, function (result, messaggio) {
           console.log(messaggio);
-          database.allMovementsSend(200, function (result) {
+          database.allMovementsSend(100, function (result) {
             console.log(result);
           });
           mov = new Movimento({
-            from: 100,
-            to: 200,
+            from: 200,
+            to: 100,
             date: today.getDate(),
-            quantity: 500
+            quantity: 1500
           });
           database.addTransaction(mov, function (result, messaggio) {
             console.log(messaggio);
-            database.allMovementsSend(100, function (result) {
+            database.allMovementsSend(200, function (result) {
               console.log(result);
             });
-            res.json({
-              success: result,
-              message: messaggio
+            mov = new Movimento({
+              from: 100,
+              to: 200,
+              date: today.getDate(),
+              quantity: 500
+            });
+            database.addTransaction(mov, function (result, messaggio) {
+              console.log(messaggio);
+              database.allMovementsSend(100, function (result) {
+                console.log(result);
+              });
+              res.json({
+                success: result,
+                message: messaggio
+              });
             });
           });
         });
       });
     });
   });
-
   /*var megapin = new Pin({
     number: 55555,
     meta: {
@@ -177,24 +200,28 @@ app.get('/', function (req, res) {
     });
   });*/
 });
+
 //Test vedere utenti
 app.get('/list', function (req, res) {
   database.sortUsersByNumberOfAccount(function (result) {
     res.json(result);
   });
 });
-//Test movimenti in uscita
+
+//Test movimenti in uscita (si può cancellare)
 app.get('/movimenti-out', function (req, res) {
   database.allMovementsSend(100, function (result) {
     res.json(result);
   });
 });
-//Test movimenti in ingresso
+
+//Test movimenti in ingresso (si può cancellare)
 app.get('/movimenti-in', function (req, res) {
   database.allMovementsReceive(100, function (result) {
     res.json(result);
   });
 });
+
 //invio avvisi
 app.post('/invio-avviso', function (req, res) {
   var data = new Date();
@@ -215,32 +242,6 @@ app.get('/get-avvisi', function (req, res) {
   });
 });
 
-//Test transazione e bonifico da amministratore
-app.post('/invio-bonifico-admin', function (req, res) {
-  var data = new Date();
-  var bonifico = new Movimento({
-    from: req.body.from,
-    to: req.body.to,
-    date: data.getDate(),
-    quantity: req.body.quantity
-  });
-  database.addTransaction(bonifico, function (result, messaggio) {
-    res.json(messaggio);
-  });
-});
-//Test transazione e bonifico da user !!!!!!!---Da correggere---!!!
-app.post('/invio-bonifico-user', function (req, res) {
-  var data = new Date();
-  var bonifico = new Movimento({
-    from: req.body.numberOfAccount, //<--- qui devi dire che vuoi l'utente corrente e non so come si fa
-    to: req.body.to,
-    date: data.getDate(),
-    quantity: req.body.quantity
-  });
-  database.addTransaction(bonifico, function (result, messaggio) {
-    res.json(messaggio);
-  });
-});
 //  Registra un nuovo utente
 app.post('/singup', function (req, res) {
   database.verifyPin(req.body.pin, function (result) {
@@ -461,6 +462,75 @@ apiRoutes.post('/movements', function (req, res) {
     {
       res.json({
         message: 'Errore interno, la tua email non è più presente nel database.',
+        success: false
+      });
+    }
+  });
+});
+
+//Test transazione e bonifico da amministratore
+apiRoutes.post('/invio-bonifico-admin', function (req, res) {
+  var data = new Date();
+
+  //  Controllo se l'utente loggato è amministratore
+  database.findUserByEmail(req.decoded, function (result) {
+    if (result) {
+      if (result.admin) {
+        var bonifico = new Movimento({
+          from: req.body.from,
+          to: req.body.to,
+          date: data.getDate(),
+          quantity: req.body.quantity
+        });
+
+        database.addTransaction(bonifico, function (result, messaggio) {
+          res.json({
+            message: messaggio,
+            success: result
+          });
+        });
+      }
+      else {  //  Se non è admin restituisco errore
+        res.json({
+          message: 'Impossible accedere a questa sezione senza essere admin.',
+          success: false
+        });
+      }
+    }
+    else {  //  Se non trovo l'user nel db (si dovrebbe verificare solo in caso di errori nel db)
+      res.json({
+        message: 'Errore interno al database, impossibile verificare che si è loggati come admin.',
+        success: false
+      });
+    }
+  });
+});
+
+//Test transazione e bonifico da user
+apiRoutes.post('/invio-bonifico-user', function (req, res) {
+  var data = new Date();
+
+  //  Cerco il numero di conto di chi ha richiesto il bonifico (req.decoded contiene l'email del user loggato)
+  database.findUserByEmail(req.decoded, function (result) {
+    if (result) {
+      var bonifico = new Movimento({
+        from: result.numberOfAccount,
+        to: req.body.to,
+        date: data.getDate(),
+        quantity: req.body.quantity
+      });
+
+      //  Aggiungo la transazione al db e rispondo all' utente il messaggio di riuscita o errore
+      database.addTransaction(bonifico, function (result, messaggio) {
+        res.json({
+          message: messaggio,
+          success: result
+        });
+      });
+    }
+    else {  //  Se non trovo il numero di conto (si dovrebbe verificare solo in caso di errori nel db)
+      res.json({
+        message: 'Errore interno al database, il suo numero conto non è stato trovato.',
         success: false
       });
     }
