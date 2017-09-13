@@ -99,6 +99,27 @@ app.get('/', function (req, res) {
     availableBalance: 5000
   });
 
+  var admin = new User({
+    email: 'testAdmin@gmail.com',
+    password: 'password',
+    admin : true,
+    meta: {
+      //Nome dell'utente
+      firstName: 'Luca',
+      //Cognome dell'utente
+      lastName: 'Marasca',
+      //Data di nascita dell'utente
+      dateOfBirth: 'non lo so',
+      //numero di telefono dell'utente
+      numberOfPhone: '0345753978',
+      //Residenza dell'utente
+      residence: 'casa mia',
+      //Codice fiscale dell'utente
+      fiscalCode: '3g43q4g465g'
+    },
+    numberOfAccount: 201,
+    availableBalance: 7000
+  });
   today = new Date();
 
   var mov = new Movimento({
@@ -112,9 +133,11 @@ app.get('/', function (req, res) {
     console.log(messaggio);
     database.addUser(user2, function (result, messaggio) {
       console.log(messaggio);
-      database.sortUsersByNumberOfAccount(function (result) {
-        console.log(result);
-      });
+      database.addUser(admin, function (result, messaggio) {
+        console.log(messaggio);
+        database.sortUsersByNumberOfAccount(function (result) {
+          console.log(result);
+        });
       database.addTransaction(mov, function (result, messaggio) {
         console.log(messaggio);
         database.allMovementsSend(100, function (result) {
@@ -151,7 +174,7 @@ app.get('/', function (req, res) {
       });
     });
   });
-
+  });
   /*var megapin = new Pin({
     number: 55555,
     meta: {
