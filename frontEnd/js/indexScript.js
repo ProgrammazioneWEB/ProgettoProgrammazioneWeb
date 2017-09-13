@@ -31,10 +31,6 @@ indexApp.config(function ($routeProvider) {
       templateUrl: './html/loading/loading.html',
       controller: 'filterUserController'
     })
-    .when('/user', {
-      templateUrl: './html/login/login.html',
-      controller: 'filterUserController'
-    })
     .when('/admin', {
       templateUrl: './html/login/login.html',
       controller: 'filterAdminController'
@@ -46,12 +42,19 @@ indexApp.config(function ($routeProvider) {
 });
 
 
-//  variabile contenente il token
+//  variable that contains token
 var curToken = { value: "", enable: false };
+// variable that contains boolean admin
+var BooleanAdmin = { value: "" };
 // create the controller and inject Angular's $scope
 indexApp.controller('homeController', function ($scope, $localStorage) {
+  //if exist a token
   if ($localStorage.XToken) {
     curToken = $localStorage.XToken;
+  }
+  //if exist a booleanAdmin
+  if ($localStorage.BooleanAdmin) {
+    BooleanAdmin = $localStorage.BooleanAdmin;
   }
   $scope.message = "Home Page";
   /**
@@ -145,7 +148,7 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location, $window
   * helloWorld = fail;
   * helloWorld1 = succes;
   */
-  var passwordFilter = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
+  var passwordFilter ="";
   //Autenticazione via token (se si è precedentementi loggati)
   if (curToken.enable == true) {
     $http({
@@ -155,7 +158,8 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location, $window
       data: { 'token': curToken.value }
     }).then(function SuccessoInfinito(response) {
       if (response.data.success) {
-        alert(response.data.message);
+        //if i'm here i was logged, so redirect to the profile page
+        $location.path("/profile");
       }
       else
         alert("Error! " + response.data.message);
@@ -214,7 +218,17 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location, $window
       $scope.form.licence.$invalid = false;
     }
   }
-  // funzione per l'invio dei dati di login a node
+  //functio to control i form is valid
+  $scope.formNotValid=function(){
+    if($scope.form.$invalid || $scope.form.licence.$invalid || 
+      $scope.form.password.$invalid ||  $scope.form.username.$invalid){
+        return true;
+      }
+      else{
+        return false;
+      }
+  }
+  // function to send data to server node
   $scope.login = function () {
     var parametri = {
       email: $scope.username,
@@ -227,11 +241,16 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location, $window
       data: parametri
     }).then(function mySuccess(response) {
       if (response.data.success) {
+        //save token
         curToken.value = response.data.token;
         curToken.enable = true;
+        //booleans admin
+        //BooleanAdmin.value = responde.data.booleanAdmin;
+        //save datas in localStorage
         $localStorage.XToken = curToken;
         $localStorage.Email = $scope.username;
         alert(curToken.value);
+        //at this point will be the choose of page
         $window.location.href = './indexUser.html';
       }
       else
@@ -243,11 +262,18 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location, $window
 });
 
 //controller che filtra se l'utente è loggato o meno
-indexApp.controller("filterUserController", function ($scope, $http, $window, $location) {
-  //TO DEFINE
-  $window.location.href = '../indexUser.html';
+indexApp.controller("filterUserController", function ($scope, $http, $window, $location, $localStorage) {
+  //if exist a token i'm already Logged in
+  if ($localStorage.XToken) {
+    $window.location.href = '../indexUser.html';
+  }
+  //non sono loggato, eseguo il redirect alla pagina di login
+  else {
+    $location.path("/login");
+  }
 });
 
+//TO CANCEL
 //controller che filtra se l'utente è loggato o meno
 indexApp.controller("filterAdminController", function ($scope, $http, $window, $location) {
   //TO DEFINE
@@ -255,11 +281,11 @@ indexApp.controller("filterAdminController", function ($scope, $http, $window, $
 });
 
 //controller che si occupa del logout
-indexApp.controller("logOutController", function ($scope, $location,$window, $localStorage) {
+indexApp.controller("logOutController", function ($scope, $location, $window, $localStorage) {
   //cancello tutti i dati salvati in locale
   $localStorage.$reset();
   //ritorno alla home page
-  $window.location.href="../index.html";
+  $window.location.href = "../index.html";
 });
 
 //SIGNUP CONTROLLER

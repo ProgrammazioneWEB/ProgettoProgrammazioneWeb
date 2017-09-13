@@ -1,5 +1,5 @@
     <!-- make a payment could be seen only if specified button was clicked-->
-    <div class="">
+    <div>
         <h1>{{message}}</h1>
         <form class="form-horizontal" ng-model="form" name="form" novalidate ng-submit="pay()">
             <!-- Cifra da pagare-->
@@ -22,7 +22,7 @@
             </div>
             <!--Bottone per conferma di invio-->
             <div class="form-group">
-                <button type="submit" class="btn btn-primary" ng-disabled="form.$invalid || form.iban.$invalid || form.payment.$invalid ">Esegui il bonifico</button>
+                <button type="submit" class="btn btn-primary" ng-disabled="formNotValid()">Esegui il bonifico</button>
             </div>
         </form>
     </div>

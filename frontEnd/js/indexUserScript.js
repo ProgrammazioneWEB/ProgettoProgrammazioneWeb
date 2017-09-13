@@ -44,11 +44,11 @@ indexUserApp.controller('userHomeController', function ($scope, $http, $window, 
         curToken = $localStorage.XToken;
     }
     //se i dati dell'utente sono già salvati li prelevo
-    if($localStorage.userProfile){
+    if ($localStorage.userProfile) {
         userProfile = $localStorage.userProfile;
     }
-     //se i dati sui movimenti dell'utente sono già salvati li prelevo
-     if($localStorage.userMovements){
+    //se i dati sui movimenti dell'utente sono già salvati li prelevo
+    if ($localStorage.userMovements) {
         userMovements = $localStorage.userMovements;
     }
     //  Tutti i dati sottostanti vanno richiesti al server di node (bisogna passargli l'email)
@@ -65,7 +65,7 @@ indexUserApp.controller('userHomeController', function ($scope, $http, $window, 
         }).then(function (response) {
             if (response.data.success) {
                 userProfile = response.data.result;
-                $localStorage.userProfile =userProfile;
+                $localStorage.userProfile = userProfile;
                 //assign datas
                 $scope.message = "Benvenuto nel tuo profilo privato!";
                 //profile area
@@ -99,7 +99,7 @@ indexUserApp.controller('userHomeController', function ($scope, $http, $window, 
         }).then(function (response) {
             if (response.data.success) {
                 userMovements = response.data.result;
-                $localStorage.userMovements= userMovements;
+                $localStorage.userMovements = userMovements;
             }
             else {
                 alert("Nessun Movimento trovato");
@@ -193,6 +193,15 @@ indexUserApp.controller('userTransactionController', function ($scope) {
         }
 
     };
+    //function that control if form is valid
+    $scope.formNotValid = function () {
+        if ($scope.form.$invalid || $scope.form.iban.$invalid || $scope.form.payment.$invalid) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 });
 
 //user spent average controller
@@ -269,7 +278,7 @@ indexUserApp.controller('userGraphController', function ($scope) {
     //Function to show activeExitGraph
     $scope.activeExitGraph = function () {
         for (i = 0; i < userMovements.length; i++) {
-            $scope.userExit[i] =userMovements[i].uscita;
+            $scope.userExit[i] = userMovements[i].uscita;
         }
         $scope.entranceBGraphClicked = false;
         $scope.versusBGraphClicked = false;
