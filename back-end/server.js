@@ -177,26 +177,26 @@ app.get('/', function (req, res) {
     });
   });*/
 });
-
+//Test vedere utenti
 app.get('/list', function (req, res) {
   database.sortUsersByNumberOfAccount(function (result) {
     res.json(result);
   });
 });
-
+//Test movimenti in uscita
 app.get('/movimenti-out', function (req, res) {
   database.allMovementsSend(100, function (result) {
     res.json(result);
   });
 });
-
+//Test movimenti in ingresso
 app.get('/movimenti-in', function (req, res) {
   database.allMovementsReceive(100, function (result) {
     res.json(result);
   });
 });
-//Test invio avvisi
-app.get('/invio-avviso', function (req, res) {
+//invio avvisi
+app.post('/invio-avviso', function (req, res) {
   var data = new Date();
   var avviso = new Advise({
     title: req.body.title,
@@ -208,12 +208,14 @@ app.get('/invio-avviso', function (req, res) {
   });
 });
 
-//Test arrivo avvisi
+//arrivo ultimi 5 avvisi
 app.get('/get-avvisi', function (req, res) {
   database.returnLastFiveAdvises(function (result) {
     res.json(result);
   });
 });
+
+//Test transazione e bonifico
 
 //  Registra un nuovo utente
 app.post('/singup', function (req, res) {
