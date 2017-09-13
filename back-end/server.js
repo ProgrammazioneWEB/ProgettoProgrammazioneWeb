@@ -216,10 +216,23 @@ app.get('/get-avvisi', function (req, res) {
 });
 
 //Test transazione e bonifico da amministratore
-app.post('/invio-bonifico', function (req, res) {
+app.post('/invio-bonifico-admin', function (req, res) {
   var data = new Date();
   var bonifico = new Movimento({
     from: req.body.from,
+    to: req.body.to,
+    date: data.getDate(),
+    quantity: req.body.quantity
+  });
+  database.addTransaction(bonifico, function (result, messaggio) {
+    res.json(messaggio);
+  });
+});
+//Test transazione e bonifico da user !!!!!!!---Da correggere---!!!
+app.post('/invio-bonifico-user', function (req, res) {
+  var data = new Date();
+  var bonifico = new Movimento({
+    from: req.body.numberOfAccount, //<--- qui devi dire che vuoi l'utente corrente e non so come si fa
     to: req.body.to,
     date: data.getDate(),
     quantity: req.body.quantity
