@@ -304,7 +304,7 @@ indexApp.controller("signUp", function ($scope, $http) {
    * helloWorld = fail;
    * helloWorld1 = succes;
    */
-  var passwordFilter = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
+  var passwordFilter = "";
   //errors
   $scope.emailError = { error: "" };
   $scope.licenceError = { licence: "" };
