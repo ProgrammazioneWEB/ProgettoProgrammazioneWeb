@@ -148,7 +148,7 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location, $window
   * helloWorld = fail;
   * helloWorld1 = succes;
   */
-  var passwordFilter ="";
+  var passwordFilter = "";
   //Autenticazione via token (se si è precedentementi loggati)
   if (curToken.enable == true) {
     $http({
@@ -219,14 +219,14 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location, $window
     }
   }
   //functio to control i form is valid
-  $scope.formNotValid=function(){
-    if($scope.form.$invalid || $scope.form.licence.$invalid || 
-      $scope.form.password.$invalid ||  $scope.form.username.$invalid){
-        return true;
-      }
-      else{
-        return false;
-      }
+  $scope.formNotValid = function () {
+    if ($scope.form.$invalid || $scope.form.licence.$invalid ||
+      $scope.form.password.$invalid || $scope.form.username.$invalid) {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
   // function to send data to server node
   $scope.login = function () {
@@ -297,7 +297,7 @@ indexApp.controller("logOutController", function ($scope, $location, $window, $l
 });
 
 //SIGNUP CONTROLLER
-indexApp.controller("signUp", function ($scope, $http) {
+indexApp.controller("signUp", function ($scope, $http, $location) {
   $scope.message = "Benvenuto nella pagina \n di registrazione!";
   //filter used to filter e-mails
   var emailFilter = /^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/;
@@ -318,6 +318,22 @@ indexApp.controller("signUp", function ($scope, $http) {
   $scope.licenceError = { licence: "" };
   $scope.passwordError = { password: "" };
   $scope.passwordReapeatError = { passwordReapeat: "" };
+  //Autenticazione via token (se si è precedentementi loggati)
+  if (curToken.enable == true) {
+    $http({
+      method: "POST",
+      url: "http://localhost:3001/api",
+      headers: { 'Content-Type': 'application/json' },
+      data: { 'token': curToken.value }
+    }).then(function SuccessoInfinito(response) {
+      if (response.data.success) {
+        //if i'm here i was logged, so redirect to the profile page
+        $location.path("/profile");
+      }
+      else
+        alert("Error! " + response.data.message);
+    });
+  }
   //function to control username field and show the errors if user wrong to type 
   $scope.controllaMail = function () {
     //if length is 0 user has type nothing
@@ -421,7 +437,6 @@ indexApp.controller("signUp", function ($scope, $http) {
       password: $scope.password,
       pin: $scope.pin
     }
-
     $http({
       method: "POST",
       url: "http://localhost:3001/singup",
