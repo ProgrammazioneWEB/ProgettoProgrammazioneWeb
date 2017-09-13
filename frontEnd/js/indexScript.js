@@ -250,6 +250,7 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location, $window
         $localStorage.XToken = curToken;
         $localStorage.Email = $scope.username;
         alert(curToken.value);
+        alert(response.data.admin);
         if(response.data.admin == true)
         {
           $window.location.href = './indexAdmin.html';
