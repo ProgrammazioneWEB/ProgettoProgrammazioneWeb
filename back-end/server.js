@@ -513,7 +513,6 @@ apiRoutes.post('/invio-bonifico-admin', function (req, res) {
 //Test transazione e bonifico da user
 apiRoutes.post('/invio-bonifico-user', function (req, res) {
   var data = new Date();
-
   //  Cerco il numero di conto di chi ha richiesto il bonifico (req.decoded contiene l'email del user loggato)
   database.findUserByEmail(req.decoded, function (result) {
     if (result) {

@@ -35,20 +35,19 @@
         <table class="table center">
             <tr>
                 <!--route per index -->
-                <td >
+                <td>
                     <a href="#!/mainHome" class="whiteFont">
                             <img class="iconUnicam"  src="./CSS/images/Logos/unicam.png"/>
                     </a>
                     <h2 class="hint" name="hint">
-                            Clicca sullo stemma
-                            <br>
-                            Unicam per tornare
-                            <br> al sito principale!
+                        Clicca sullo stemma
+                        <br> Unicam per tornare
+                        <br> al sito principale!
                     </h2>
                 </td>
 
                 <!--user image-->
-                <td >
+                <td>
                     <img ng-src="{{userImagePath}}" class="userImage" />
                 </td>
                 <!--user data-->
@@ -90,7 +89,8 @@
                     ng-blur="buttonMovementColor={}" ng-model="movimentiBancari">
                         <img src="../../CSS/images/iconsForUser/bank_transaction.png" class="img-fluid" alt="Guarda i tuoi movimenti bancari"/> 
                         <br> 
-                        Guarda i tuoi movimenti bancari
+                        <br>
+                              Guarda i tuoi <br>movimenti bancari
                     </button>
                 </a>
         </li>
@@ -101,8 +101,9 @@
                     ng-blur="buttonPaymentColor={}"  ng-model="paymentButtonClicked">          
                         <img src="../../CSS/images/iconsForUser/bank_transfer.png"  class="img-fluid" alt="Effettua un bonifico"/> 
                             <br> 
-                                    Esegui un bonifico 
-                                                   </button>
+                            <br>
+                                  Esegui un bonifico
+                    </button>
                         </a>
         </li>
     </ul>
@@ -116,19 +117,22 @@
                 <button type="button" class="btn btn-primary userArea" name="averageSpent" ng-model="averageSpent" ng-style="buttonAverageColor"
                     ng-focus="buttonAverageColor={background:'#6090AA'}" ng-blur="buttonAverageColor={}">
                                     <img src="../../CSS/images/iconsForUser/Payment.png" class="img-fluid" alt="Guarda la tua spesa media giornaliera"/> 
-                                  <br> Guarda la tua spesa  <br>media giornaliera
+                                  <br> 
+                                  <br>
+                                        Guarda la tua spesa <br>media giornaliera
                 </button>
                 </a>
         </li>
         <!--Watch your stats with  Graphs!-->
         <li class=" list-group-item next">
-
             <a href="#!/graph" class="whiteFont">                     
                 <button type="button" class="btn btn-primary userArea" name="graphButtonClicked" ng-style="buttonGraphColor" ng-focus="buttonGraphColor={background:'#6090AA'}"
                     ng-blur="buttonGraphColor={}" ng-model="graphButtonClicked"> <img src="../../CSS/images/iconsForUser/stats.png"  class="img-fluid" alt="Guarda il grafico del tuo conto"/> 
-                                        <br> Guarda il grafico del tuo conto
+                     <br> 
+                     <br> 
+                         Guarda il grafico <br>del tuo conto
                 </button>
-                </a>
+            </a>
         </li>
     </ul>
     <!--Center column or dynamic areas-->

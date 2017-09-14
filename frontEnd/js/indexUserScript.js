@@ -79,7 +79,7 @@ indexUserApp.controller('userHomeController', function ($scope, $http, $window, 
                 //save the variable to show the real saldo
                 $scope.moneyMessage = userProfile.availableBalance + " €";
                 //save the variabile to show the real countNumber
-                $scope.countNumber = userProfile.meta.numberOfAccount;
+                $scope.countNumber = userProfile.numberOfAccount;
             }
             else {
                 alert("Nessun utente trovato! ");
@@ -124,9 +124,9 @@ indexUserApp.controller('changeSite', function ($scope, $window) {
 });
 
 //user movements controller
-indexUserApp.controller('userTransactionController', function ($scope) {
+indexUserApp.controller('userTransactionController', function ($scope, $http,$window, $localStorage) {
     //iban filter 
-    var ibanFilter = /^IT\d{2}[A-Z]\d{10}[0-9A-Z]{12}$/;
+    var ibanFilter = "";
     //ERRORS
     //errors that could be thrown
     $scope.paymentErrors =
@@ -138,6 +138,7 @@ indexUserApp.controller('userTransactionController', function ($scope) {
         {
             error: ""
         };
+    //message
     $scope.message = "Da qui puoi effettuare un bonifico";
     //functions that do the payment
     //functio to control if payment is acceptable
@@ -176,13 +177,14 @@ indexUserApp.controller('userTransactionController', function ($scope) {
             $scope.form.iban.$invalid = false;
             $scope.ibanErrors.error = "";
         }
+        /**TO DEFINE AFTER CHOOSE THE FILTER 
         // alert(ibanFilter.test($scope.iban));
         else if (!(ibanFilter.test($scope.iban))) {
             //error
             //alert("iban scorretto");
             $scope.form.iban.$invalid = true;
             $scope.ibanErrors.error = "*Iban in formato errato";
-        }
+        }*/
         else {
             //error
             //alert("iban corretto");              
@@ -193,13 +195,59 @@ indexUserApp.controller('userTransactionController', function ($scope) {
     };
     //function that control if form is valid
     $scope.formNotValid = function () {
-        if ($scope.form.$invalid || $scope.form.iban.$invalid || $scope.form.payment.$invalid) {
+        if ($scope.form.$invalid || 
+            $scope.form.iban.$invalid || 
+            $scope.form.payment.$invalid) {
             return true;
         }
         else {
             return false;
         }
     }
+    //payment done or not 
+    $scope.controlIfTransaction = function () {
+        if ($localStorage.BonificoEffettuatoOra==true) {
+            $scope.message = "Hai effettuato un bonifico!";
+            return true;
+        }
+        else
+            return false;
+    }
+    //reset boolean transaction
+    $scope.resetBoolean = function () {
+        alert("Valore booleano prima:"+$localStorage.BonificoEffettuatoOra);                
+        //cancello questo booleano
+        //$localStorage.removeItem('BonificoEffettuatoOra');
+        $localStorage.BonificoEffettuatoOra=false;
+        $scope.message = "Da qui puoi effettuare un bonifico";
+        alert("Valore booleano dopo:"+$localStorage.BonificoEffettuatoOra);                
+    };
+    //function to pay, that calls server apis
+    $scope.pay = function () {
+        $http({
+            method: "POST",
+            url: "http://localhost:3001/api/invio-bonifico-user",
+            headers: { 'Content-Type': 'application/json' },
+            data: {
+                'email': $localStorage.Email,
+                'token': curToken.value,
+                'to': $scope.iban,
+                'quantity': $scope.payment 
+            }
+        }).then(function (response) {
+            if (response.data.success) {
+                alert(response.data.message);
+                //boolean used to change content of page
+               $localStorage.BonificoEffettuatoOra = true;
+                $scope.message = "Hai effettuato un bonifico!";
+                //refresho la pagina per prendere i risultati
+                $window.location.reload();
+            }
+            else {
+                alert(response.data.message);
+            }
+        });
+    };
 });
 
 //user spent average controller
@@ -214,9 +262,10 @@ indexUserApp.controller('userAverageController', function ($scope) {
     this.sumOfPassive = 0;
     //define a function into the for each called on the movement's array to find the average of the spent
     //of the user for every day
+    /** 
     userProfile.movimenti.forEach(function (movimento) {
         this.sumOfPassive += Number(movimento.spesa);
-    }, this);
+    }, this);*/
     //return the sum divided by the total of the days with some activity
     this.average = Math.round(this.sumOfPassive / this.numberOfDays).toFixed(2);
     $scope.message = "La tua spesa giornaliera media è di: " + this.average;

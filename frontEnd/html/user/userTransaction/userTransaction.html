@@ -1,29 +1,42 @@
-    <!-- make a payment could be seen only if specified button was clicked-->
-    <div>
-        <h1>{{message}}</h1>
-        <form class="form-horizontal" ng-model="form" name="form" novalidate ng-submit="pay()">
-            <!-- Cifra da pagare-->
-            <div class="form-group formElementCenter">
-                <input type="number" class="form-control" ng-model="payment" name="payment" ng-blur="controlPayment()" required placeholder="Inserisci qui la quota del bonifico"
-                /> 
-                <!--Show error if invalid payment-->
-                <span class="leftAlignError" ng-show="form.payment.$invalid">
+<!-- make a payment could be seen only if specified button was clicked-->
+<div>
+    <h1>{{message}}</h1>
+    <!--form section is showed if user haven't done a transaction since some time or if it don't no one-->
+    <form class="form-horizontal" ng-model="form" ng-show="!controlIfTransaction()" name="form" novalidate ng-submit="pay()">
+        <!-- Cifra da pagare-->
+        <div class="form-group formElementCenter">
+            <input type="number" class="form-control" ng-model="payment" name="payment" ng-blur="controlPayment()" required placeholder="Inserisci qui la quota del bonifico"
+            />
+            <!--Show error if invalid payment-->
+            <span class="leftAlignError" ng-show="form.payment.$invalid">
                  {{paymentErrors.error}} 
                    </span>
-            </div>
-            <!-- Conto da bonificare -->
-            <div class="form-group formElementCenter">
-                <input type="text" class="form-control" ng-model="iban" name="iban" required ng-blur="controlIban()" placeholder="Inserisci qui l'iban del conto (non lasciare spazi tra un carattere e l'altro!)"
-                />
-                <!--Show error if invalid iban-->
-                <span class="leftAlignError" ng-show="form.iban.$invalid">
+        </div>
+        <!-- Conto da bonificare -->
+        <div class="form-group formElementCenter">
+            <input type="text" class="form-control" ng-model="iban" name="iban" required ng-blur="controlIban()" placeholder="Inserisci qui l'iban del conto (non lasciare spazi tra un carattere e l'altro!)"
+            />
+            <!--Show error if invalid iban-->
+            <span class="leftAlignError" ng-show="form.iban.$invalid">
                   {{ibanErrors.error}} 
                    </span>
-            </div>
-            <!--Bottone per conferma di invio-->
+        </div>
+        <!--Bottone per conferma di invio-->
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary" ng-disabled="formNotValid()">Esegui il bonifico</button>
+        </div>
+    </form>
+    <!--form section is showed if user have done a transaction-->
+    <div class="container" ng-show="controlIfTransaction()">
+        <form class="form-horizontal">
             <div class="form-group">
-                <button type="submit" class="btn btn-primary" ng-disabled="formNotValid()">Esegui il bonifico</button>
+                <button type="submit" class="btn btn-default leftArrow" 
+                    name="resetBoolean" ng-model="resetBoolean" ng-click="resetBoolean()"> 
+                    Effettua un altro bonifico
+                        <img src="../../../CSS/images/arrows/blue_arrow.png" class="leftArrow"/>
+                </button>
             </div>
         </form>
     </div>
-    <!-- end of payment section-->
+</div>
+<!-- end of payment section-->
