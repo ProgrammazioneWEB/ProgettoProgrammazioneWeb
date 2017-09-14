@@ -1,6 +1,5 @@
 //module for admin
-var indexAdminApp = angular.module('indexAdminApp', ['ngRoute']);
-
+var indexAdminApp = angular.module('indexAdminApp', ['ngRoute', 'ngStorage']);
 //route for admin
 indexAdminApp.config(function ($routeProvider) {
     $routeProvider
@@ -29,24 +28,55 @@ indexAdminApp.config(function ($routeProvider) {
             controller: 'changeSite'
         })
 });
-
-//global variable of admin data
-var adminProfile = {
-    name: "Lorenzo",
-    surname: "Stacchio",
-    idNumber: "124356",
-    imagePath: "/CSS/images/Fondatori/Ls.png",
-};
+//admin Profile
+var adminProfile = {};
+//  variabile contenente il token
+var curToken = { value: "", enable: false };
 
 //controller for admin
-indexAdminApp.controller('adminHomeController', function ($scope) {
-    //admin image path
-    $scope.adminImagePath = adminProfile.imagePath;
-    //name and surname
-    $scope.name = adminProfile.name;
-    $scope.surname = adminProfile.surname;
-    $scope.idNumber = adminProfile.idNumber;
+indexAdminApp.controller('adminHomeController', function ($scope, $http, $window, $localStorage) {
+    //  Se il token è salvato in locale lo prelevo (sarà sempre salvato in locale dopo il login)
+    if ($localStorage.XToken) {
+        curToken = $localStorage.XToken;
+    }
+    //se i dati dell'utente sono già salvati li prelevo
+    if ($localStorage.adminProfile) {
+        adminProfile = $localStorage.adminProfile;
+    }
+    //  Tutti i dati sottostanti vanno richiesti al server di node (bisogna passargli l'email)
+    //in sostanza ho appena fatto login!
+    if ($localStorage.Email) {
+        $http({
+            method: "POST",
+            url: "http://localhost:3001/api/userData",
+            headers: { 'Content-Type': 'application/json' },
+            data: {
+                'email': $localStorage.Email,
+                'token': curToken.value
+            }
+        }).then(function (response) {
+            if (response.data.success) {
+                adminProfile = response.data.result;
+                $localStorage.adminProfile = adminProfile;
+                //profile area
+                $scope.name = adminProfile.meta.firstName;
+                $scope.surname = adminProfile.meta.lastName;
+                /**
+                   * This path it's useless at this level of file, but this path will be used in indexUser.html
+                   * which is at the right level 
+                   */
+                $scope.userImagePath = adminProfile.image;
+                //stats area
+                //save the variabile to show the real countNumber
+                $scope.idNumber = adminProfile.numberOfAccount;
+            }
+            else {
+                alert("Nessun utente trovato! ");
+                $window.location.href = "../index.html";
+            }
 
+        });
+    }
 });
 
 //controller that will change the page
@@ -56,20 +86,29 @@ indexAdminApp.controller('changeSite', function ($scope, $window) {
 });
 
 //define alert controller
-indexAdminApp.controller('adminAlertController', function ($scope) {
+indexAdminApp.controller('adminAlertController', function ($scope, $http, $localStorage) {
     //message
     $scope.message = "Benvenuto, da qui potrai scrivere un avviso da inviare a tutti coloro che posseggono un conto Bancario presso la nostra Banca.Ricorda che l'avviso dovrà avere almeno 20 caratteri!";
     //alert to create
     $scope.alert = "";
     //Define function that create alert
     $scope.createAlert = function () {
-        var alert = {
-            alert: $scope.alert
-        };
+        //function to send alerts to users
+        $http({
+            method: "POST",
+            url: "http://localhost:3001/api/invio-avviso",
+            headers: { 'Content-Type': 'application/json' },
+            data: {
+                'token': curToken.value,
+                'title': "Avviso",
+                'text': $scope.alert
+            }
+        }).then(function (response) {
+            alert(response.data.message);
+        });
     };
     //define function that control if text area is null
     $scope.textAreaInvalida = function () {
-        console.log($scope.alert.length);
         if ($scope.alert.length < 20) {
             return true;
         }
@@ -250,3 +289,4 @@ indexAdminApp.controller('adminAbilitaController', function ($scope) {
     };
 
 });
+

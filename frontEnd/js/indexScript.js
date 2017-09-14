@@ -250,7 +250,6 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location, $window
         curToken.value = response.data.token;
         curToken.enable = true;
         //booleans admin
-        //BooleanAdmin.value = responde.data.booleanAdmin;
         //save datas in localStorage
         $localStorage.XToken = curToken;
         $localStorage.Email = $scope.username;

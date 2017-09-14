@@ -83,7 +83,7 @@ indexUserApp.controller('userHomeController', function ($scope, $http, $window, 
             }
             else {
                 alert("Nessun utente trovato! ");
-                $window.location.href = "../indexUser.html";
+                $window.location.href = "../index.html";
             }
 
         });
@@ -215,12 +215,9 @@ indexUserApp.controller('userTransactionController', function ($scope, $http,$wi
     }
     //reset boolean transaction
     $scope.resetBoolean = function () {
-        alert("Valore booleano prima:"+$localStorage.BonificoEffettuatoOra);                
         //cancello questo booleano
-        //$localStorage.removeItem('BonificoEffettuatoOra');
         $localStorage.BonificoEffettuatoOra=false;
         $scope.message = "Da qui puoi effettuare un bonifico";
-        alert("Valore booleano dopo:"+$localStorage.BonificoEffettuatoOra);                
     };
     //function to pay, that calls server apis
     $scope.pay = function () {
