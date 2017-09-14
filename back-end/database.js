@@ -452,3 +452,49 @@ exports.avgCashOutside = function(numberOfAccount, callbackRis){
   });
 }
 
+//this function modify the user in collections users
+exports.modifyCredential = function(user, email, password, phone, residence, callbackRis){
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    var myquery = { email : user.email, password : user.password};
+    var myobj = user;
+
+    //Controllo se email è definita, se è definita lo sostituisco nell'utente
+    if(email = undefined){
+
+         }
+    else
+          myobj.email = email;
+    
+    //Controllo se password è definita, se è definita la sostituisco nell'utente
+    if(password = undefined){
+
+         }
+    else
+           myobj.password = password;
+
+    //Controllo se phone è definita, se è definita lo sostituisco nell'utente
+    if(phone = undefined){
+      
+          }
+    else
+          myobj.meta.numberOfPhone = phone;
+          
+    //Controllo se residence è definita, se è definita la sostituisco nell'utente
+    if(residence = undefined){
+      
+          }
+    else
+          myobj.meta.residence = residence;
+
+
+
+    db.collection("users").updateOne(myquery, myobj, function(err, res) {
+      
+      if (err) throw err;
+      console.log("1 document updated");
+      db.close();
+      callbackRis(true, 'Document modify');
+    });
+  });
+}
