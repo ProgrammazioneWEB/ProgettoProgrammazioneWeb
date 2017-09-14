@@ -96,15 +96,15 @@ indexAdminApp.controller('adminAlertController', function ($scope, $http, $local
         //function to send alerts to users
         $http({
             method: "POST",
-            url: "http://localhost:3001/api/invio-avviso",
+            url: "http://localhost:3001/invio-avviso",
             headers: { 'Content-Type': 'application/json' },
             data: {
                 'token': curToken.value,
-                'title': "Avviso",
+                'title': 'Avviso',
                 'text': $scope.alert
             }
         }).then(function (response) {
-            alert(response.data.message);
+            alert(response.data);
         });
     };
     //define function that control if text area is null

@@ -206,7 +206,6 @@ app.get('/movimenti-in', function (req, res) {
 app.post('/invio-avviso', function (req, res) {
   var date = new Date();
   var today = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay();
-
   var avviso = new Advise({
     title: req.body.title,
     text: req.body.text,
