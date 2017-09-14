@@ -399,12 +399,13 @@ exports.returnLastFiveAdvises = function (callbackRis) {
 }
 
 //this function activate an user account
-exports.activateAccount = function(numberOfAccount, callbackRis){
+exports.activateAccount = function(user, callbackRis){
   MongoClient.connect(url, function(err, db) {
     if (err) throw err;
     var myquery = { numberOfAccount : numberOfAccount };
-    var newvalues = { active : true };
-    db.collection("users").updateOne(myquery, newvalues, function(err, res) {
+    var myobj = user;
+    myobj.active = true;
+    db.collection("users").updateOne(myquery, myobj, function(err, res) {
       if (err) throw err;
       console.log("1 document updated");
       db.close();
@@ -413,12 +414,13 @@ exports.activateAccount = function(numberOfAccount, callbackRis){
 }
 
 //this function disactivate an user account
-exports.disactivateAccount = function(numberOfAccount, callbackRis){
+exports.disactivateAccount = function(user, callbackRis){
   MongoClient.connect(url, function(err, db) {
     if (err) throw err;
     var myquery = { numberOfAccount : numberOfAccount };
-    var newvalues = { active : false };
-    db.collection("users").updateOne(myquery, newvalues, function(err, res) {
+    var myobj = user;
+    myobj.active = false;
+    db.collection("users").updateOne(myquery, myobj, function(err, res) {
       if (err) throw err;
       console.log("1 document updated");
       db.close();
