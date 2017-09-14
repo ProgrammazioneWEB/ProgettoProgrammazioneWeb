@@ -91,6 +91,8 @@ indexAdminApp.controller('adminAlertController', function ($scope, $http, $local
     $scope.message = "Benvenuto, da qui potrai scrivere un avviso da inviare a tutti coloro che posseggono un conto Bancario presso la nostra Banca.Ricorda che l'avviso dovrà avere almeno 20 caratteri!";
     //alert to create
     $scope.alert = "";
+    //alert getted
+    $scope.alerts={};
     //Define function that create alert
     $scope.createAlert = function () {
         //function to send alerts to users
@@ -107,6 +109,19 @@ indexAdminApp.controller('adminAlertController', function ($scope, $http, $local
             alert(response.data);
         });
     };
+    //defin function to get alert
+    $scope.getAlerts= function(){
+        $http({
+            method: "GET",
+            url: "http://localhost:3001/get-avvisi",
+            headers: { 'Content-Type': 'application/json' },
+            data: {
+                'token': curToken.value,
+            }
+        }).then(function (response) {
+           $scope.alerts=response.data;
+        });
+    }
     //define function that control if text area is null
     $scope.textAreaInvalida = function () {
         if ($scope.alert.length < 20) {

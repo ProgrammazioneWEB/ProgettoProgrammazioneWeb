@@ -182,6 +182,23 @@ width: 15%;
 height: 20%;
 }
 
+.adminAlertTitle{
+    color: red;
+    text-align: center;
+    font-weight: bold;
+    font-size: 20;
+}
+.adminAlertDescription{
+    color: black;
+    text-align: center;
+    font-size: 18;
+}
+.adminAlertDate{
+    color: green;
+    text-align: center;
+    font-size: 18;
+}
+
 table.center{
     text-align: center;
     float: center;

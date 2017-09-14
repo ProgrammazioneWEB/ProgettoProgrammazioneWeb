@@ -1,5 +1,5 @@
 <!--page for admin's alerta -->
-<form class="form-group">
+<form class="form-group" name="form">
     <h1>
         {{message}}
     </h1>
@@ -10,4 +10,14 @@
     <div class="form-group">
         <button type="submit" class="btn btn-primary" ng-click="createAlert()" ng-disabled="textAreaInvalida()">Invia avviso</button>
     </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary" ng-click="getAlerts()">Leggi gli ultimi cinque avvisi creati</button>
+    </div>
 </form>
+<div ng-repeat="avviso in alerts">
+    <ul class="list-group">
+        <li class="list-group-item adminAlertTitle">{{avviso.title}}</li>
+        <li class="list-group-item adminAlertDescription">{{avviso.text}}</li>
+        <li class="list-group-item adminAlertDate">{{avviso.date}}</li>
+    </ul>
+</div>
