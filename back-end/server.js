@@ -212,7 +212,10 @@ app.post('/invio-avviso', function (req, res) {
     date: today
   });
   database.addAdvise(avviso, function (result, messaggio) {
-    res.json(messaggio);
+    res.json({
+      success: result,
+      message: messaggio
+    });
   });
 });
 
