@@ -409,6 +409,7 @@ exports.activateAccount = function(user, callbackRis){
       if (err) throw err;
       console.log("1 document updated");
       db.close();
+      callbackRis(true, 'Document modify');
     });
   });
 }
@@ -424,6 +425,29 @@ exports.disactivateAccount = function(user, callbackRis){
       if (err) throw err;
       console.log("1 document updated");
       db.close();
+      callbackRis(true, 'Document modify');
+    });
+  });
+}
+
+//this function return the media of the cash sent in transaction
+exports.avgCashOutside = function(numberOfAccount, callbackRis){
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    db.collection("movements").aggregate([
+      {
+        $group :
+        {
+         _id : { from : numberOfAccount},
+         avgQuantity : { $avg : quantity}
+
+        } 
+      }
+    ], function(err, res) {
+      if (err) throw err;
+      console.log("1 document updated");
+      db.close();
+      callbackRis(res);
     });
   });
 }
