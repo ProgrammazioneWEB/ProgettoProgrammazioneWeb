@@ -84,7 +84,7 @@ exports.autenticate = function (email, password, callbackRis) {
       callbackRis(false, "Impossibile connettersi al Database");
       throw err;
     }
-    db.collection("users").findOne({ email: email, password: password }, function (err, result) {
+    db.collection("users").findOne({ email: email, password: password, active : true }, function (err, result) {
       if (err) {
         callbackRis(false, "Impossibile trovare lo schema del Database");
         throw err;
@@ -397,3 +397,32 @@ exports.returnLastFiveAdvises = function (callbackRis) {
     });
   });
 }
+
+//this function activate an user account
+exports.activateAccount = function(numberOfAccount, callbackRis){
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    var myquery = { numberOfAccount : numberOfAccount };
+    var newvalues = { active : true };
+    db.collection("users").updateOne(myquery, newvalues, function(err, res) {
+      if (err) throw err;
+      console.log("1 document updated");
+      db.close();
+    });
+  });
+}
+
+//this function disactivate an user account
+exports.disactivateAccount = function(numberOfAccount, callbackRis){
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    var myquery = { numberOfAccount : numberOfAccount };
+    var newvalues = { active : false };
+    db.collection("users").updateOne(myquery, newvalues, function(err, res) {
+      if (err) throw err;
+      console.log("1 document updated");
+      db.close();
+    });
+  });
+}
+
