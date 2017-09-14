@@ -57,27 +57,6 @@ database.init();
 // basic route (momentaneamente solo di test)
 app.get('/', function (req, res) {
   // creo il nuovo utente con i dati 
-  var user = new User({
-    email: 'testA@gmail.com',
-    password: 'password',
-    meta: {
-      //Nome dell'utente
-      firstName: 'Nicolò',
-      //Cognome dell'utente
-      lastName: 'Ruggeri',
-      //Data di nascita dell'utente
-      dateOfBirth: '24/10/1995',
-      //numero di telefono dell'utente
-      numberOfPhone: '0932740753978',
-      //Residenza dell'utente
-      residence: 'casa mia',
-      //Codice fiscale dell'utente
-      fiscalCode: '097u45032r9yf2f'
-    },
-    numberOfAccount: 100,
-    availableBalance: 5500
-  });
-
   var user2 = new User({
     email: 'testB@gmail.com',
     password: 'password',
@@ -120,61 +99,62 @@ app.get('/', function (req, res) {
     numberOfAccount: 201,
     availableBalance: 7000
   });
-  today = new Date();
+
+  var date = new Date();
+  var today = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay();
 
   var mov = new Movimento({
     from: 100,
     to: 200,
-    date: today.getDate(),
+    date: today,
     quantity: 500
   });
 
-  database.addUser(user, function (result, messaggio) {
+
+  database.addUser(user2, function (result, messaggio) {
     console.log(messaggio);
-    database.addUser(user2, function (result, messaggio) {
+    database.addUser(admin, function (result, messaggio) {
       console.log(messaggio);
-      database.addUser(admin, function (result, messaggio) {
+      database.sortUsersByNumberOfAccount(function (result) {
+        console.log(result);
+      });
+      database.addTransaction(mov, function (result, messaggio) {
         console.log(messaggio);
-        database.sortUsersByNumberOfAccount(function (result) {
+        database.allMovementsSend(100, function (result) {
           console.log(result);
+        });
+        mov = new Movimento({
+          from: 200,
+          to: 100,
+          date: today,
+          quantity: 1500
         });
         database.addTransaction(mov, function (result, messaggio) {
           console.log(messaggio);
-          database.allMovementsSend(100, function (result) {
+          database.allMovementsSend(200, function (result) {
             console.log(result);
           });
           mov = new Movimento({
-            from: 200,
-            to: 100,
-            date: today.getDate(),
-            quantity: 1500
+            from: 100,
+            to: 200,
+            date: today,
+            quantity: 500
           });
           database.addTransaction(mov, function (result, messaggio) {
             console.log(messaggio);
-            database.allMovementsSend(200, function (result) {
+            database.allMovementsSend(100, function (result) {
               console.log(result);
             });
-            mov = new Movimento({
-              from: 100,
-              to: 200,
-              date: today.getDate(),
-              quantity: 500
-            });
-            database.addTransaction(mov, function (result, messaggio) {
-              console.log(messaggio);
-              database.allMovementsSend(100, function (result) {
-                console.log(result);
-              });
-              res.json({
-                success: result,
-                message: messaggio
-              });
+            res.json({
+              success: result,
+              message: messaggio
             });
           });
         });
       });
     });
   });
+
   /*var megapin = new Pin({
     number: 55555,
     meta: {
@@ -224,11 +204,13 @@ app.get('/movimenti-in', function (req, res) {
 
 //invio avvisi
 app.post('/invio-avviso', function (req, res) {
-  var data = new Date();
+  var date = new Date();
+  var today = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay();
+
   var avviso = new Advise({
     title: req.body.title,
     text: req.body.text,
-    date: data.getDate()
+    date: today
   });
   database.addAdvise(avviso, function (result, messaggio) {
     res.json(messaggio);
@@ -327,7 +309,7 @@ apiRoutes.post('/authenticate', function (req, res) {
       //res.cookie('authToken',token);          
 
       // return the information including token as JSON
-      database.findUserByEmail(req.body.email, function(risultato){
+      database.findUserByEmail(req.body.email, function (risultato) {
         // return the information including token as JSON
         res.json({
           success: true,
@@ -474,7 +456,8 @@ apiRoutes.post('/movements', function (req, res) {
 
 //Test transazione e bonifico da amministratore
 apiRoutes.post('/invio-bonifico-admin', function (req, res) {
-  var data = new Date();
+  var date = new Date();
+  var today = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay();
 
   //  Controllo se l'utente loggato è amministratore
   database.findUserByEmail(req.decoded, function (result) {
@@ -483,7 +466,7 @@ apiRoutes.post('/invio-bonifico-admin', function (req, res) {
         var bonifico = new Movimento({
           from: req.body.from,
           to: req.body.to,
-          date: data.getDate(),
+          date: today,
           quantity: req.body.quantity
         });
 
@@ -512,14 +495,16 @@ apiRoutes.post('/invio-bonifico-admin', function (req, res) {
 
 //Test transazione e bonifico da user
 apiRoutes.post('/invio-bonifico-user', function (req, res) {
-  var data = new Date();
+  var date = new Date();
+  var today = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay();
+
   //  Cerco il numero di conto di chi ha richiesto il bonifico (req.decoded contiene l'email del user loggato)
   database.findUserByEmail(req.decoded, function (result) {
     if (result) {
       var bonifico = new Movimento({
         from: result.numberOfAccount,
         to: req.body.to,
-        date: data.getDate(),
+        date: today,
         quantity: req.body.quantity
       });
 
@@ -547,6 +532,3 @@ app.use('/api', apiRoutes);
 // =======================
 app.listen(port);
 console.log('Node è in funzione su http://localhost:' + port);
-
-
-
