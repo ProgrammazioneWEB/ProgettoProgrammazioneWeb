@@ -28,6 +28,10 @@ indexUserApp.config(function ($routeProvider) {
             templateUrl: './html/user/userHome/userHome.html',
             controller: 'changeSite'
         })
+        .when('/modifyMeta', {
+            templateUrl: './html/user/userModifyMeta/userModifyMeta.html',
+            controller: 'userModifyMetaController'
+        })
 });
 
 //  variabile contenente il token
@@ -81,10 +85,10 @@ indexUserApp.controller('userHomeController', function ($scope, $http, $window, 
                    * which is at the right level 
                    */
                 $scope.userImagePath = userProfile.image;
-                //control user image path
-                if($scope.userImagePath==undefined){
+                //control user image path, if string contains nothing replace it 
+                if ($scope.userImagePath == "") {
                     //give a default image
-                    $scope.userImagePath="../CSS/images/iconsForUser/user_default.jpg"
+                    $scope.userImagePath = "../CSS/images/iconsForUser/user_default.jpg"
                 }
                 //stats area
                 //save the variable to show the real saldo
@@ -432,6 +436,10 @@ indexUserApp.controller('userGraphController', function ($scope) {
     }
 });
 
+//modify meta controller
+indexUserApp.controller('userModifyMetaController', function ($scope, $http, $window) {
+    $scope.message="Benvenuto " + userProfile.meta.firstName +", da qui potrai modificare le tue credenziali!";
+});
 
 
 
