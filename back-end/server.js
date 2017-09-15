@@ -181,6 +181,54 @@ app.get('/', function (req, res) {
   });*/
 });
 
+//  Funzione solo di test per disabilitazione account (si può cancellare)
+app.get('/off', function (req, res) {
+  database.findUserByEmail("testB@gmail.com", function (result) {
+    if (result)
+      database.disactivateAccount(result, function (result, message) {
+        if (result)
+          res.json({
+            success: result,
+            message: message
+          });
+        else
+          res.json({
+            success: false,
+            message: 'Riscontrati problemi nel database.'
+          });
+      });
+    else
+      res.json({
+        success: false,
+        message: 'L\'utente da disabilitare non esiste.'
+      });
+  });
+});
+
+//  Funzione solo di test per abilitazione account (si può cancellare)
+app.get('/on', function (req, res) {
+  database.findUserByEmail("testB@gmail.com", function (result) {
+    if (result)
+      database.activateAccount(result, function (result, message) {
+        if (result)
+          res.json({
+            success: result,
+            message: message
+          });
+        else
+          res.json({
+            success: false,
+            message: 'Riscontrati problemi nel database.'
+          });
+      });
+    else
+      res.json({
+        success: false,
+        message: 'L\'utente da disabilitare non esiste.'
+      });
+  });
+});
+
 //Test vedere utenti
 app.get('/list', function (req, res) {
   database.sortUsersByNumberOfAccount(function (result) {
@@ -267,7 +315,7 @@ app.post('/singup', function (req, res) {
           password: req.body.password,
           meta: metadata,
           numberOfAccount: nAccount,
-          availableBalance: 1000
+          availableBalance: 0
         });
 
         //  Lo aggiungo al database
@@ -313,14 +361,18 @@ apiRoutes.post('/authenticate', function (req, res) {
       // return the information including token as JSON
       database.findUserByEmail(req.body.email, function (risultato) {
         // return the information including token as JSON
-        res.json({
-          success: true,
-          message: 'Successfull!',
-          token: token,
-          admin: risultato.admin
-        });
+        if (risultato) {
+          res.json({
+            success: true,
+            message: 'Successfull!',
+            token: token,
+            admin: risultato.admin
+          });
+        }
+        else
+          res.json({ success: false, message: 'Authentication failed. User not found.' });
       });
-    };
+    }
   });
 });
 

@@ -4,7 +4,7 @@
 
 var mongoose = require('mongoose');
 var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://localhost:27017/mydbTESTA00";
+var url = "mongodb://localhost:27017/dbTest001";
 
 // this function find a user from his number of account
 var findByNumberOfAccount = function (numberOfAccount, callback) {
@@ -84,17 +84,17 @@ exports.autenticate = function (email, password, callbackRis) {
       callbackRis(false, "Impossibile connettersi al Database");
       throw err;
     }
-    db.collection("users").findOne({ email: email, password: password, active : true }, function (err, result) {
+    db.collection("users").findOne({ email: email, password: password, active: true }, function (err, result) {
       if (err) {
         callbackRis(false, "Impossibile trovare lo schema del Database");
         throw err;
       }
       db.close();
 
-      if (!result) {
+      if (!result)
         callbackRis(false, "Utente o password errati");
-      }
-      callbackRis(true, "Login Effettuato");
+      else
+        callbackRis(true, "Login Effettuato");
     });
   });
 }
@@ -106,6 +106,25 @@ exports.addUser = function (user, callbackRis) {
   {
     callbackRis(false, "Impossibile registrare un utente che non esiste");
     return;
+  }
+
+  if (user.admin == undefined)
+    user.admin = false;
+
+  if (user.active == undefined)
+    user.active = true;
+
+  if (user.availableBalance == undefined)
+    user.availableBalance = 0;
+
+  if (user.image == undefined)
+    user.image = "";
+
+  if (user.dateOfCreation == undefined) {
+    var date = new Date();
+    var today = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay();
+
+    user.date = today;
   }
 
   MongoClient.connect(url, function (err, db) {
@@ -399,13 +418,13 @@ exports.returnLastFiveAdvises = function (callbackRis) {
 }
 
 //this function activate an user account
-exports.activateAccount = function(user, callbackRis){
-  MongoClient.connect(url, function(err, db) {
+exports.activateAccount = function (user, callbackRis) {
+  MongoClient.connect(url, function (err, db) {
     if (err) throw err;
-    var myquery = { numberOfAccount : numberOfAccount };
+    var myquery = { numberOfAccount: user.numberOfAccount };
     var myobj = user;
     myobj.active = true;
-    db.collection("users").updateOne(myquery, myobj, function(err, res) {
+    db.collection("users").updateOne(myquery, myobj, function (err, res) {
       if (err) throw err;
       console.log("1 document updated");
       db.close();
@@ -415,13 +434,13 @@ exports.activateAccount = function(user, callbackRis){
 }
 
 //this function disactivate an user account
-exports.disactivateAccount = function(user, callbackRis){
-  MongoClient.connect(url, function(err, db) {
+exports.disactivateAccount = function (user, callbackRis) {
+  MongoClient.connect(url, function (err, db) {
     if (err) throw err;
-    var myquery = { numberOfAccount : numberOfAccount };
+    var myquery = { numberOfAccount: user.numberOfAccount };
     var myobj = user;
     myobj.active = false;
-    db.collection("users").updateOne(myquery, myobj, function(err, res) {
+    db.collection("users").updateOne(myquery, myobj, function (err, res) {
       if (err) throw err;
       console.log("1 document updated");
       db.close();
@@ -431,19 +450,19 @@ exports.disactivateAccount = function(user, callbackRis){
 }
 
 //this function return the media of the cash sent in transaction
-exports.avgCashOutside = function(numberOfAccount, callbackRis){
-  MongoClient.connect(url, function(err, db) {
+exports.avgCashOutside = function (numberOfAccount, callbackRis) {
+  MongoClient.connect(url, function (err, db) {
     if (err) throw err;
     db.collection("movements").aggregate([
       {
-        $group :
+        $group:
         {
-         _id : { from : numberOfAccount},
-         avgQuantity : { $avg : quantity}
+          _id: { from: numberOfAccount },
+          avgQuantity: { $avg: quantity }
 
-        } 
+        }
       }
-    ], function(err, res) {
+    ], function (err, res) {
       if (err) throw err;
       console.log("1 document updated");
       db.close();
@@ -453,44 +472,30 @@ exports.avgCashOutside = function(numberOfAccount, callbackRis){
 }
 
 //this function modify the user in collections users
-exports.modifyCredential = function(user, email, password, phone, residence, callbackRis){
-  MongoClient.connect(url, function(err, db) {
+exports.modifyCredential = function (user, email, password, phone, residence, callbackRis) {
+  MongoClient.connect(url, function (err, db) {
     if (err) throw err;
-    var myquery = { email : user.email, password : user.password};
+    var myquery = { email: user.email, password: user.password };
     var myobj = user;
 
     //Controllo se email è definita, se è definita lo sostituisco nell'utente
-    if(email = undefined){
+    if (email != undefined)
+      myobj.email = email;
 
-         }
-    else
-          myobj.email = email;
-    
     //Controllo se password è definita, se è definita la sostituisco nell'utente
-    if(password = undefined){
-
-         }
-    else
-           myobj.password = password;
+    if (password != undefined)
+      myobj.password = password;
 
     //Controllo se phone è definita, se è definita lo sostituisco nell'utente
-    if(phone = undefined){
-      
-          }
-    else
-          myobj.meta.numberOfPhone = phone;
-          
+    if (phone != undefined)
+      myobj.meta.numberOfPhone = phone;
+
     //Controllo se residence è definita, se è definita la sostituisco nell'utente
-    if(residence = undefined){
-      
-          }
-    else
-          myobj.meta.residence = residence;
+    if (residence != undefined)
+      myobj.meta.residence = residence;
 
+    db.collection("users").updateOne(myquery, myobj, function (err, res) {
 
-
-    db.collection("users").updateOne(myquery, myobj, function(err, res) {
-      
       if (err) throw err;
       console.log("1 document updated");
       db.close();
