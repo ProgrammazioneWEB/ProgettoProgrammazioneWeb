@@ -33,6 +33,12 @@ indexUserApp.config(function ($routeProvider) {
 //  variabile contenente il token
 var curToken = { value: "", enable: false };
 
+//user dates
+var userProfile = null;
+//user movements
+var userMovements = null;
+//user alerts
+var userAlerts = null;
 //user home controller
 /**
  * Dato che questo è il primo controller utilizzato richiamerò tutte le funzioni del server per salvare
@@ -75,6 +81,11 @@ indexUserApp.controller('userHomeController', function ($scope, $http, $window, 
                    * which is at the right level 
                    */
                 $scope.userImagePath = userProfile.image;
+                //control user image path
+                if($scope.userImagePath==undefined){
+                    //give a default image
+                    $scope.userImagePath="../CSS/images/iconsForUser/user_default.jpg"
+                }
                 //stats area
                 //save the variable to show the real saldo
                 $scope.moneyMessage = userProfile.availableBalance + " €";
@@ -105,7 +116,34 @@ indexUserApp.controller('userHomeController', function ($scope, $http, $window, 
                 alert("Nessun Movimento trovato");
             }
 
-        })
+        });
+        //define booleans to show alerts if exists
+        $scope.existOneAlert = false;
+        $scope.showAlertCall = false;
+        //define local alerts
+        $scope.alerts = [];
+        //take alerts from database
+        $http({
+            method: "GET",
+            url: "http://localhost:3001/get-avvisi",
+            headers: { 'Content-Type': 'application/json' },
+            data: {
+                'token': curToken.value,
+            }
+        }).then(function (response) {
+            //get alerts object
+            userAlerts = response.data;
+            //control if exist one alert 
+            if (userAlerts.length != 0) {
+                alert(userAlerts[1].text);
+                $scope.existOneAlert = true;
+                $scope.alerts = userAlerts;
+            }
+        });
+        //define function to show alert
+        $scope.showAlert = function () {
+            $scope.showAlertCall = !$scope.showAlertCall;
+        }
     }
 
 });
@@ -124,7 +162,7 @@ indexUserApp.controller('changeSite', function ($scope, $window) {
 });
 
 //user movements controller
-indexUserApp.controller('userTransactionController', function ($scope, $http,$window, $localStorage) {
+indexUserApp.controller('userTransactionController', function ($scope, $http, $window, $localStorage) {
     //iban filter 
     var ibanFilter = "";
     //ERRORS
@@ -195,8 +233,8 @@ indexUserApp.controller('userTransactionController', function ($scope, $http,$wi
     };
     //function that control if form is valid
     $scope.formNotValid = function () {
-        if ($scope.form.$invalid || 
-            $scope.form.iban.$invalid || 
+        if ($scope.form.$invalid ||
+            $scope.form.iban.$invalid ||
             $scope.form.payment.$invalid) {
             return true;
         }
@@ -206,7 +244,7 @@ indexUserApp.controller('userTransactionController', function ($scope, $http,$wi
     }
     //payment done or not 
     $scope.controlIfTransaction = function () {
-        if ($localStorage.BonificoEffettuatoOra==true) {
+        if ($localStorage.BonificoEffettuatoOra == true) {
             $scope.message = "Hai effettuato un bonifico!";
             return true;
         }
@@ -216,7 +254,7 @@ indexUserApp.controller('userTransactionController', function ($scope, $http,$wi
     //reset boolean transaction
     $scope.resetBoolean = function () {
         //cancello questo booleano
-        $localStorage.BonificoEffettuatoOra=false;
+        $localStorage.BonificoEffettuatoOra = false;
         $scope.message = "Da qui puoi effettuare un bonifico";
     };
     //function to pay, that calls server apis
@@ -229,13 +267,13 @@ indexUserApp.controller('userTransactionController', function ($scope, $http,$wi
                 'email': $localStorage.Email,
                 'token': curToken.value,
                 'to': $scope.iban,
-                'quantity': $scope.payment 
+                'quantity': $scope.payment
             }
         }).then(function (response) {
             if (response.data.success) {
                 alert(response.data.message);
                 //boolean used to change content of page
-               $localStorage.BonificoEffettuatoOra = true;
+                $localStorage.BonificoEffettuatoOra = true;
                 $scope.message = "Hai effettuato un bonifico!";
                 //refresho la pagina per prendere i risultati
                 $window.location.reload();
@@ -398,13 +436,6 @@ indexUserApp.controller('userGraphController', function ($scope) {
 
 
 
-//user dates
-var userProfile = {
-};
-//user movements
-var userMovements = {
-
-};
 
 
 

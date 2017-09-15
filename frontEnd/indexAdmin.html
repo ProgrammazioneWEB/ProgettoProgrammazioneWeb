@@ -24,61 +24,61 @@
     <script type="text/javascript" src="js/zingchart/client/zingchart.min.js"></script>
     <script type="text/javascript" src="js/ZingChart-AngularJS/src/zingchart-angularjs.js"></script>
     <script src="js/jquery/jquery-3.2.1.min.js"></script>
-    <script src="js/storage/ngStorage.js"></script>    
+    <script src="js/storage/ngStorage.js"></script>
     <script src="js/indexAdminScript.js"></script>
 </head>
 
 <body ng-controller="adminHomeController" class="whiteBackground">
     <!-- bar of user's function-->
     <div class="userFunction">
-            <!--table that contains user statistics-->
-            <table class="table center">
-                <tr>
-                    <!--route per index -->
-                    <td >
-                        <a href="#!/mainHome" class="whiteFont">
+        <!--table that contains user statistics-->
+        <table class="table center">
+            <tr>
+                <!--route per index -->
+                <td>
+                    <a href="#!/mainHome" class="logoImage" title="Torna al sito principale" alt="Torna al sito principale">
                                 <img class="iconUnicam"  src="./CSS/images/Logos/unicam.png"/>
                         </a>
-                    </td>
-                    <!--user image-->
-                    <td >
-                        <img ng-src="{{adminImagePath}}" class="userImage" />
-                    </td>
-                    <!--user data-->
-                    <td>
-                        <ul class="list-group limitSpace">
-                            <li class="list-group-item statisticsTitle">
-                                Admin data <i class="fa fa-id-card-o" aria-hidden="true"></i>
-                            </li>
-                            <li class="list-group-item statistics">
-                                {{name}}
-                            </li>
-                            <li class="list-group-item statistics">
-                                    {{surname}}
-                                </li>
-                    </td>
-                    <td>
-                        <!--second column-->
-                        <!--user statistic-->
-                        <ul class="list-group limitSpace">
-                            <li class="list-group-item statisticsTitle">
-                                Admin statistics <i class="fa fa-bar-chart" aria-hidden="true"></i>
-                            </li>
-                            <li class="list-group-item statistics">
-                                N° admin: {{idNumber}}
-                            </li>
-                        </ul>
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <br>
-        <br>
-        <!--Button zone and dinamic zone-->
-        <ul class="list-group leftAlign">
-            <li class="list-group-item previous">
-                <!-- show money movement-->
-                <a href="#!/alert" class="whiteFont">
+                </td>
+                <!--user image-->
+                <td>
+                    <img ng-src="{{adminImagePath}}" class="userImage" title="Immagine del profilo" alt="Immagine del profilo" />
+                </td>
+                <!--user data-->
+                <td>
+                    <ul class="list-group limitSpace">
+                        <li class="list-group-item statisticsTitle">
+                            Admin data <i class="fa fa-id-card-o" aria-hidden="true"></i>
+                        </li>
+                        <li class="list-group-item statistics">
+                            {{name}}
+                        </li>
+                        <li class="list-group-item statistics">
+                            {{surname}}
+                        </li>
+                </td>
+                <td>
+                    <!--second column-->
+                    <!--user statistic-->
+                    <ul class="list-group limitSpace">
+                        <li class="list-group-item statisticsTitle">
+                            Admin statistics <i class="fa fa-bar-chart" aria-hidden="true"></i>
+                        </li>
+                        <li class="list-group-item statistics">
+                            N° admin: {{idNumber}}
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <br>
+    <br>
+    <!--Button zone and dinamic zone-->
+    <ul class="list-group leftAlign">
+        <li class="list-group-item previous">
+            <!-- show money movement-->
+            <a href="#!/alert" class="whiteFont">
                     <button type="button" class="btn btn-primary userArea" name="creaAvviso" ng-style="buttonMovementColor" ng-focus="buttonMovementColor={background:'#6090AA'}"
                         ng-blur="buttonMovementColor={}" ng-model="creaAvviso">
                             <img src="../../CSS/images/iconsForAdmin/alert.png" class="img-fluid" alt="Crea un avviso"/> 
@@ -86,10 +86,10 @@
                            Crea un avviso
                         </button>
                     </a>
-            </li>
-            <li class=" list-group-item previous">
-                <!--make a payment-->
-                <a href="#!/activeUser" class="whiteFont"> 
+        </li>
+        <li class=" list-group-item previous">
+            <!--make a payment-->
+            <a href="#!/activeUser" class="whiteFont"> 
                         <button type="button" class="btn btn-primary userArea" name="abiDisUser" ng-style="buttonPaymentColor" ng-focus="buttonPaymentColor={background:'#6090AA'}"
                         ng-blur="buttonPaymentColor={}"  ng-model="abiDisUser">          
                             <img src="../../CSS/images/iconsForAdmin/user.jpg"  class="img-fluid" alt="D/A utente"/> 
@@ -97,35 +97,35 @@
                                         Abilita/Disabilita utente
                                                        </button>
                             </a>
-            </li>
-        </ul>
-    
-        <!-- Right column or other half button area-->
-        <!--Button zone and dinamic zone-->
-        <ul class="list-group rightAlign">
-            <li class="list-group-item next">
-                <!-- show how spent in one day at average-->
-                <a href="#!/transaction" class="whiteFont"> 
+        </li>
+    </ul>
+
+    <!-- Right column or other half button area-->
+    <!--Button zone and dinamic zone-->
+    <ul class="list-group rightAlign">
+        <li class="list-group-item next">
+            <!-- show how spent in one day at average-->
+            <a href="#!/transaction" class="whiteFont"> 
                     <button type="button" class="btn btn-primary userArea" name="transaction" ng-model="transaction" ng-style="buttonAverageColor"
                         ng-focus="buttonAverageColor={background:'#6090AA'}" ng-blur="buttonAverageColor={}">
                                         <img src="../../CSS/images/iconsForAdmin/transaction.png" class="img-fluid" alt="Effettua bonifico tra due utenti"/> 
                                       <br> Effettua bonifico tra  <br>due utenti
                     </button>
                     </a>
-            </li>
-            <!--Watch your stats with  Graphs!-->
-            <li class=" list-group-item next">
-                <a href="#!/userStats" class="whiteFont">                     
+        </li>
+        <!--Watch your stats with  Graphs!-->
+        <li class=" list-group-item next">
+            <a href="#!/userStats" class="whiteFont">                     
                     <button type="button" class="btn btn-primary userArea" name="userStats" ng-style="buttonGraphColor" ng-focus="buttonGraphColor={background:'#6090AA'}"
                         ng-blur="buttonGraphColor={}" ng-model="userStats"> <img src="../../CSS/images/iconsForAdmin/userStats.png"  class="img-fluid" alt="Visiona stato di un utente"/> 
                                             <br> Visiona stato di<br> un utente
                     </button>
                     </a>
-            </li>
-        </ul>
-        <!--Center column or dynamic areas-->
-        <div ng-view class="userStatistics">
-        </div>
+        </li>
+    </ul>
+    <!--Center column or dynamic areas-->
+    <div ng-view class="userStatistics">
+    </div>
 </body>
 
 </html>

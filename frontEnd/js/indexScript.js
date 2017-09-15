@@ -167,7 +167,7 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location, $window
   }
   //function to control username field and show the errors if user wrong to type 
   $scope.controlUsernameField = function () {
-   // alert("sono nel controllo username, la password è:"+$scope.password);    
+    // alert("sono nel controllo username, la password è:"+$scope.password);    
     //if length is 0 user has type nothing
     if ($scope.username === undefined) {
       //username value is empty
@@ -253,9 +253,10 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location, $window
         //save datas in localStorage
         $localStorage.XToken = curToken;
         $localStorage.Email = $scope.username;
+        $localStorage.admin = response.data.admin;
         alert(curToken.value);
         alert(response.data.admin);
-        if (response.data.admin == true) {
+        if ($localStorage.admin == true) {
           $window.location.href = './indexAdmin.html';
         }
         else {
@@ -275,7 +276,13 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location, $window
 indexApp.controller("filterUserController", function ($scope, $http, $window, $location, $localStorage) {
   //if exist a token i'm already Logged in
   if ($localStorage.XToken) {
-    $window.location.href = '../indexUser.html';
+    if ($localStorage.admin) {
+      $window.location.href = '../indexAdmin.html';
+    }
+    else {
+      $window.location.href = '../indexUser.html';
+
+    }
   }
   //non sono loggato, eseguo il redirect alla pagina di login
   else {

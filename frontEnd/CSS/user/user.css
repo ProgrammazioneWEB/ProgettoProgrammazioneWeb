@@ -41,10 +41,18 @@ img.leftArrow{
 img.userImage{
     text-align: center;
     float:center;
-    min-width: 40%;
-    min-height: 40%;
-    max-height: 75%;
-    max-width: 75%;
+    min-width: 35%;
+    min-height: 20%;
+    max-height: 40%;
+    max-width: 40%;
+}
+img.logoImage{
+    text-align: center;
+    float:center;
+    min-width: 45%;
+    min-height: 20%;
+    max-height: 40%;
+    max-width: 60%;
 }
 
 img.buttonImage{
@@ -60,10 +68,16 @@ font-weight:bold;
 color:  black;
 }
 
-h2.hint{
+label.hint{
     font-family: 'Times New Roman', Times, serif;    
     color:#3E50F3;
     font-weight: bold;
+    float: left;
+    font-size: 20;
+    max-height: 50%;
+    max-width: 30%;
+    min-height: 10%;
+    min-width: 10%;
    
 }
 .statistics{
@@ -182,6 +196,19 @@ width: 15%;
 height: 20%;
 }
 
+div.noAlerts{
+    padding-top: 2%;
+    background-color: #3E50F3;    
+    color:gray;
+    font-weight: bold;
+    text-align: center;
+    font: 22;
+    float: center;
+}
+div.alertsArea{
+    text-align: center;
+    border-radius: 5%;
+}
 .adminAlertTitle{
     color: red;
     text-align: center;

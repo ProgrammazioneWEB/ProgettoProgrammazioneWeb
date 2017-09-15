@@ -36,19 +36,13 @@
             <tr>
                 <!--route per index -->
                 <td>
-                    <a href="#!/mainHome" class="whiteFont">
+                    <a href="#!/mainHome" class="logoImage" title="Torna al sito principale" alt="Torna al sito principale">
                             <img class="iconUnicam"  src="./CSS/images/Logos/unicam.png"/>
                     </a>
-                    <h2 class="hint" name="hint">
-                        Clicca sullo stemma
-                        <br> Unicam per tornare
-                        <br> al sito principale!
-                    </h2>
                 </td>
-
                 <!--user image-->
                 <td>
-                    <img ng-src="{{userImagePath}}" class="userImage" />
+                    <img ng-src="{{userImagePath}}" class="userImage" title="Immagine del profilo" alt="Immagine del profilo" />
                 </td>
                 <!--user data-->
                 <td>
@@ -77,6 +71,29 @@
                 </td>
             </tr>
         </table>
+    </div>
+    <!--showed if exitst no alerts-->
+    <div class="noAlerts" ng-show="!existOneAlert">
+        <span>Non ci sono nuovi avvisi</span>
+    </div>
+    <!--showed if exitst  alerts-->
+    <div class="container alertsArea" style="background-color: red;" ng-show="existOneAlert">
+        <div ng-show="existOneAlert">
+            <!--button to open alerts menu-->
+            <button type="submit" name="buttonShowAlert" class="btn btn-alert" ng-show="!showAlertCall" ng-model="buttoShowAlert" ng-click="showAlert()">
+                Mostra avvisi
+            </button>
+            <!--button to close alerts menu-->
+            <button type="submit" name="buttonShowAlert" class="btn btn-alert" ng-show="showAlertCall" ng-model="buttoShowAlert" ng-click="showAlert()">
+                    Chiudi sezione avvisi
+            </button>
+            <!--lists of alerts-->
+            <ul class="list-group" ng-show="showAlertCall" ng-repeat="avviso in alerts">
+                <li class="list-group-item adminAlertTitle">{{avviso.title}}</li>
+                <li class="list-group-item adminAlertDescription">{{avviso.text}}</li>
+                <li class="list-group-item adminAlertDate">{{avviso.date}}</li>
+            </ul>
+        </div>
     </div>
     <br>
     <br>

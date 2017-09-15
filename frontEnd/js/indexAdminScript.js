@@ -65,7 +65,12 @@ indexAdminApp.controller('adminHomeController', function ($scope, $http, $window
                    * This path it's useless at this level of file, but this path will be used in indexUser.html
                    * which is at the right level 
                    */
-                $scope.userImagePath = adminProfile.image;
+                $scope.adminImagePath = adminProfile.image;
+                 //control user image path
+                 if($scope.adminImagePath==undefined){
+                    //give a default image
+                    $scope.adminImagePath="../CSS/images/iconsForUser/user_default.jpg"
+                }
                 //stats area
                 //save the variabile to show the real countNumber
                 $scope.idNumber = adminProfile.numberOfAccount;
@@ -106,7 +111,7 @@ indexAdminApp.controller('adminAlertController', function ($scope, $http, $local
                 'text': $scope.alert
             }
         }).then(function (response) {
-            alert(response.data);
+            alert(response.data.message);
         });
     };
     //defin function to get alert
