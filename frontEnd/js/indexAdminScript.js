@@ -114,6 +114,8 @@ indexAdminApp.controller('adminAlertController', function ($scope, $http, $local
             alert(response.data.message);
         });
     };
+    //boolean to show section advise
+    $scope.showAlertsB = false;
     //defin function to get alert
     $scope.getAlerts= function(){
         $http({
@@ -126,6 +128,10 @@ indexAdminApp.controller('adminAlertController', function ($scope, $http, $local
         }).then(function (response) {
            $scope.alerts=response.data;
         });
+    }
+    //function to active alerts area
+    $scope.showAlerts= function(){
+        $scope.showAlertsB = !$scope.showAlertsB;
     }
     //define function that control if text area is null
     $scope.textAreaInvalida = function () {

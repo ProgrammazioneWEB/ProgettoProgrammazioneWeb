@@ -135,7 +135,6 @@ indexUserApp.controller('userHomeController', function ($scope, $http, $window, 
             userAlerts = response.data;
             //control if exist one alert 
             if (userAlerts.length != 0) {
-                alert(userAlerts[1].text);
                 $scope.existOneAlert = true;
                 $scope.alerts = userAlerts;
             }
