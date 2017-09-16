@@ -604,6 +604,16 @@ apiRoutes.post('/invio-bonifico-user', function (req, res) {
     }
   });
 });
+//this function return the media of the cash sent in transaction
+apiRoutes.post('/CalcolaMedia', function (req, res) {
+  database.avgCashOutside(req.numberOfAccount, function (result, messaggio) {
+    res.json({
+      success: result,
+      message: messaggio
+    });
+  });
+});
+
 
 app.use('/api', apiRoutes);
 
