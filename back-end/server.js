@@ -96,7 +96,7 @@ app.get('/', function (req, res) {
       //Codice fiscale dell'utente
       fiscalCode: '3g43q4g465g'
     },
-    numberOfAccount: 201,
+    numberOfAccount: 100,
     availableBalance: 7000
   });
 
@@ -110,51 +110,59 @@ app.get('/', function (req, res) {
     quantity: 500
   });
 
-
-  database.addUser(user2, function (result, messaggio) {
-    console.log(messaggio);
-    database.addUser(admin, function (result, messaggio) {
-      console.log(messaggio);
-      database.sortUsersByNumberOfAccount(function (result) {
-        console.log(result);
+  database.findUserByEmail(user2.email, function (result) {
+    //  Se è già registrata non posso registrarla nuovamente
+    if (result) {
+      res.json({
+        success: false,
+        message: 'Utenti predefiniti già presenti nel DB'
       });
-      database.addTransaction(mov, function (result, messaggio) {
+      return;
+    }
+    database.addUser(user2, function (result, messaggio) {
+      console.log(messaggio);
+      database.addUser(admin, function (result, messaggio) {
         console.log(messaggio);
-        database.allMovementsSend(100, function (result) {
+        database.sortUsersByNumberOfAccount(function (result) {
           console.log(result);
-        });
-        mov = new Movimento({
-          from: 200,
-          to: 100,
-          date: today,
-          quantity: 1500
         });
         database.addTransaction(mov, function (result, messaggio) {
           console.log(messaggio);
-          database.allMovementsSend(200, function (result) {
+          database.allMovementsSend(100, function (result) {
             console.log(result);
           });
           mov = new Movimento({
-            from: 100,
-            to: 200,
+            from: 200,
+            to: 100,
             date: today,
-            quantity: 500
+            quantity: 1500
           });
           database.addTransaction(mov, function (result, messaggio) {
             console.log(messaggio);
-            database.allMovementsSend(100, function (result) {
+            database.allMovementsSend(200, function (result) {
               console.log(result);
             });
-            res.json({
-              success: result,
-              message: messaggio
+            mov = new Movimento({
+              from: 100,
+              to: 200,
+              date: today,
+              quantity: 500
+            });
+            database.addTransaction(mov, function (result, messaggio) {
+              console.log(messaggio);
+              database.allMovementsSend(100, function (result) {
+                console.log(result);
+              });
+              res.json({
+                success: result,
+                message: messaggio
+              });
             });
           });
         });
       });
     });
   });
-
   /*var megapin = new Pin({
     number: 55555,
     meta: {
