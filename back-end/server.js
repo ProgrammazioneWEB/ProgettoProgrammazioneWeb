@@ -444,142 +444,104 @@ apiRoutes.post('/updateUserData', function (req, res) {
         success: false
       });
   });
+});
 
-  //  Restituisce la lista di tutti i movimenti di un utente (non necessita di parametri in ingresso)
-  apiRoutes.post('/movements', function (req, res) {
-    // req.decoded  Contiene l'email di chi ha fatto la richiesta
-    database.findUserByEmail(req.decoded, function (result) {
-      if (result) {
-        var nAccount = result.numberOfAccount;
-        //  Richiedo i movimenti in uscita
-        database.allMovementsReceive(nAccount, function (result) {
-          var movIn;
+//  Restituisce la lista di tutti i movimenti di un utente (non necessita di parametri in ingresso)
+apiRoutes.post('/movements', function (req, res) {
+  // req.decoded  Contiene l'email di chi ha fatto la richiesta
+  database.findUserByEmail(req.decoded, function (result) {
+    if (result) {
+      var nAccount = result.numberOfAccount;
+      //  Richiedo i movimenti in uscita
+      database.allMovementsReceive(nAccount, function (result) {
+        var movIn;
 
-          if (result) {
-            movIn = result;
-            database.allMovementsSend(nAccount, function (result) {
-              var movOut;
+        if (result) {
+          movIn = result;
+          database.allMovementsSend(nAccount, function (result) {
+            var movOut;
 
-              //  Se tutto va a buon fine formatto i dati e li restituisco
-              if (result) {
-                movOut = result;
+            //  Se tutto va a buon fine formatto i dati e li restituisco
+            if (result) {
+              movOut = result;
 
-                var allMov = [];
-                var i = 0;
+              var allMov = [];
+              var i = 0;
 
-                //  Prendo tutti i movimenti in ingresso
-                while (i < movIn.length) {
-                  allMov[i] = {
-                    data: movIn[i].date,
-                    entrata: movIn[i].quantity,
-                    uscita: 0,
-                    conto: movIn[i].from
-                  };
-                  i++;
-                }
-
-                var j = 0;
-
-                //  Prendo tutti i movimenti in uscita
-                while (j < movOut.length) {
-                  allMov[i] = {
-                    data: movOut[j].date,
-                    entrata: 0,
-                    uscita: movOut[j].quantity,
-                    conto: movOut[j].to
-                  };
-                  i++;
-                  j++;
-                }
-
-                //  Ritorno la lista dei movimenti all' utente
-                res.json({
-                  success: true,
-                  result: allMov
-                });
-
+              //  Prendo tutti i movimenti in ingresso
+              while (i < movIn.length) {
+                allMov[i] = {
+                  data: movIn[i].date,
+                  entrata: movIn[i].quantity,
+                  uscita: 0,
+                  conto: movIn[i].from
+                };
+                i++;
               }
-              else {
-                res.json({
-                  message: 'Errore, ci sono problemi con il tuo numero di conto.',
-                  success: false
-                });
+
+              var j = 0;
+
+              //  Prendo tutti i movimenti in uscita
+              while (j < movOut.length) {
+                allMov[i] = {
+                  data: movOut[j].date,
+                  entrata: 0,
+                  uscita: movOut[j].quantity,
+                  conto: movOut[j].to
+                };
+                i++;
+                j++;
               }
-            });
-          }
-          else {
-            res.json({
-              message: 'Errore, ci sono problemi con il tuo numero di conto.',
-              success: false
-            });
-          }
-        });
-      }
-      else  //  Questo errore si verifica solo in caso di perdida di dati nel db 
-      {
-        res.json({
-          message: 'Errore interno, la tua email non è più presente nel database.',
-          success: false
-        });
-      }
-    });
-  });
 
-  //Test transazione e bonifico da amministratore
-  apiRoutes.post('/invio-bonifico-admin', function (req, res) {
-    var date = new Date();
-    var today = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay();
+              //  Ritorno la lista dei movimenti all' utente
+              res.json({
+                success: true,
+                result: allMov
+              });
 
-    //  Controllo se l'utente loggato è amministratore
-    database.findUserByEmail(req.decoded, function (result) {
-      if (result) {
-        if (result.admin) {
-          var bonifico = new Movimento({
-            from: req.body.from,
-            to: req.body.to,
-            date: today,
-            quantity: req.body.quantity
-          });
-
-          database.addTransaction(bonifico, function (result, messaggio) {
-            res.json({
-              message: messaggio,
-              success: result
-            });
+            }
+            else {
+              res.json({
+                message: 'Errore, ci sono problemi con il tuo numero di conto.',
+                success: false
+              });
+            }
           });
         }
-        else {  //  Se non è admin restituisco errore
+        else {
           res.json({
-            message: 'Impossible accedere a questa sezione senza essere admin.',
+            message: 'Errore, ci sono problemi con il tuo numero di conto.',
             success: false
           });
         }
-      }
-      else {  //  Se non trovo l'user nel db (si dovrebbe verificare solo in caso di errori nel db)
-        res.json({
-          message: 'Errore interno al database, impossibile verificare che si è loggati come admin.',
-          success: false
-        });
-      }
-    });
+      });
+    }
+    else  //  Questo errore si verifica solo in caso di perdida di dati nel db 
+    {
+      res.json({
+        message: 'Errore interno, la tua email non è più presente nel database.',
+        success: false
+      });
+    }
   });
+});
 
-  //Test transazione e bonifico da user
-  apiRoutes.post('/invio-bonifico-user', function (req, res) {
-    var date = new Date();
-    var today = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay();
+//Test transazione e bonifico da amministratore
+apiRoutes.post('/invio-bonifico-admin', function (req, res) {
+  var date = new Date();
+  var today = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay();
 
-    //  Cerco il numero di conto di chi ha richiesto il bonifico (req.decoded contiene l'email del user loggato)
-    database.findUserByEmail(req.decoded, function (result) {
-      if (result) {
+  //  Controllo se l'utente loggato è amministratore
+  database.findUserByEmail(req.decoded, function (result) {
+    if (result) {
+      if (result.admin) {
         var bonifico = new Movimento({
-          from: result.numberOfAccount,
+          from: req.body.from,
           to: req.body.to,
           date: today,
           quantity: req.body.quantity
         });
 
-        //  Aggiungo la transazione al db e rispondo all' utente il messaggio di riuscita o errore
         database.addTransaction(bonifico, function (result, messaggio) {
           res.json({
             message: messaggio,
@@ -587,19 +549,58 @@ apiRoutes.post('/updateUserData', function (req, res) {
           });
         });
       }
-      else {  //  Se non trovo il numero di conto (si dovrebbe verificare solo in caso di errori nel db)
+      else {  //  Se non è admin restituisco errore
         res.json({
-          message: 'Errore interno al database, il suo numero conto non è stato trovato.',
+          message: 'Impossible accedere a questa sezione senza essere admin.',
           success: false
         });
       }
-    });
+    }
+    else {  //  Se non trovo l'user nel db (si dovrebbe verificare solo in caso di errori nel db)
+      res.json({
+        message: 'Errore interno al database, impossibile verificare che si è loggati come admin.',
+        success: false
+      });
+    }
   });
+});
 
-  app.use('/api', apiRoutes);
+//Test transazione e bonifico da user
+apiRoutes.post('/invio-bonifico-user', function (req, res) {
+  var date = new Date();
+  var today = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay();
 
-  // =======================
-  // start the server ======
-  // =======================
-  app.listen(port);
-  console.log('Node è in funzione su http://localhost:' + port);
+  //  Cerco il numero di conto di chi ha richiesto il bonifico (req.decoded contiene l'email del user loggato)
+  database.findUserByEmail(req.decoded, function (result) {
+    if (result) {
+      var bonifico = new Movimento({
+        from: result.numberOfAccount,
+        to: req.body.to,
+        date: today,
+        quantity: req.body.quantity
+      });
+
+      //  Aggiungo la transazione al db e rispondo all' utente il messaggio di riuscita o errore
+      database.addTransaction(bonifico, function (result, messaggio) {
+        res.json({
+          message: messaggio,
+          success: result
+        });
+      });
+    }
+    else {  //  Se non trovo il numero di conto (si dovrebbe verificare solo in caso di errori nel db)
+      res.json({
+        message: 'Errore interno al database, il suo numero conto non è stato trovato.',
+        success: false
+      });
+    }
+  });
+});
+
+app.use('/api', apiRoutes);
+
+// =======================
+// start the server ======
+// =======================
+app.listen(port);
+console.log('Node è in funzione su http://localhost:' + port);
