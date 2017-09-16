@@ -475,19 +475,48 @@ indexUserApp.controller('userModifyMetaController', function ($scope, $http, $wi
     $scope.activeForm = function () {
         //user have to compile at least one form field
         if (($scope.newMail != undefined && $scope.newMail != "")
-            || ($scope.newResidence != undefined && $scope.newResidence != "" ) 
-            || ($scope.newPassword != undefined && $scope.newPassword != "" ) 
-            || ($scope.newPhoneNumber != undefined && $scope.newPhoneNumber != "" ) ) {
+            || ($scope.newResidence != undefined && $scope.newResidence != "")
+            || ($scope.newPassword != undefined && $scope.newPassword != "")
+            || ($scope.newPhoneNumber != undefined && $scope.newPhoneNumber != "")) {
             return true;
         }
         else return false;
     }
     //function to modify data, contact with server and db
-    $scope.modifyData= function(){
+    $scope.modifyData = function () {
+        //control data, if field are empty i declare it null for backend reason
+        if ($scope.newEmail == undefined || $scope.newEmail == "") {
+            $scope.newEmail = null;
+        }
+        if ($scope.newPassword == undefined || $scope.newPassword == "") {
+            $scope.newPassword = null;
+        }
+        if ($scope.newResidence == undefined || $scope.newResidence == "") {
+            $scope.newResidence = null;
+        }
+        if ($scope.newPhoneNumber == undefined || $scope.newPhoneNumber == "") {
+            $scope.newPhoneNumber = null;
+        }
+        //call server api
         $http({
+            method: 'POST',
+            url: 'http://localhost:3001/api/updateUserData',
+            headers: { 'Content-Type': 'application/json' },
+            data: {
+                'token': curToken.value,
+                'email': $scope.newEmail,
+                'password': $scope.newPassword,
+                'phone': $scope.newPhoneNumber,
+                'residence': $scope.newResidence
 
-        }).then(function(response){
-
+            }
+        }).then(function (response) {
+            if(response.data.success){
+                alert(response.data);
+            }
+            else{
+                alert(response.data.message);
+            }
         });
     }
 });
