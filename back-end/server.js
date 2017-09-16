@@ -258,22 +258,7 @@ app.get('/movimenti-in', function (req, res) {
   });
 });
 
-//invio avvisi
-app.post('/invio-avviso', function (req, res) {
-  var date = new Date();
-  var today = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay();
-  var avviso = new Advise({
-    title: req.body.title,
-    text: req.body.text,
-    date: today
-  });
-  database.addAdvise(avviso, function (result, messaggio) {
-    res.json({
-      success: result,
-      message: messaggio
-    });
-  });
-});
+
 
 //arrivo ultimi 5 avvisi
 app.get('/get-avvisi', function (req, res) {
@@ -613,7 +598,22 @@ apiRoutes.post('/CalcolaMedia', function (req, res) {
   });
 });
 
-
+//invio avvisi
+appRoutes.post('/invio-avviso', function (req, res) {
+  var date = new Date();
+  var today = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay();
+  var avviso = new Advise({
+    title: req.body.title,
+    text: req.body.text,
+    date: today
+  });
+  database.addAdvise(avviso, function (result, messaggio) {
+    res.json({
+      success: result,
+      message: messaggio
+    });
+  });
+});
 app.use('/api', apiRoutes);
 
 // =======================
