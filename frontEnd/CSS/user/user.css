@@ -67,6 +67,10 @@ font-size: 25;
 font-weight:bold;
 color:  black;
 }
+label.oldData{
+    float:left; 
+    color:black;
+}
 
 label.hint{
     font-family: 'Times New Roman', Times, serif;    
