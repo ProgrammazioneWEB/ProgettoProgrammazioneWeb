@@ -445,6 +445,10 @@ apiRoutes.post('/updateUserData', function (req, res) {
       });
   });
 });
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 //  Restituisce la lista di tutti i movimenti di un utente (non necessita di parametri in ingresso)
 apiRoutes.post('/movements', function (req, res) {
   // req.decoded  Contiene l'email di chi ha fatto la richiesta
