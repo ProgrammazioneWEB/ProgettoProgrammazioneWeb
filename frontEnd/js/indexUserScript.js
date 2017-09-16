@@ -28,6 +28,10 @@ indexUserApp.config(function ($routeProvider) {
             templateUrl: './html/user/userHome/userHome.html',
             controller: 'changeSite'
         })
+        .when('/modifyMeta', {
+            templateUrl: './html/user/userModifyMeta/userModifyMeta.html',
+            controller: 'userModifyMetaController'
+        })
 });
 
 //  variabile contenente il token
@@ -81,10 +85,10 @@ indexUserApp.controller('userHomeController', function ($scope, $http, $window, 
                    * which is at the right level 
                    */
                 $scope.userImagePath = userProfile.image;
-                //control user image path
-                if($scope.userImagePath==undefined){
+                //control user image path, if string contains nothing replace it 
+                if ($scope.userImagePath == "") {
                     //give a default image
-                    $scope.userImagePath="../CSS/images/iconsForUser/user_default.jpg"
+                    $scope.userImagePath = "../CSS/images/iconsForUser/user_default.jpg"
                 }
                 //stats area
                 //save the variable to show the real saldo
@@ -285,23 +289,13 @@ indexUserApp.controller('userTransactionController', function ($scope, $http, $w
 });
 
 //user spent average controller
-indexUserApp.controller('userAverageController', function ($scope) {
-    //take the date of creatione of the count
-    this.dateOfCreation = new Date(userProfile.dataCreazioneConto);
-    //take the current day
-    this.currentDay = Date.now();
-    //differences between the two dates
-    this.numberOfDays = this.currentDay - this.dateOfCreation.getDate();
-    //take the sum of the passive
-    this.sumOfPassive = 0;
-    //define a function into the for each called on the movement's array to find the average of the spent
-    //of the user for every day
-    /** 
-    userProfile.movimenti.forEach(function (movimento) {
-        this.sumOfPassive += Number(movimento.spesa);
-    }, this);*/
-    //return the sum divided by the total of the days with some activity
-    this.average = Math.round(this.sumOfPassive / this.numberOfDays).toFixed(2);
+indexUserApp.controller('userAverageController', function ($scope,$http) {
+   //take the average of spent and entrance
+    $http({
+
+   }).then(function(response){
+
+   });
     $scope.message = "La tua spesa giornaliera media è di: " + this.average;
 });
 
@@ -432,6 +426,90 @@ indexUserApp.controller('userGraphController', function ($scope) {
     }
 });
 
+//modify meta controller
+indexUserApp.controller('userModifyMetaController', function ($scope, $http, $window) {
+    $scope.message = "Benvenuto " + userProfile.meta.firstName + ", da qui potrai modificare le tue credenziali!";
+    //assign data to show 
+    $scope.oldResidence = userProfile.meta.residence;
+    $scope.oldMail = userProfile.email;
+    $scope.oldPhoneNumber = userProfile.meta.numberOfPhone;
+    $scope.oldPassword = userProfile.password;
+
+    //errori rilevabili nei campi
+    $scope.mailError = { mail: "" };
+    //filter used to filter e-mails
+    var emailFilter = /^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/;
+
+    //function to control username field and show the errors if user wrong to type 
+    $scope.controlMailField = function () {
+        //if length is 0 user has type nothing
+        if ($scope.newMail === undefined) {
+            //username value is empty
+            $scope.mailError = { mail: "*E-mail non scritta" };
+            $scope.form.newMail.$invalid = true;
+        }
+        else {
+            if (!emailFilter.test($scope.newMail)) {
+                //username value fail the test 
+                $scope.mailError = { mail: "*Mail in formato errato" };
+                $scope.form.newMail.$invalid = true;
+            }
+            else {
+                //username is in an acceptable structure
+                $scope.mailError = { mail: "" };
+                $scope.form.newMail.$invalid = false;
+            }
+        }
+    }
+    //function that active button to modify data if at least one field is compiled
+    $scope.activeForm = function () {
+        //user have to compile at least one form field
+        if (($scope.newMail != undefined && $scope.newMail != "")
+            || ($scope.newResidence != undefined && $scope.newResidence != "")
+            || ($scope.newPassword != undefined && $scope.newPassword != "")
+            || ($scope.newPhoneNumber != undefined && $scope.newPhoneNumber != "")) {
+            return true;
+        }
+        else return false;
+    }
+    //function to modify data, contact with server and db
+    $scope.modifyData = function () {
+        //control data, if field are empty i declare it null for backend reason
+        if ($scope.newEmail == undefined || $scope.newEmail == "") {
+            $scope.newEmail = null;
+        }
+        if ($scope.newPassword == undefined || $scope.newPassword == "") {
+            $scope.newPassword = null;
+        }
+        if ($scope.newResidence == undefined || $scope.newResidence == "") {
+            $scope.newResidence = null;
+        }
+        if ($scope.newPhoneNumber == undefined || $scope.newPhoneNumber == "") {
+            $scope.newPhoneNumber = null;
+        }
+        //call server api
+        $http({
+            method: 'POST',
+            url: 'http://localhost:3001/api/updateUserData',
+            headers: { 'Content-Type': 'application/json' },
+            data: {
+                'token': curToken.value,
+                'email': $scope.newEmail,
+                'password': $scope.newPassword,
+                'phone': $scope.newPhoneNumber,
+                'residence': $scope.newResidence
+            }
+        }).then(function (response) {
+            if(response.data.success){
+                alert(response.data);
+                $window.location.reload();
+            }
+            else{
+                alert(response.data.message);
+            }
+        });
+    }
+});
 
 
 

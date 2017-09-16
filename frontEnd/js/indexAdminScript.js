@@ -67,7 +67,7 @@ indexAdminApp.controller('adminHomeController', function ($scope, $http, $window
                    */
                 $scope.adminImagePath = adminProfile.image;
                  //control user image path
-                 if($scope.adminImagePath==undefined){
+                 if($scope.adminImagePath==""){
                     //give a default image
                     $scope.adminImagePath="../CSS/images/iconsForUser/user_default.jpg"
                 }
@@ -91,7 +91,7 @@ indexAdminApp.controller('changeSite', function ($scope, $window) {
 });
 
 //define alert controller
-indexAdminApp.controller('adminAlertController', function ($scope, $http, $localStorage) {
+indexAdminApp.controller('adminAlertController', function ($scope, $http, $localStorage,$window) {
     //message
     $scope.message = "Benvenuto, da qui potrai scrivere un avviso da inviare a tutti coloro che posseggono un conto Bancario presso la nostra Banca.Ricorda che l'avviso dovrà avere almeno 20 caratteri!";
     //alert to create
@@ -111,7 +111,10 @@ indexAdminApp.controller('adminAlertController', function ($scope, $http, $local
                 'text': $scope.alert
             }
         }).then(function (response) {
+            //if i'm here server response with bad error or not
             alert(response.data.message);
+             //reload page
+           $window.location.reload();     
         });
     };
     //boolean to show section advise
@@ -126,8 +129,9 @@ indexAdminApp.controller('adminAlertController', function ($scope, $http, $local
                 'token': curToken.value,
             }
         }).then(function (response) {
+            //assign data from database to local variable
            $scope.alerts=response.data;
-        });
+           });
     }
     //function to active alerts area
     $scope.showAlerts= function(){

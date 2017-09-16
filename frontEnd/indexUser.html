@@ -42,7 +42,7 @@
                 </td>
                 <!--user image-->
                 <td>
-                    <img ng-src="{{userImagePath}}" class="userImage" title="Immagine del profilo" alt="Immagine del profilo" />
+                    <img ng-src="{{userImagePath}}" class="userImage" title="Immagine del profilo" />
                 </td>
                 <!--user data-->
                 <td>
@@ -52,6 +52,14 @@
                         </li>
                         <li class="list-group-item statistics">
                             {{username}}
+                        </li>
+                        <li class="list-group-item">
+                            <a href="#!/modifyMeta">
+                            <button type="button" class="btn btn-primary">
+                                <i class="fa fa-id-card-o" aria-hidden="true"></i>
+                                Modifica credenziali
+                            </button>
+                            </a>
                         </li>
                 </td>
                 <td>

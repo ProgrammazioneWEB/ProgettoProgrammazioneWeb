@@ -1,0 +1,44 @@
+<h1>{{message}}</h1>
+<form class="form-horizontal" ng-model="form" name="form">
+    <!--section to change email-->
+    <div class="form-group formElementCenter">
+        <label class="oldData">
+                    Vecchia mail: {{oldMail}}
+            </label>
+        <input type="text" class="form-control" ng-model="newMail" name="newMail" placeholder="Inserisci qui la tua nuova mail" ng-blur="controlMailField()"
+        />
+        <span class="leftAlignError" ng-show="form.newMail.$invalid">
+             {{mailError.mail}}
+         </span>
+    </div>
+    <!--section to change password-->
+    <div class="form-group formElementCenter">
+        <label class="oldData">
+                    Vecchia password: {{oldPassword}}
+            </label>
+        <input type="text" class="form-control" ng-model="newPassword" name="newPassword" placeholder="Inserisci qui la tua nuova password"
+        />
+    </div>
+    <!--section to change residence-->
+    <div class="form-group formElementCenter">
+        <label class="oldData">                    
+            Vecchio indirizzo: {{oldResidence}}
+        </label>
+        <input type="text" class="form-control" ng-model="newResidence" name="newResidence" placeholder="Inserisci qui il tuo nuovo indirizzo"
+        />
+    </div>
+    <!--section to change phone number-->
+    <div class="form-group formElementCenter">
+        <label class="oldData">
+                Vecchio recapito telefonico: {{oldPhoneNumber}}
+        </label>
+        <input type="text" class="form-control" ng-model="newPhoneNumber" name="newPhoneNumber" placeholder="Inserisci qui il tuo nuovo numero di telefono"
+        />
+    </div>
+    <div class="form-group formElementCenter">
+        <button class="btn btn-primary" type="submit" name="sendData" ng-disabled="!activeForm()"
+         ng-model="sendData" ng-click="modifyData()">
+               Invia modifiche
+           </button>
+    </div>
+</form>
