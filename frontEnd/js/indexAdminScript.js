@@ -103,7 +103,7 @@ indexAdminApp.controller('adminAlertController', function ($scope, $http, $local
         //function to send alerts to users
         $http({
             method: "POST",
-            url: "http://localhost:3001/invio-avviso",
+            url: "http://localhost:3001/api/invio-avviso",
             headers: { 'Content-Type': 'application/json' },
             data: {
                 'token': curToken.value,

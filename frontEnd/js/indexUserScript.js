@@ -289,14 +289,29 @@ indexUserApp.controller('userTransactionController', function ($scope, $http, $w
 });
 
 //user spent average controller
-indexUserApp.controller('userAverageController', function ($scope,$http) {
-   //take the average of spent and entrance
+indexUserApp.controller('userAverageController', function ($scope, $http) {
+    //DEFINE AVERAGE EXPENS
+    $scope.averageExpence = "";
+    //take the average of spent and entrance
     $http({
+        method: 'POST',
+        url: 'http://localhost:3001/api/CalcolaMediaUscite',
+        headers: { 'Content-Type': 'application/json' },
+        data: {
+            'token': curToken.value,
+            'numberOfAccount': userProfile.numberOfAccount
+        }
+    }).then(function (response) {
+        if (response.data.success) {
+            $scope.averageExpence = response.data.message;
+        }
+        else {
+            alert("Server error at http://localhost:3001/api/CalcolaMediaUscite");
+        }
+    });
+    //Stampa il messaggio
+    $scope.message = "La tua spesa giornaliera media è di: " + $scope.averageExpence;
 
-   }).then(function(response){
-
-   });
-    $scope.message = "La tua spesa giornaliera media è di: " + this.average;
 });
 
 //user graph controller
@@ -500,11 +515,11 @@ indexUserApp.controller('userModifyMetaController', function ($scope, $http, $wi
                 'residence': $scope.newResidence
             }
         }).then(function (response) {
-            if(response.data.success){
+            if (response.data.success) {
                 alert(response.data);
                 $window.location.reload();
             }
-            else{
+            else {
                 alert(response.data.message);
             }
         });

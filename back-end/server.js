@@ -589,7 +589,7 @@ apiRoutes.post('/invio-bonifico-user', function (req, res) {
   });
 });
 //this function return the media of the cash sent in transaction
-apiRoutes.post('/CalcolaMedia', function (req, res) {
+apiRoutes.post('/CalcolaMediaUscite', function (req, res) {
   database.avgCashOutside(req.numberOfAccount, function (result, messaggio) {
     res.json({
       success: result,
@@ -599,7 +599,7 @@ apiRoutes.post('/CalcolaMedia', function (req, res) {
 });
 
 //invio avvisi
-appRoutes.post('/invio-avviso', function (req, res) {
+apiRoutes.post('/invio-avviso', function (req, res) {
   var date = new Date();
   var today = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay();
   var avviso = new Advise({
