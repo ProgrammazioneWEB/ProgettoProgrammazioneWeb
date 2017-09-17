@@ -35,6 +35,10 @@ var curToken = { value: "", enable: false };
 
 //controller for admin
 indexAdminApp.controller('adminHomeController', function ($scope, $http, $window, $localStorage) {
+    //if no token, redirect to principal site
+    if(!$localStorage.XToken){
+        $window.location.href("../index.html");
+    }
     //  Se il token è salvato in locale lo prelevo (sarà sempre salvato in locale dopo il login)
     if ($localStorage.XToken) {
         curToken = $localStorage.XToken;
@@ -261,6 +265,7 @@ indexAdminApp.controller('adminUserVisionController', function ($scope, $http) {
         $http({
             method: 'POST',
             url: 'http://localhost:3001/api/userDataNAccount',
+            headers: { 'Content-Type': 'application/json' },
             data: {
                 'token': curToken.value,
                 'n_account': $scope.countNumber
@@ -278,6 +283,7 @@ indexAdminApp.controller('adminUserVisionController', function ($scope, $http) {
                 $scope.userMoney = $scope.userData.availableBalance + " €";
                 $scope.userResidence = $scope.userData.meta.residence;
                 $scope.userPhoneNumber = $scope.userData.meta.numberOfPhone;
+                $scope.userEnable = $scope.userData.active;
                 //control user image path, if string contains nothing replace it 
                 if ($scope.userData.image == "") {
                     //give a default image
@@ -310,14 +316,13 @@ indexAdminApp.controller('adminUserVisionController', function ($scope, $http) {
     }
 
 });
-
-indexAdminApp.controller('adminAbilitaController', function ($scope) {
+//define adminAbilitaController
+indexAdminApp.controller('adminAbilitaController', function ($scope,$http) {
     //message
     $scope.message = "Benvenuto amministratore, da qui puoi abilitare o disabilitare un correntista. Cosa vuoi fare?";
     //booleans to check admin choose
     $scope.decisioneAbilitaNonPresaBooleano = true;
     $scope.decisioneDisabilitaNonPresaBooleano = true;
-
     //functions to check that admin doesn't click any button yet
     $scope.decisioneAbilitaNonPresa = function () {
         return $scope.decisioneAbilitaNonPresaBooleano;
@@ -342,6 +347,38 @@ indexAdminApp.controller('adminAbilitaController', function ($scope) {
         $scope.decisioneAbilitaNonPresaBooleano = true;
         $scope.decisioneDisabilitaNonPresaBooleano = true;
     };
+    //function to enable user
+    $scope.enableUser= function(){
+        //call the api
+        $http({
+            method:'POST',
+            url:'http://localhost:3001/api/on',
+            headers: { 'Content-Type': 'application/json' },
+            data:{
+                'token':curToken.value,
+                'n_account': $scope.countNumberDaAbilitare
+            }
+        }).then(function(response){
+            //in every case i print the return message
+            alert(response.data.message);
+        });
+    }
+    //function to disable user
+    $scope.disableUser= function(){
+        //call the api
+        $http({
+            method:'POST',
+            url:'http://localhost:3001/api/off',
+            headers: { 'Content-Type': 'application/json' },
+            data:{
+                'token':curToken.value,
+                'n_account': $scope.countNumberDaDisabilitare
+            }
+        }).then(function(response){
+            //in every case i print the return message
+            alert(response.data.message);
+        });
+    }
 
 });
 
