@@ -584,8 +584,8 @@ apiRoutes.post('/off', function (req, res) {
   database.findUserByEmail(req.decoded, function (result) {
     if (result)
       if (result.admin)
-        database.findUserByEmail(req.body.email, function (result) {
-          if (result)
+        database.findUserByAccount(req.body.n_account, function (ris, result) {
+          if (ris)
             database.disactivateAccount(result, function (result, message) {
               if (result)
                 res.json({
@@ -622,8 +622,8 @@ apiRoutes.post('/on', function (req, res) {
   database.findUserByEmail(req.decoded, function (result) {
     if (result)
       if (result.admin)
-        database.findUserByEmail(req.body.email, function (result) {
-          if (result)
+        database.findUserByAccount(req.body.n_account, function (ris, result) {
+          if (ris)
             database.activateAccount(result, function (result, message) {
               if (result)
                 res.json({

@@ -89,9 +89,9 @@ exports.findUserByAccount = function (numberOfAccount, callback) {
       db.close();
 
       if (result)
-        callback(false, result);
-      else
         callback(true, result);
+      else
+        callback(false, result);
     });
   });
 }
