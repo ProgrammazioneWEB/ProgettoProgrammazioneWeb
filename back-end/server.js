@@ -189,54 +189,6 @@ app.get('/', function (req, res) {
   });*/
 });
 
-//  Funzione solo di test per disabilitazione account (si può cancellare)
-app.get('/off', function (req, res) {
-  database.findUserByEmail("testB@gmail.com", function (result) {
-    if (result)
-      database.disactivateAccount(result, function (result, message) {
-        if (result)
-          res.json({
-            success: result,
-            message: message
-          });
-        else
-          res.json({
-            success: false,
-            message: 'Riscontrati problemi nel database.'
-          });
-      });
-    else
-      res.json({
-        success: false,
-        message: 'L\'utente da disabilitare non esiste.'
-      });
-  });
-});
-
-//  Funzione solo di test per abilitazione account (si può cancellare)
-app.get('/on', function (req, res) {
-  database.findUserByEmail("testB@gmail.com", function (result) {
-    if (result)
-      database.activateAccount(result, function (result, message) {
-        if (result)
-          res.json({
-            success: result,
-            message: message
-          });
-        else
-          res.json({
-            success: false,
-            message: 'Riscontrati problemi nel database.'
-          });
-      });
-    else
-      res.json({
-        success: false,
-        message: 'L\'utente da disabilitare non esiste.'
-      });
-  });
-});
-
 //Test vedere utenti
 app.get('/list', function (req, res) {
   database.sortUsersByNumberOfAccount(function (result) {
@@ -421,6 +373,16 @@ apiRoutes.post('/userData', function (req, res) {
   });
 });
 
+//  Ritorna alla parte front-end l'utente corrispondente al token
+apiRoutes.post('/userDataNAccount', function (req, res) {
+  database.findUserByAccount(req.body.n_account, function (ris, result) {
+    res.json({
+      success: ris,
+      result: result
+    });
+  });
+});
+
 //  Modifico i dati personali dell' utente
 apiRoutes.post('/updateUserData', function (req, res) {
   database.findUserByEmail(req.decoded, function (result) {
@@ -438,6 +400,7 @@ apiRoutes.post('/updateUserData', function (req, res) {
       });
   });
 });
+
 //  Restituisce la lista di tutti i movimenti di un utente (non necessita di parametri in ingresso)
 apiRoutes.post('/movements', function (req, res) {
   // req.decoded  Contiene l'email di chi ha fatto la richiesta
@@ -588,17 +551,17 @@ apiRoutes.post('/invio-bonifico-user', function (req, res) {
     }
   });
 });
-//this function return the media of the cash sent in transaction
+
+//  this function return the media of the cash sent in transaction
 apiRoutes.post('/CalcolaMediaUscite', function (req, res) {
   database.avgCashOutside(req.numberOfAccount, function (result, messaggio) {
     res.json({
-      success: result,
-      message: messaggio
+      success: result //  Qui in realtà non invia il campo success ma in result c'è il risultato della media
     });
   });
 });
 
-//invio avvisi
+//  invio avvisi
 apiRoutes.post('/invio-avviso', function (req, res) {
   var date = new Date();
   var today = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay();
@@ -607,6 +570,7 @@ apiRoutes.post('/invio-avviso', function (req, res) {
     text: req.body.text,
     date: today
   });
+
   database.addAdvise(avviso, function (result, messaggio) {
     res.json({
       success: result,
@@ -614,6 +578,83 @@ apiRoutes.post('/invio-avviso', function (req, res) {
     });
   });
 });
+
+//  Funzione per disabilitazione account
+apiRoutes.post('/off', function (req, res) {
+  database.findUserByEmail(req.decoded, function (result) {
+    if (result)
+      if (result.admin)
+        database.findUserByEmail(req.body.email, function (result) {
+          if (result)
+            database.disactivateAccount(result, function (result, message) {
+              if (result)
+                res.json({
+                  success: result,
+                  message: message
+                });
+              else
+                res.json({
+                  success: false,
+                  message: 'Riscontrati problemi nel database.'
+                });
+            });
+          else
+            res.json({
+              success: false,
+              message: 'L\'utente da disabilitare non esiste.'
+            });
+        });
+      else
+        res.json({
+          success: false,
+          message: 'Impossibile disabilitare un account senza essere admin.'
+        });
+    else
+      res.json({
+        success: false,
+        message: 'Riscontrati problemi nel database.'
+      });
+  });
+});
+
+//  Funzione per abilitazione account
+apiRoutes.post('/on', function (req, res) {
+  database.findUserByEmail(req.decoded, function (result) {
+    if (result)
+      if (result.admin)
+        database.findUserByEmail(req.body.email, function (result) {
+          if (result)
+            database.activateAccount(result, function (result, message) {
+              if (result)
+                res.json({
+                  success: result,
+                  message: message
+                });
+              else
+                res.json({
+                  success: false,
+                  message: 'Riscontrati problemi nel database.'
+                });
+            });
+          else
+            res.json({
+              success: false,
+              message: 'L\'utente da abilitare non esiste.'
+            });
+        });
+      else
+        res.json({
+          success: false,
+          message: 'Impossibile abilitare un account senza essere admin.'
+        });
+    else
+      res.json({
+        success: false,
+        message: 'Riscontrati problemi nel database.'
+      });
+  });
+});
+
 app.use('/api', apiRoutes);
 
 // =======================

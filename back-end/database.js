@@ -77,6 +77,25 @@ exports.init = function () {
   });
 }
 
+exports.findUserByAccount = function (numberOfAccount, callback) {
+  MongoClient.connect(url, function (err, db) {
+    if (err) {
+      callback(false, null);
+      throw err;
+    }
+    db.collection("users").findOne({ numberOfAccount: numberOfAccount }, function (err, result) {
+      if (err)
+        throw err;
+      db.close();
+
+      if (result)
+        callback(false, result);
+      else
+        callback(true, result);
+    });
+  });
+}
+
 //This function find by email and password one user in Database
 exports.autenticate = function (email, password, callbackRis) {
   MongoClient.connect(url, function (err, db) {
