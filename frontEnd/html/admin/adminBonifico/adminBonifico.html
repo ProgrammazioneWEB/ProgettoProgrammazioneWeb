@@ -5,33 +5,18 @@
     </h1>
     <!--iban ordinante -->
     <div class="form-group formElementCenter">
-        <label class="adminTitle"> 
-                    Scrivi qui l'iban dell'ordinante
-        </label>
-        <input type="text" name="ibanOrd" class="form-control" ng-model="ibanOrd" placeholder="Scrivi qui l'Iban dell'ordinante"
-            required ng-blur="controlIbanOrd()">
+        <input type="text" name="countNumberOrd" class="form-control" ng-model="countNumberOrd" placeholder="Scrivi qui il numero di conto dell'ordinante"
+            required>
         </input>
-        <span class="leftAlignError" ng-show="form.ibanOrd.$invalid">
-                {{ibanOrdErrors.error}} 
-        </span>
     </div>
     <!--iban beneficiante -->
     <div class="form-group formElementCenter">
-        <label class="adminTitle"> 
-                    Scrivi qui l'iban del beneficiario
-        </label>
-        <input type="text" name="ibanBen" class="form-control" ng-model="ibanBen" placeholder="Scrivi qui l'Iban del beneficiante"
-            required ng-blur="controlIbanBen()">
+        <input type="text" name="countNumberBen" class="form-control" ng-model="countNumberBen" placeholder="Scrivi qui il numero di conto  del beneficiante"
+            required>
         </input>
-        <span class="leftAlignError" ng-show="form.ibanBen.$invalid">
-                {{ibanBenErrors.error}} 
-        </span>
     </div>
     <!--importo -->
     <div class="form-group formElementCenter">
-        <label class="adminTitle"> 
-                    Scrivi qui l'importo del bonifico (non inferiore a 50 euro)
-                </label>
         <input type="number" name="payment" class="form-control" ng-model="payment" placeholder=" Scrivi qui l'importo del bonifico"
             required ng-blur="checkImport()">
         </input>
@@ -41,6 +26,6 @@
     </div>
     <!--submit button -->
     <div class="form-group">
-        <button type="submit" class="btn btn-primary" ng-click="makeTransaction()" ng-disabled="ibanInvalidi()">Esegui Bonifico</button>
+        <button type="submit" class="btn btn-primary" ng-click="makeTransaction()">Esegui Bonifico</button>
     </div>
 </form>

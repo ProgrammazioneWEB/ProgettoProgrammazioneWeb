@@ -35,10 +35,6 @@ var curToken = { value: "", enable: false };
 
 //controller for admin
 indexAdminApp.controller('adminHomeController', function ($scope, $http, $window, $localStorage) {
-    //if no token, redirect to principal site
-    if(!$localStorage.XToken){
-        $window.location.href("../index.html");
-    }
     //  Se il token è salvato in locale lo prelevo (sarà sempre salvato in locale dopo il login)
     if ($localStorage.XToken) {
         curToken = $localStorage.XToken;
@@ -153,74 +149,15 @@ indexAdminApp.controller('adminAlertController', function ($scope, $http, $local
 });
 
 //controller for transaction
-indexAdminApp.controller('adminBonificoController', function ($scope) {
+indexAdminApp.controller('adminBonificoController', function ($scope, $http, $window) {
     //message
     $scope.message = "Benvenuto admin, da qui potrai effettuare un bonifico tra due utenti, per accertarti che la somma del bonifico possa essere effettivamente pagata vai nella sezione" +
         "Visiona stato di un utente";
-    //ItalianIbanFilter
-    var ibanFilter = /^IT\d{2}[A-Z]\d{10}[0-9A-Z]{12}$/;
-    //errors that could be thrown
-    $scope.ibanOrdErrors =
-        {
-            error: ""
-        };
-    //errors that could be thrown
-    $scope.ibanBenErrors =
-        {
-            error: ""
-        };
     //errors that could be thrown
     $scope.paymentErrors =
         {
             error: ""
         };
-
-    //function that control validity of iban
-    $scope.controlIbanOrd = function () {
-        console.log("sonoqui");
-        if ($scope.ibanOrd == undefined) {
-            //user didn't write nothing yet, it' not an error
-            $scope.form.ibanOrd.$invalid = false;
-            $scope.ibanOrdErrors.error = "";
-        }
-        // alert(ibanFilter.test($scope.iban));
-        else if (!(ibanFilter.test($scope.ibanOrd))) {
-            //error
-            //alert("iban scorretto");
-            $scope.form.ibanOrd.$invalid = true;
-            $scope.ibanOrdErrors.error = "*Iban in formato errato";
-        }
-        else {
-            //error
-            //alert("iban corretto");             
-            $scope.form.ibanOrd.$invalid = false;
-            $scope.ibanOrdErrors.error = "";
-        }
-
-    };
-
-    //function that control validity of iban
-    $scope.controlIbanBen = function () {
-        if ($scope.ibanBen == undefined) {
-            //user didn't write nothing yet, it' not an error
-            $scope.form.ibanBen.$invalid = false;
-            $scope.ibanBenErrors.error = "";
-        }
-        // alert(ibanFilter.test($scope.iban));
-        else if (!(ibanFilter.test($scope.ibanBen))) {
-            //error
-            //alert("iban scorretto");
-            $scope.form.ibanBen.$invalid = true;
-            $scope.ibanBenErrors.error = "*Iban in formato errato";
-        }
-        else {
-            //error
-            //alert("iban corretto");             
-            $scope.form.ibanBen.$invalid = false;
-            $scope.ibanBenErrors.error = "";
-        }
-
-    };
 
     //function that control import
     $scope.checkImport = function () {
@@ -239,14 +176,32 @@ indexAdminApp.controller('adminBonificoController', function ($scope) {
             $scope.form.payment.$invalid = false;
             $scope.paymentErrors.error = "";
         }
-        //function to make the transaction
-        $scope.makeTransaction = function () {
-            var transaction = {
-                ordinante: $scope.ibanOrd,
-                beneficiario: $scope.ibanBen,
-                importo: $scope.importo
+    };
+    //function to make the transaction
+    $scope.makeTransaction = function () {
+        //call server api    
+        $http({
+            method: 'POST',
+            url: 'http://localhost:3001/api/invio-bonifico-admin',
+            headers: { 'Content-Type': 'application/json' },
+            data: {
+                'token': curToken.value,
+                'from': $scope.countNumberOrd,
+                'to': $scope.countNumberBen,
+                'quantity': $scope.payment
             }
-        };
+        }).then(function (response) {
+            if (response.data.success) {
+                //in case of success reload page
+                alert(response.data.message);
+                $window.location.reload();
+            }
+            else{
+                //error
+                alert(response.data.message)
+            }
+
+        });
     };
 });
 
@@ -317,7 +272,7 @@ indexAdminApp.controller('adminUserVisionController', function ($scope, $http) {
 
 });
 //define adminAbilitaController
-indexAdminApp.controller('adminAbilitaController', function ($scope,$http) {
+indexAdminApp.controller('adminAbilitaController', function ($scope, $http) {
     //message
     $scope.message = "Benvenuto amministratore, da qui puoi abilitare o disabilitare un correntista. Cosa vuoi fare?";
     //booleans to check admin choose
@@ -348,33 +303,33 @@ indexAdminApp.controller('adminAbilitaController', function ($scope,$http) {
         $scope.decisioneDisabilitaNonPresaBooleano = true;
     };
     //function to enable user
-    $scope.enableUser= function(){
+    $scope.enableUser = function () {
         //call the api
         $http({
-            method:'POST',
-            url:'http://localhost:3001/api/on',
+            method: 'POST',
+            url: 'http://localhost:3001/api/on',
             headers: { 'Content-Type': 'application/json' },
-            data:{
-                'token':curToken.value,
+            data: {
+                'token': curToken.value,
                 'n_account': $scope.countNumberDaAbilitare
             }
-        }).then(function(response){
+        }).then(function (response) {
             //in every case i print the return message
             alert(response.data.message);
         });
     }
     //function to disable user
-    $scope.disableUser= function(){
+    $scope.disableUser = function () {
         //call the api
         $http({
-            method:'POST',
-            url:'http://localhost:3001/api/off',
+            method: 'POST',
+            url: 'http://localhost:3001/api/off',
             headers: { 'Content-Type': 'application/json' },
-            data:{
-                'token':curToken.value,
+            data: {
+                'token': curToken.value,
                 'n_account': $scope.countNumberDaDisabilitare
             }
-        }).then(function(response){
+        }).then(function (response) {
             //in every case i print the return message
             alert(response.data.message);
         });
