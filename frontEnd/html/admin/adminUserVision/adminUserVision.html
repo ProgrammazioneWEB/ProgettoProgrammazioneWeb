@@ -16,17 +16,63 @@
 
 <!--userData-->
 <div ng-show="!informazioniUserVuote()">
-    <ul class="list-group" ng-repeat="data in userData">
-        <li class="list-group-item">
-            {{data}}
-        </li>
-    </ul>
+    <img ng-src=="{{userImagePath}}" style="text-align:center;" />
+    <table class="table table-bordered">
+        <!--first row-->
+        <tr>
+            <!--first column-->
+            <td>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        Nome
+                    </li>
+                    <li class="list-group-item">
+                        Cognome
+                    </li>
+                    <li class="list-group-item">
+                        E-mail
+                    </li>
+                    <li class="list-group-item">
+                        Saldo
+                    </li>
+                    <li class="list-group-item">
+                        Indirizzo
+                    </li>
+                    <li class="list-group-item">
+                        Numero di telefono
+                    </li>
+                </ul>
+            </td>
+            <!--secondo column-->
+            <td>
+                    <ul class="list-group">
+                            <li class="list-group-item">
+                                    {{userName}}
+                            </li>
+                            <li class="list-group-item">
+                                    {{userSurname}}
+                            </li>
+                            <li class="list-group-item">
+                                    {{userEmail}}
+                            </li>
+                            <li class="list-group-item">
+                                    {{userMoney}}
+                            </li>
+                            <li class="list-group-item">
+                                    {{userResidence}}
+                            </li>
+                            <li class="list-group-item">
+                                    {{userPhoneNumber}}
+                            </li>
+                    </ul>
+            </td>
+        </tr>       
+    </table>
     <!--form per dare un giusto layout al button-->
     <form class="form-horizontal" name="form" invalid>
         <div class="form-group">
             <button type="submit" class="btn btn-primary leftArrow" name="resetUser" ng-model="resetUser" ng-click="resetUser()"> 
              <img src="../../../CSS/images/arrows/blue_arrow.png" class="leftArrow">
-                <br>Cerca un altro utente
             </button>
         </div>
     </form>

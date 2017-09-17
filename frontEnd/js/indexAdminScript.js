@@ -66,10 +66,10 @@ indexAdminApp.controller('adminHomeController', function ($scope, $http, $window
                    * which is at the right level 
                    */
                 $scope.adminImagePath = adminProfile.image;
-                 //control user image path
-                 if($scope.adminImagePath==""){
+                //control user image path
+                if ($scope.adminImagePath == "") {
                     //give a default image
-                    $scope.adminImagePath="../CSS/images/iconsForUser/user_default.jpg"
+                    $scope.adminImagePath = "../CSS/images/iconsForAdmin/admin_default.jpg"
                 }
                 //stats area
                 //save the variabile to show the real countNumber
@@ -91,13 +91,13 @@ indexAdminApp.controller('changeSite', function ($scope, $window) {
 });
 
 //define alert controller
-indexAdminApp.controller('adminAlertController', function ($scope, $http, $localStorage,$window) {
+indexAdminApp.controller('adminAlertController', function ($scope, $http, $localStorage, $window) {
     //message
     $scope.message = "Benvenuto, da qui potrai scrivere un avviso da inviare a tutti coloro che posseggono un conto Bancario presso la nostra Banca.Ricorda che l'avviso dovrà avere almeno 20 caratteri!";
     //alert to create
     $scope.alert = "";
     //alert getted
-    $scope.alerts={};
+    $scope.alerts = {};
     //Define function that create alert
     $scope.createAlert = function () {
         //function to send alerts to users
@@ -113,14 +113,14 @@ indexAdminApp.controller('adminAlertController', function ($scope, $http, $local
         }).then(function (response) {
             //if i'm here server response with bad error or not
             alert(response.data.message);
-             //reload page
-           $window.location.reload();     
+            //reload page
+            $window.location.reload();
         });
     };
     //boolean to show section advise
     $scope.showAlertsB = false;
     //defin function to get alert
-    $scope.getAlerts= function(){
+    $scope.getAlerts = function () {
         $http({
             method: "GET",
             url: "http://localhost:3001/get-avvisi",
@@ -130,11 +130,11 @@ indexAdminApp.controller('adminAlertController', function ($scope, $http, $local
             }
         }).then(function (response) {
             //assign data from database to local variable
-           $scope.alerts=response.data;
-           });
+            $scope.alerts = response.data;
+        });
     }
     //function to active alerts area
-    $scope.showAlerts= function(){
+    $scope.showAlerts = function () {
         $scope.showAlertsB = !$scope.showAlertsB;
     }
     //define function that control if text area is null
@@ -248,7 +248,7 @@ indexAdminApp.controller('adminBonificoController', function ($scope) {
 
 
 //define userVisionController
-indexAdminApp.controller('adminUserVisionController', function ($scope) {
+indexAdminApp.controller('adminUserVisionController', function ($scope, $http) {
     //message
     $scope.message = "Benvenuto admin, da qui potrai controllare lo stato di un correntista";
     //count number insert by admin
@@ -257,19 +257,44 @@ indexAdminApp.controller('adminUserVisionController', function ($scope) {
     $scope.userData = null;
     //function to get userData from server
     $scope.getUserData = function () {
-        //request http get with countNumber
-        $scope.userData = {
-            name: "Lorenzo",
-            surname: "Stacchio",
-            saldo: 50
-        }
-        //change message
-        $scope.message = "Ecco qui i dati di" + userData.name + " " + userData.surname;
+        //get user data from server
+        $http({
+            method: 'POST',
+            url: 'http://localhost:3001/api/userDataNAccount',
+            data: {
+                'token': curToken.value,
+                'n_account': $scope.countNumber
+            }
+        }).then(function (response) {
+            //if succes
+            if (response.data.success) {
+                $scope.userData = response.data.result;
+                //change message
+                $scope.message = "Dati del correntista " + $scope.userData.numberOfAccount;
+                //define some local variable
+                $scope.userName = $scope.userData.meta.firstName;
+                $scope.userSurname = $scope.userData.meta.lastName;
+                $scope.userEmail = $scope.userData.email;
+                $scope.userMoney = $scope.userData.availableBalance + " €";
+                $scope.userResidence = $scope.userData.meta.residence;
+                $scope.userPhoneNumber = $scope.userData.meta.numberOfPhone;
+                //control user image path, if string contains nothing replace it 
+                if ($scope.userData.image == "") {
+                    //give a default image
+                    $scope.userImagePath = "../CSS/images/iconsForUser/user_default.jpg";
+                }
+                else
+                    $scope.userImagePath = $scope.userData.image;
+            }
+            else {
+                alert("Non esiste un correntista con questo numero di conto");
+            }
+        });
     };
 
     //function to check if user data were gotten or not 
     $scope.informazioniUserVuote = function () {
-        if ($scope.userData === null) {
+        if ($scope.userData == null) {
             return true;
         }
         else {
