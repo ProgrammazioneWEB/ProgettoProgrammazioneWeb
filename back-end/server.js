@@ -556,8 +556,11 @@ apiRoutes.post('/invio-bonifico-user', function (req, res) {
 apiRoutes.post('/CalcolaMediaUscite', function (req, res) {
   database.avgCashOutside(req.numberOfAccount, function (result, messaggio) {
     res.json({
-      success: result //  Qui in realtà non invia il campo success ma in result c'è il risultato della media
+      success: result, //  Qui in realtà non invia il campo success ma in result c'è il risultato della media
+      message: messaggio
     });
+    console.log(result);
+    console.log(messaggio);
   });
 });
 

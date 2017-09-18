@@ -478,13 +478,14 @@ exports.avgCashOutside = function (numberOfAccount, callbackRis) {
         {
           _id: { from: numberOfAccount },
           avgQuantity: { $avg: "$quantity" }
+
         }
       }
     ], function (err, res) {
       if (err) throw err;
       console.log("1 document updated");
       db.close();
-      callbackRis(res);
+      callbackRis(true,res);
     });
   });
 }
