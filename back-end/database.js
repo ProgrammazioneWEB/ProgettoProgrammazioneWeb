@@ -473,14 +473,10 @@ exports.avgCashOutside = function (numberOfAccount, callbackRis) {
   MongoClient.connect(url, function (err, db) {
     if (err) throw err;
     db.collection("movements").aggregate([
-      {
-        $group:
-        {
-          _id: { from: numberOfAccount },
-          avgQuantity: { $avg: "$quantity" }
-
-        }
-      }
+      //matcha che il from sia il numero di conto che passo
+        {$match : { from : numberOfAccount}},
+      //ritorna la media della quantità
+        {$group : { $avgQuantity : "$quantity" }}
     ], function (err, res) {
       if (err) throw err;
       console.log("1 document updated");
