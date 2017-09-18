@@ -1,4 +1,7 @@
 {
   "name": "node-token-jwt",
-  "main": "server.js"
+  "main": "server.js",
+  "dependencies": {
+    "moment": "file:node_modules/moment"
+  }
 }

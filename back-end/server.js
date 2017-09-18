@@ -15,6 +15,7 @@ var Movimento = require('./app/models/movement');
 var Pin = require('./app/models/pin');
 var Advise = require('./app/models/advise');
 var database = require('./database'); // Importo il file per la gestione del database
+var moment = require('moment');
 
 // =======================
 // ==== configuration ====
@@ -56,6 +57,9 @@ database.init();
 
 // basic route (momentaneamente solo di test)
 app.get('/', function (req, res) {
+  var date = new Date();
+  var today = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay();
+
   // creo il nuovo utente con i dati 
   var user2 = new User({
     email: 'testB@gmail.com',
@@ -75,7 +79,8 @@ app.get('/', function (req, res) {
       fiscalCode: '3g43q4g465g'
     },
     numberOfAccount: 200,
-    availableBalance: 5000
+    availableBalance: 5000,
+    dateOfCreation: today
   });
 
   var admin = new User({
@@ -97,11 +102,9 @@ app.get('/', function (req, res) {
       fiscalCode: '3g43q4g465g'
     },
     numberOfAccount: 100,
-    availableBalance: 7000
+    availableBalance: 7000,
+    dateOfCreation: today
   });
-
-  var date = new Date();
-  var today = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay();
 
   var mov = new Movimento({
     from: 100,
@@ -556,12 +559,50 @@ apiRoutes.post('/invio-bonifico-user', function (req, res) {
 apiRoutes.post('/CalcolaMediaUscite', function (req, res) {
   database.findUserByEmail(req.decoded, function (user) {
     if (user)
-      database.avgCashOutside(user.numberOfAccount, function (result, data) {
-        res.json({
-          success: result, 
-          message: 'Dati inviati correttamente.',
-          data: data
-        });
+      database.sumCashOutside(user.numberOfAccount, function (result, data) {
+
+        if (!data) {
+          res.json({
+            success: false,
+            message: 'Riscontrati problemi nel database.'
+          });
+        }
+        else
+          if (!data.sumQuantity)
+            res.json({
+              success: false,
+              message: 'Riscontrati problemi nel database.'
+            });
+          else {
+            var date = new Date();
+            var today = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay();
+
+            var then = moment(user.dateOfCreation, "YYYY-MM-DD");
+            var now = moment(today, "YYYY-MM-DD");
+            //  Ottengo la differenza in giorni
+            var days = moment.duration(then.diff(now)).asDays();
+
+            //  Se la differenza è negativa ci sono errori con le dati
+            if (days < 0)
+              res.json({
+                success: false,
+                message: 'Riscontrati problemi nel database.'
+              });
+            else {
+              //  Se sono passati zero giorni
+              if (days == 0)
+                days = 1; //  Non posso dividere per zero
+
+              //  Calcolo la spesa giornaliera
+              var ris = data.sumQuantity / days;
+
+              res.json({
+                success: result,
+                message: 'Dati inviati correttamente.',
+                data: ris
+              });
+            }
+          }
       });
     else
       res.json({

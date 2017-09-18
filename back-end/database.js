@@ -4,7 +4,7 @@
 
 var mongoose = require('mongoose');
 var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://localhost:27017/dbTest010";
+var url = "mongodb://localhost:27017/dbTest11";
 
 // this function find a user from his number of account
 var findByNumberOfAccount = function (numberOfAccount, callback) {
@@ -127,6 +127,9 @@ exports.addUser = function (user, callbackRis) {
     return;
   }
 
+  var date = new Date();
+  var today = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay();
+
   if (user.admin == undefined)
     user.admin = false;
 
@@ -139,12 +142,8 @@ exports.addUser = function (user, callbackRis) {
   if (user.image == undefined)
     user.image = "";
 
-  if (user.dateOfCreation == undefined) {
-    var date = new Date();
-    var today = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay();
-
+  if (user.dateOfCreation == undefined)
     user.date = today;
-  }
 
   MongoClient.connect(url, function (err, db) {
     if (err) {
