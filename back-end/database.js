@@ -477,8 +477,7 @@ exports.avgCashOutside = function (numberOfAccount, callbackRis) {
         $group:
         {
           _id: { from: numberOfAccount },
-          avgQuantity: { $avg: quantity }
-
+          avgQuantity: { $avg: "$quantity" }
         }
       }
     ], function (err, res) {

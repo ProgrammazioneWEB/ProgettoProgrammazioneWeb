@@ -302,12 +302,8 @@ indexUserApp.controller('userAverageController', function ($scope, $http) {
             'numberOfAccount': userProfile.numberOfAccount
         }
     }).then(function (response) {
-        if (response.data.success) {
-            $scope.averageExpence = response.data.message;
-        }
-        else {
-            alert("Server error at http://localhost:3001/api/CalcolaMediaUscite");
-        }
+        alert(response.data.success.value);
+        $scope.averageExpence = response.data.success;
     });
     //Stampa il messaggio
     $scope.message = "La tua spesa giornaliera media è di: " + $scope.averageExpence;
