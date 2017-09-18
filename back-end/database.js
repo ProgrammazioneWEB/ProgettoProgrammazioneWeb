@@ -469,7 +469,7 @@ exports.disactivateAccount = function (user, callbackRis) {
 }
 
 //  this function return the media of the cash sent in transaction
-exports.avgCashOutside = function (numberOfAccount, callbackRis) {
+exports.sumCashOutside = function (numberOfAccount, callbackRis) {
   MongoClient.connect(url, function (err, db) {
     if (err) {
       callbackRis(false, null);
@@ -486,7 +486,7 @@ exports.avgCashOutside = function (numberOfAccount, callbackRis) {
         $group:
         {
           _id: "$from",
-          avgQuantity: { $avg: "$quantity" }
+          sumQuantity: { $sum: "$quantity" }
         }
       }
     ], function (err, res) {
@@ -494,7 +494,7 @@ exports.avgCashOutside = function (numberOfAccount, callbackRis) {
         callbackRis(false, null);
         throw err;
       }
-      console.log("1 document updated");
+      console.log("Sum return");
       db.close();
 
       if (res.length > 0)
