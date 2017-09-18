@@ -468,24 +468,39 @@ exports.disactivateAccount = function (user, callbackRis) {
   });
 }
 
-//this function return the media of the cash sent in transaction
+//  this function return the media of the cash sent in transaction
 exports.avgCashOutside = function (numberOfAccount, callbackRis) {
   MongoClient.connect(url, function (err, db) {
-    if (err) throw err;
+    if (err) {
+      callbackRis(false, null);
+      throw err;
+    }
     db.collection("movements").aggregate([
+      {
+        $match:
+        {
+          from: numberOfAccount
+        }
+      },
       {
         $group:
         {
-          _id: { from: numberOfAccount },
+          _id: "$from",
           avgQuantity: { $avg: "$quantity" }
-
         }
       }
     ], function (err, res) {
-      if (err) throw err;
+      if (err) {
+        callbackRis(false, null);
+        throw err;
+      }
       console.log("1 document updated");
       db.close();
-      callbackRis(true,res);
+
+      if (res.length > 0)
+        callbackRis(true, res[0]);
+      else
+        callbackRis(false, null);
     });
   });
 }

@@ -554,13 +554,20 @@ apiRoutes.post('/invio-bonifico-user', function (req, res) {
 
 //  this function return the media of the cash sent in transaction
 apiRoutes.post('/CalcolaMediaUscite', function (req, res) {
-  database.avgCashOutside(req.numberOfAccount, function (result, messaggio) {
-    res.json({
-      success: result, //  Qui in realtà non invia il campo success ma in result c'è il risultato della media
-      message: messaggio
-    });
-    console.log(result);
-    console.log(messaggio);
+  database.findUserByEmail(req.decoded, function (user) {
+    if (user)
+      database.avgCashOutside(user.numberOfAccount, function (result, data) {
+        res.json({
+          success: result, 
+          message: 'Dati inviati correttamente.',
+          data: data
+        });
+      });
+    else
+      res.json({
+        success: false,
+        message: 'Riscontrati problemi nel database.'
+      });
   });
 });
 
