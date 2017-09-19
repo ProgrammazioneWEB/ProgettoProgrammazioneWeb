@@ -612,6 +612,63 @@ apiRoutes.post('/CalcolaMediaUscite', function (req, res) {
   });
 });
 
+//  this function return the media of the cash recieve in transaction
+apiRoutes.post('/CalcolaMediaEntrate', function (req, res) {
+  database.findUserByEmail(req.decoded, function (user) {
+    if (user)
+      database.sumCashInside(user.numberOfAccount, function (result, data) {
+
+        if (!data) {
+          res.json({
+            success: false,
+            message: 'Riscontrati problemi nel database.'
+          });
+        }
+        else
+          if (!data.sumQuantity)
+            res.json({
+              success: false,
+              message: 'Riscontrati problemi nel database.'
+            });
+          else {
+            var date = new Date();
+            var today = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay();
+
+            var then = moment(user.dateOfCreation, "YYYY-MM-DD");
+            var now = moment(today, "YYYY-MM-DD");
+            //  Ottengo la differenza in giorni
+            var days = moment.duration(then.diff(now)).asDays();
+
+            //  Se la differenza è negativa ci sono errori con le dati
+            if (days < 0)
+              res.json({
+                success: false,
+                message: 'Riscontrati problemi nel database.'
+              });
+            else {
+              //  Se sono passati zero giorni
+              if (days == 0)
+                days = 1; //  Non posso dividere per zero
+
+              //  Calcolo la spesa giornaliera
+              var ris = data.sumQuantity / days;
+
+              res.json({
+                success: result,
+                message: 'Dati inviati correttamente.',
+                data: ris
+              });
+            }
+          }
+      });
+    else
+      res.json({
+        success: false,
+        message: 'Riscontrati problemi nel database.'
+      });
+  });
+});
+
 //  invio avvisi
 apiRoutes.post('/invio-avviso', function (req, res) {
   var date = new Date();
