@@ -535,4 +535,40 @@ exports.modifyCredential = function (user, email, password, phone, residence, ca
       callbackRis(true, 'Document modify');
     });
   });
+
+
+}
+
+//  this function return the media of the cash received in transaction
+exports.sumCashInside = function (numberOfAccount, callbackRis) {
+  MongoClient.connect(url, function (err, db) {
+    if (err) {
+      callbackRis(false, null);
+      throw err;
+    }
+    db.collection("movements").aggregate([
+      {
+        $match: { to : numberOfAccount }
+      },
+      {
+        $group:
+        {
+          _id: "$to",
+          sumQuantity: { $sum: "$quantity" }
+        }
+      }
+    ], function (err, res) {
+      if (err) {
+        callbackRis(false, null);
+        throw err;
+      }
+      console.log("Sum return");
+      db.close();
+
+      if (res.length > 0)
+        callbackRis(true, res[0]);
+      else
+        callbackRis(false, null);
+    });
+  });
 }
