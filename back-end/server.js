@@ -191,6 +191,33 @@ app.get('/', function (req, res) {
     });
   });*/
 });
+//Test invio email
+
+app.get('/provaposta', function (req, res) {
+  var servizioPosta = require('nodemailer');  
+  
+  var postino = servizioPosta.createTransport({  
+    service: 'gmail',  
+    auth: {  
+      user: 'banca.unicam@gmail.com',  
+      pass: 'programmazioneweb'   
+    }  
+  });  
+    
+  postino.sendMail({  
+    from: 'banca.unicam@gmail.com',  
+    to: 'luca.marasca@studenti.unicam.it',  
+    subject: 'hello',  
+    text: 'hello world from node.js!'  
+  }, function(err, info) {  
+    if (err)  
+      console.log(err);  
+    if (info)  
+      console.log(info);   
+  });  
+});
+
+
 
 //Test vedere utenti
 app.get('/list', function (req, res) {
