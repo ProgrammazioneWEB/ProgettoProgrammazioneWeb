@@ -4,7 +4,7 @@
 
 var mongoose = require('mongoose');
 var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://localhost:27017/dbTest11";
+var url = "mongodb://localhost:27017/dbTestNew";
 
 // this function find a user from his number of account
 var findByNumberOfAccount = function (numberOfAccount, callback) {
@@ -128,7 +128,7 @@ exports.addUser = function (user, callbackRis) {
   }
 
   var date = new Date();
-  var today = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay();
+  var today = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
 
   if (user.admin == undefined)
     user.admin = false;

@@ -312,6 +312,23 @@ indexUserApp.controller('userAverageController', function ($scope, $http) {
         }
     });
 
+    $http({
+        method: 'POST',
+        url: 'http://localhost:3001/api/CalcolaMediaEntrate',
+        headers: { 'Content-Type': 'application/json' },
+        data: {
+            'token': curToken.value,
+            'numberOfAccount': userProfile.numberOfAccount
+        }
+    }).then(function (response) {
+        if (response.data.success) {
+            $scope.averageEntrance = response.data.data;
+        }
+        else {
+            alert("Server error at http://localhost:3001/api/CalcolaMediaEntrate");
+        }
+    });
+
 
 });
 

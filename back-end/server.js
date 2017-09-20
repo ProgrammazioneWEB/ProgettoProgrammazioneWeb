@@ -58,7 +58,7 @@ database.init();
 // basic route (momentaneamente solo di test)
 app.get('/', function (req, res) {
   var date = new Date();
-  var today = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay();
+  var today = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
 
   // creo il nuovo utente con i dati 
   var user2 = new User({
@@ -487,7 +487,7 @@ apiRoutes.post('/movements', function (req, res) {
 //Test transazione e bonifico da amministratore
 apiRoutes.post('/invio-bonifico-admin', function (req, res) {
   var date = new Date();
-  var today = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay();
+  var today = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
 
   //  Controllo se l'utente loggato è amministratore
   database.findUserByEmail(req.decoded, function (result) {
@@ -526,7 +526,7 @@ apiRoutes.post('/invio-bonifico-admin', function (req, res) {
 //Test transazione e bonifico da user
 apiRoutes.post('/invio-bonifico-user', function (req, res) {
   var date = new Date();
-  var today = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay();
+  var today = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
 
   //  Cerco il numero di conto di chi ha richiesto il bonifico (req.decoded contiene l'email del user loggato)
   database.findUserByEmail(req.decoded, function (result) {
@@ -575,7 +575,7 @@ apiRoutes.post('/CalcolaMediaUscite', function (req, res) {
             });
           else {
             var date = new Date();
-            var today = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay();
+            var today = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
 
             var then = moment(user.dateOfCreation, "YYYY-MM-DD");
             var now = moment(today, "YYYY-MM-DD");
@@ -583,11 +583,12 @@ apiRoutes.post('/CalcolaMediaUscite', function (req, res) {
             var days = moment.duration(then.diff(now)).asDays();
 
             //  Se la differenza è negativa ci sono errori con le dati
-            if (days < 0)
+            if (days < 0) {
               res.json({
                 success: false,
-                message: 'Riscontrati problemi nel database.'
+                message: 'Riscontrati problemi con le date nel database.'
               });
+            }
             else {
               //  Se sono passati zero giorni
               if (days == 0)
@@ -632,7 +633,7 @@ apiRoutes.post('/CalcolaMediaEntrate', function (req, res) {
             });
           else {
             var date = new Date();
-            var today = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay();
+            var today = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
 
             var then = moment(user.dateOfCreation, "YYYY-MM-DD");
             var now = moment(today, "YYYY-MM-DD");
@@ -641,10 +642,12 @@ apiRoutes.post('/CalcolaMediaEntrate', function (req, res) {
 
             //  Se la differenza è negativa ci sono errori con le dati
             if (days < 0)
+            {
               res.json({
                 success: false,
-                message: 'Riscontrati problemi nel database.'
+                message: 'Riscontrati problemi con le date nel database.'
               });
+            }
             else {
               //  Se sono passati zero giorni
               if (days == 0)
@@ -672,7 +675,8 @@ apiRoutes.post('/CalcolaMediaEntrate', function (req, res) {
 //  invio avvisi
 apiRoutes.post('/invio-avviso', function (req, res) {
   var date = new Date();
-  var today = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay();
+  var today = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+
   var avviso = new Advise({
     title: req.body.title,
     text: req.body.text,
