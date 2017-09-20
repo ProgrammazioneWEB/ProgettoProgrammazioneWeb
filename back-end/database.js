@@ -4,7 +4,7 @@
 
 var mongoose = require('mongoose');
 var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://localhost:27017/dbTest010";
+var url = "mongodb://localhost:27017/dbTestNew";
 
 // this function find a user from his number of account
 var findByNumberOfAccount = function (numberOfAccount, callback) {
@@ -127,6 +127,9 @@ exports.addUser = function (user, callbackRis) {
     return;
   }
 
+  var date = new Date();
+  var today = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+
   if (user.admin == undefined)
     user.admin = false;
 
@@ -139,12 +142,8 @@ exports.addUser = function (user, callbackRis) {
   if (user.image == undefined)
     user.image = "";
 
-  if (user.dateOfCreation == undefined) {
-    var date = new Date();
-    var today = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay();
-
+  if (user.dateOfCreation == undefined)
     user.date = today;
-  }
 
   MongoClient.connect(url, function (err, db) {
     if (err) {
@@ -468,20 +467,46 @@ exports.disactivateAccount = function (user, callbackRis) {
   });
 }
 
-//this function return the media of the cash sent in transaction
-exports.avgCashOutside = function (numberOfAccount, callbackRis) {
+//  this function return the media of the cash sent in transaction
+exports.sumCashOutside = function (numberOfAccount, callbackRis) {
   MongoClient.connect(url, function (err, db) {
-    if (err) throw err;
+    if (err) {
+      callbackRis(false, null);
+      throw err;
+    }
     db.collection("movements").aggregate([
+<<<<<<< HEAD
       //matcha che il from sia il numero di conto che passo
         {$match : { from : numberOfAccount}},
       //ritorna la media della quantità
         {$group : { $avgQuantity : "$quantity" }}
+=======
+      {
+        $match:
+        {
+          from: numberOfAccount
+        }
+      },
+      {
+        $group:
+        {
+          _id: "$from",
+          sumQuantity: { $sum: "$quantity" }
+        }
+      }
+>>>>>>> master
     ], function (err, res) {
-      if (err) throw err;
-      console.log("1 document updated");
+      if (err) {
+        callbackRis(false, null);
+        throw err;
+      }
+      console.log("Sum return");
       db.close();
-      callbackRis(true,res);
+
+      if (res.length > 0)
+        callbackRis(true, res[0]);
+      else
+        callbackRis(false, null);
     });
   });
 }
@@ -515,6 +540,42 @@ exports.modifyCredential = function (user, email, password, phone, residence, ca
       console.log("1 document updated");
       db.close();
       callbackRis(true, 'Document modify');
+    });
+  });
+
+
+}
+
+//  this function return the media of the cash received in transaction
+exports.sumCashInside = function (numberOfAccount, callbackRis) {
+  MongoClient.connect(url, function (err, db) {
+    if (err) {
+      callbackRis(false, null);
+      throw err;
+    }
+    db.collection("movements").aggregate([
+      {
+        $match: { to : numberOfAccount }
+      },
+      {
+        $group:
+        {
+          _id: "$to",
+          sumQuantity: { $sum: "$quantity" }
+        }
+      }
+    ], function (err, res) {
+      if (err) {
+        callbackRis(false, null);
+        throw err;
+      }
+      console.log("Sum return");
+      db.close();
+
+      if (res.length > 0)
+        callbackRis(true, res[0]);
+      else
+        callbackRis(false, null);
     });
   });
 }

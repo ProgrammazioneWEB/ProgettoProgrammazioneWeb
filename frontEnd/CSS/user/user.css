@@ -111,6 +111,14 @@ font-size: 18;
 font-weight:bold;
 }
 
+span.Average{
+    text-align: center;    
+    color: black;
+    font-weight: bold;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 20;
+}
+
 
 div.userFunction{
     width:100%; 
