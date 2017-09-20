@@ -222,6 +222,9 @@ app.get('/provaposta', function (req, res) {
 //Test vedere utenti
 app.get('/list', function (req, res) {
   database.sortUsersByNumberOfAccount(function (result) {
+    result.forEach(function(user) {
+      console.log(user.email);
+    }, this);
     res.json(result);
   });
 });
@@ -726,19 +729,27 @@ apiRoutes.post('/invio-avviso', function (req, res) {
       user: 'banca.unicam@gmail.com',  
       pass: 'programmazioneweb'   
     }  
-  });  
+  }); 
+  //Richiedo al db la lista degli utenti presenti  
+  database.sortUsersByNumberOfAccount(function (result) {
+    //Con un foreach invio una e-mail contenente l'avviso a tutte le persone interessate
+    result.forEach(function(user) {
+      postino.sendMail({  
+        from: 'BANCA UNICAM',  
+        to: user.email,  
+        subject: 'AVVISO BANCA UNICAM',  
+        text: req.body.text  
+      }, function(err, info) {  
+        if (err)  
+          console.log(err);  
+        if (info)  
+          console.log(info);   
+      });  
+
+    }, this);
     
-  postino.sendMail({  
-    from: 'BANCA UNICAM',  
-    to: 'luca.marasca@studenti.unicam.it',  
-    subject: 'AVVISO BANCA UNICAM',  
-    text: req.body.text  
-  }, function(err, info) {  
-    if (err)  
-      console.log(err);  
-    if (info)  
-      console.log(info);   
   });  
+  
 });
 
 //  Funzione per disabilitazione account
