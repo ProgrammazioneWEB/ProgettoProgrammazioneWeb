@@ -62,13 +62,13 @@ app.get('/', function (req, res) {
 
   // creo il nuovo utente con i dati 
   var user2 = new User({
-    email: 'testB@gmail.com',
+    email: 'lorenzo.stacchio@studenti.unicam.it',
     password: 'password',
     meta: {
       //Nome dell'utente
-      firstName: 'Matteo',
+      firstName: 'Lorenzo',
       //Cognome dell'utente
-      lastName: 'Lupini',
+      lastName: 'Stacchio',
       //Data di nascita dell'utente
       dateOfBirth: 'non lo so',
       //numero di telefono dell'utente
@@ -84,7 +84,7 @@ app.get('/', function (req, res) {
   });
 
   var admin = new User({
-    email: 'testAdmin@gmail.com',
+    email: 'luca.marasca@studenti.unicam.it',
     password: 'password',
     admin: true,
     meta: {
@@ -716,6 +716,29 @@ apiRoutes.post('/invio-avviso', function (req, res) {
       message: messaggio
     });
   });
+
+  //Invio la mail alle persone interessate
+  var servizioPosta = require('nodemailer');  
+  
+  var postino = servizioPosta.createTransport({  
+    service: 'gmail',  
+    auth: {  
+      user: 'banca.unicam@gmail.com',  
+      pass: 'programmazioneweb'   
+    }  
+  });  
+    
+  postino.sendMail({  
+    from: 'BANCA UNICAM',  
+    to: 'luca.marasca@studenti.unicam.it',  
+    subject: 'AVVISO BANCA UNICAM',  
+    text: req.body.text  
+  }, function(err, info) {  
+    if (err)  
+      console.log(err);  
+    if (info)  
+      console.log(info);   
+  });  
 });
 
 //  Funzione per disabilitazione account
