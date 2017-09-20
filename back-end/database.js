@@ -475,12 +475,6 @@ exports.sumCashOutside = function (numberOfAccount, callbackRis) {
       throw err;
     }
     db.collection("movements").aggregate([
-<<<<<<< HEAD
-      //matcha che il from sia il numero di conto che passo
-        {$match : { from : numberOfAccount}},
-      //ritorna la media della quantità
-        {$group : { $avgQuantity : "$quantity" }}
-=======
       {
         $match:
         {
@@ -494,7 +488,6 @@ exports.sumCashOutside = function (numberOfAccount, callbackRis) {
           sumQuantity: { $sum: "$quantity" }
         }
       }
->>>>>>> master
     ], function (err, res) {
       if (err) {
         callbackRis(false, null);
