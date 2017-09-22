@@ -611,7 +611,7 @@ apiRoutes.post('/CalcolaMediaUscite', function (req, res) {
             var then = moment(user.dateOfCreation, "YYYY-MM-DD");
             var now = moment(today, "YYYY-MM-DD");
             //  Ottengo la differenza in giorni
-            var days = moment.duration(then.diff(now)).asDays();
+            var days = moment.duration(now.diff(then)).asDays();
 
             //  Se la differenza è negativa ci sono errori con le dati
             if (days < 0) {
@@ -669,7 +669,7 @@ apiRoutes.post('/CalcolaMediaEntrate', function (req, res) {
             var then = moment(user.dateOfCreation, "YYYY-MM-DD");
             var now = moment(today, "YYYY-MM-DD");
             //  Ottengo la differenza in giorni
-            var days = moment.duration(then.diff(now)).asDays();
+            var days = moment.duration(now.diff(then)).asDays();
 
             //  Se la differenza è negativa ci sono errori con le dati
             if (days < 0)
