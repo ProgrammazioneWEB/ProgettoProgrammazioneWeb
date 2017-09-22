@@ -11,9 +11,10 @@ var mongoose = require('mongoose');
 var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('./config'); // get our config file
 var User = require('./app/models/user'); // get our mongoose model
-var Movimento = require('./app/models/movement');
-var Pin = require('./app/models/pin');
-var Advise = require('./app/models/advise');
+var Movimento = require('./app/models/movement'); // get our mongoose model
+var Pin = require('./app/models/pin'); // get our mongoose model
+var Advise = require('./app/models/advise'); // get our mongoose model
+var UserToVerify = require('./app/models/userToVerify'); // get our mongoose model
 var database = require('./database'); // Importo il file per la gestione del database
 var moment = require('moment');
 

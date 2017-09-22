@@ -74,6 +74,15 @@ exports.init = function () {
         db.close();
       });
     });
+    //Collection advises
+    MongoClient.connect(url, function (err, db) {
+      if (err) throw err;
+      db.createCollection("advises", function (err, res) {
+        if (err) throw err;
+        console.log("Collection usersToVerify created!");
+        db.close();
+      });
+    });
   });
 }
 
@@ -569,6 +578,69 @@ exports.sumCashInside = function (numberOfAccount, callbackRis) {
         callbackRis(true, res[0]);
       else
         callbackRis(false, null);
+    });
+  });
+}
+
+// this function insert an user (email and link) in the collection user to verify
+// DENTRO USER TO VERIFY E' IMPORTANTE CHE ARRIVINO SIA IL NUMERO DI ACCOUNT
+// CHE IL LINK PER AGGIUNGERE L'UTENTE ALLA COLLEZIONE
+exports.addUserToVerify = function (userToVerify, callbackRis){
+  
+  MongoClient.connect(url, function (err, db) {
+    if (err) {
+      callbackRis(false, "Impossibile connettersi al Database");
+      throw err;
+    }
+    var myobj = userToVerify;
+    db.collection("usersToVerify").insertOne(myobj, function (err, res) {
+      if (err) {
+        callbackRis(false, "Impossibile trovare lo schema del Database");
+        throw err;
+      }
+      db.close();
+      console.log("1 userToVerify inserted");
+      callbackRis(true, "Utente Aggiunto a quelli da verificare");
+    });
+  });
+}
+
+// this function required a link and it find the corresponsive number of account into the collections
+exports.findUsersByLink = function (link, callbackRis){
+  MongoClient.connect(url, function(err, db) {
+    if (err) {
+      callbackRis(false, null);
+      throw err;
+    }
+    db.collection("customers").findOne({ link : link}, function(err, res) {
+      if (err) {
+        callbackRis(false, null);
+        throw err;
+      }
+      db.close();
+      callbackRis(true, res.numberOfAccount);
+    });
+  });
+} 
+
+//this function required a numberOfAccount and delete the corrisponsive record inside the collection
+//RITORNA FALSO SE LA FUNZIONE NON HA CANCELLATO L'UTENTE
+//RITORNA VERO SE LA FUNZIONE HA CANCELLATO L'UTENTE
+exports.deleteUserToVerify = function (numberOfAccount, callbackRis){
+  MongoClient.connect(url, function(err, db) {
+    if (err) {
+      callbackRis(false, "Utente non cancellato");
+      throw err;
+    }
+    var myquery = { numberOfAccount : numberOfAccount};
+    db.collection("customers").deleteOne(myquery, function(err, obj) {
+      if (err) {
+        callbackRis(false, "Utente non cancellato");
+        throw err;
+      } 
+      console.log("1 document deleted");
+      db.close();
+      callbackRis(true,"Utente Cancellato")
     });
   });
 }
