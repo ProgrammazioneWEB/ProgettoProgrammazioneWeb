@@ -267,7 +267,6 @@ indexUserApp.controller('userTransactionController', function ($scope, $http, $w
             url: "http://localhost:3001/api/invio-bonifico-user",
             headers: { 'Content-Type': 'application/json' },
             data: {
-                'email': $localStorage.Email,
                 'token': curToken.value,
                 'to': $scope.iban,
                 'quantity': $scope.payment
@@ -308,7 +307,7 @@ indexUserApp.controller('userAverageController', function ($scope, $http) {
             $scope.averageExpence = response.data.data;
         }
         else {
-            alert("Server error at http://localhost:3001/api/CalcolaMediaUscite");
+            alert(response.data.message);
         }
     });
 
@@ -325,7 +324,7 @@ indexUserApp.controller('userAverageController', function ($scope, $http) {
             $scope.averageEntrance = response.data.data;
         }
         else {
-            alert("Server error at http://localhost:3001/api/CalcolaMediaEntrate");
+            alert(response.data.message);        
         }
     });
 

@@ -568,7 +568,6 @@ apiRoutes.post('/invio-bonifico-user', function (req, res) {
         date: today,
         quantity: req.body.quantity
       });
-
       //  Aggiungo la transazione al db e rispondo all' utente il messaggio di riuscita o errore
       database.addTransaction(bonifico, function (result, messaggio) {
         res.json({
