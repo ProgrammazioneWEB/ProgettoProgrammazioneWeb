@@ -39,6 +39,9 @@ indexApp.config(function ($routeProvider) {
       templateUrl: './html/loading/loading.html',
       controller: 'logOutController'
     })
+    .when('/licence',{
+      templateUrl:'./html/licenceContract/licenceContract.html'
+    })
 });
 
 

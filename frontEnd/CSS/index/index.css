@@ -19,7 +19,23 @@ div.photo{
     animation-name: example;
     animation-duration: 3s;
 }
-
+div.homePageDiv{
+    text-align: center;
+    width: 41%;
+    height: 82%;
+    left:0; right:0;
+    top:0; bottom:0;
+    margin:auto;
+    overflow: auto;
+    background-image: url('../images/pergamena.jpg');
+}
+span.story{
+    text-align: center;
+    font-size: 18;
+    left:0; right:0;
+    top:0; bottom:0;
+    margin:auto;
+}
 table.center{
 text-align: center;
 }
