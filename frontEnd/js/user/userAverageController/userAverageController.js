@@ -1,8 +1,6 @@
-// create the module for the indexUser
-var indexUserApp = angular.module('indexUserApp', ['ngRoute', 'ngAnimate', 'ngTouch', 'zingchart-angularjs']);
 
 //user movements controller
-indexUserApp.controller('userAverageController', function ($scope) {
+angular.module('indexUserApp').controller('userAverageController', function ($scope) {
     //take the date of creatione of the count
     this.dateOfCreation = new Date(userProfile.dataCreazioneConto);
     //take the current day

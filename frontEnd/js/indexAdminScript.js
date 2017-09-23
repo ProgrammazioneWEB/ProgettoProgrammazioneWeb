@@ -93,7 +93,7 @@ indexAdminApp.controller('changeSite', function ($scope, $window) {
 //define alert controller
 indexAdminApp.controller('adminAlertController', function ($scope, $http, $localStorage, $window) {
     //message
-    $scope.message = "Benvenuto, da qui potrai scrivere un avviso da inviare a tutti coloro che posseggono un conto Bancario presso la nostra Banca.Ricorda che l'avviso dovrà avere almeno 20 caratteri!";
+    $scope.message = "Benvenuto "+ adminProfile.meta.firstName+", da qui potrai scrivere un avviso da inviare a tutti coloro che posseggono un conto Bancario presso la nostra Banca.Ricorda che l'avviso dovrà avere almeno 20 caratteri!";
     //alert to create
     $scope.alert = "";
     //alert getted
@@ -151,7 +151,7 @@ indexAdminApp.controller('adminAlertController', function ($scope, $http, $local
 //controller for transaction
 indexAdminApp.controller('adminBonificoController', function ($scope, $http, $window) {
     //message
-    $scope.message = "Benvenuto admin, da qui potrai effettuare un bonifico tra due utenti, per accertarti che la somma del bonifico possa essere effettivamente pagata vai nella sezione" +
+    $scope.message = "Benvenuto "+ adminProfile.meta.firstName+", da qui potrai effettuare un bonifico tra due utenti, per accertarti che la somma del bonifico possa essere effettivamente pagata vai nella sezione" +
         "Visiona stato di un utente";
     //errors that could be thrown
     $scope.paymentErrors =
@@ -209,7 +209,7 @@ indexAdminApp.controller('adminBonificoController', function ($scope, $http, $wi
 //define userVisionController
 indexAdminApp.controller('adminUserVisionController', function ($scope, $http) {
     //message
-    $scope.message = "Benvenuto admin, da qui potrai controllare lo stato di un correntista";
+    $scope.message = "Benvenuto "+ adminProfile.meta.firstName+", da qui potrai controllare lo stato di un correntista";
     //count number insert by admin
     $scope.countNumber;
     //user data
@@ -274,7 +274,7 @@ indexAdminApp.controller('adminUserVisionController', function ($scope, $http) {
 //define adminAbilitaController
 indexAdminApp.controller('adminAbilitaController', function ($scope, $http) {
     //message
-    $scope.message = "Benvenuto amministratore, da qui puoi abilitare o disabilitare un correntista. Cosa vuoi fare?";
+    $scope.message = "Benvenuto "+ adminProfile.meta.firstName+", da qui puoi abilitare o disabilitare un correntista. Cosa vuoi fare?";
     //booleans to check admin choose
     $scope.decisioneAbilitaNonPresaBooleano = true;
     $scope.decisioneDisabilitaNonPresaBooleano = true;

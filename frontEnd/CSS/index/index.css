@@ -20,21 +20,21 @@ div.photo{
     animation-duration: 3s;
 }
 div.homePageDiv{
-    text-align: center;
-    width: 41%;
-    height: 82%;
+    text-align: left;
+    width: 60%;
+    height: 100%;
     left:0; right:0;
     top:0; bottom:0;
     margin:auto;
     overflow: auto;
-    background-image: url('../images/pergamena.jpg');
+    background-color: #3E50F3;
+    border-radius: 2%;
 }
 span.story{
-    text-align: center;
+    color: black;
+    text-align: left;
+    font-weight: bold;
     font-size: 18;
-    left:0; right:0;
-    top:0; bottom:0;
-    margin:auto;
 }
 table.center{
 text-align: center;

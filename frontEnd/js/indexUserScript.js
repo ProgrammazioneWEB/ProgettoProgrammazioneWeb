@@ -1,5 +1,6 @@
 // create the module for the indexUser
-var indexUserApp = angular.module('indexUserApp', ['ngRoute', 'ngAnimate', 'ngTouch', 'zingchart-angularjs', 'ngStorage']);
+var indexUserApp = angular.module('indexUserApp', ['ngRoute', 'ngAnimate', 'ngTouch', 
+'zingchart-angularjs', 'ngStorage',]);
 
 // configuring routes
 indexUserApp.config(function ($routeProvider) {
@@ -153,7 +154,7 @@ indexUserApp.controller('userHomeController', function ($scope, $http, $window, 
 
 //user movements controller
 indexUserApp.controller('userMovementsController', function ($scope) {
-    $scope.message = "Benvenuto nella pagina dei movimenti bancari";
+    $scope.message = "Sezione movimenti bancari";
     $scope.movimentiBancari = userMovements;
 });
 
@@ -180,7 +181,7 @@ indexUserApp.controller('userTransactionController', function ($scope, $http, $w
             error: ""
         };
     //message
-    $scope.message = "Da qui puoi effettuare un bonifico";
+    $scope.message = "Sezione bonifico";
     //functions that do the payment
     //functio to control if payment is acceptable
     $scope.controlPayment = function () {
@@ -338,7 +339,7 @@ indexUserApp.controller('userGraphController', function ($scope) {
     //Function to show graph
     //data of user entrance 
     $scope.userEntrance = [];
-    $scope.message = "Benvenuto nella sezione dei grafici";
+    $scope.message = "Sezione grafici";
 
     //ENTRANCE GRAPH
     //boolean to show entrace graph
