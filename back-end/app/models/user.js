@@ -65,7 +65,7 @@ var user = new Schema({
     active : {
         type : Boolean,
         required : true,
-        default : true
+        default : false
     }
 });
 

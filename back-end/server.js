@@ -79,8 +79,9 @@ app.get('/', function (req, res) {
       //Codice fiscale dell'utente
       fiscalCode: '3g43q4g465g'
     },
-    numberOfAccount: 200,
+    numberOfAccount: 100001,
     availableBalance: 5000,
+    active: true,
     dateOfCreation: today
   });
 
@@ -102,14 +103,15 @@ app.get('/', function (req, res) {
       //Codice fiscale dell'utente
       fiscalCode: '3g43q4g465g'
     },
-    numberOfAccount: 100,
+    numberOfAccount: 100000,
     availableBalance: 7000,
+    active: true,
     dateOfCreation: today
   });
 
   var mov = new Movimento({
-    from: 100,
-    to: 200,
+    from: 100000,
+    to: 100001,
     date: today,
     quantity: 500
   });
@@ -136,8 +138,8 @@ app.get('/', function (req, res) {
             console.log(result);
           });
           mov = new Movimento({
-            from: 200,
-            to: 100,
+            from: 100001,
+            to: 100000,
             date: today,
             quantity: 1500
           });
@@ -147,8 +149,8 @@ app.get('/', function (req, res) {
               console.log(result);
             });
             mov = new Movimento({
-              from: 100,
-              to: 200,
+              from: 100000,
+              to: 100001,
               date: today,
               quantity: 500
             });
@@ -169,76 +171,112 @@ app.get('/', function (req, res) {
   });
 });
 
+app.get('/verify', function (req, res) {
 
-//Test invio email
+  console.log(req.query.code);
 
-app.get('/provaposta', function (req, res) {
-  var servizioPosta = require('nodemailer');  
-  
-  var postino = servizioPosta.createTransport({  
-    service: 'gmail',  
-    auth: {  
-      user: 'banca.unicam@gmail.com',  
-      pass: 'programmazioneweb'   
-    }  
-  });  
-    
-  postino.sendMail({  
-    from: 'banca.unicam@gmail.com',  
-    to: 'luca.marasca@studenti.unicam.it',  
-    subject: 'hello',  
-    text: 'hello world from node.js!'  
-  }, function(err, info) {  
-    if (err)  
-      console.log(err);  
-    if (info)  
-      console.log(info);   
-  });  
+  if (!req.query.code)
+    res.json({
+      result: false,
+      message: 'Codice non inserito.'
+    });
+  else
+    database.findUsersByLink(req.query.code, function (ris, result) {
+      if (ris) {
+        database.findUserByAccount(result, function (ris, result) {
+          if (ris) {
+            database.activateAccount(result, function (ris, message) {
+              if (ris)
+                res.json('Il tuo account è stato attivato correttamente.');
+              else
+                res.json({
+                  result: false,
+                  message: 'Riscontrati problemi con il database.'
+                });
+            });
+          }
+          else
+            res.json({
+              result: false,
+              message: 'Riscontrati problemi con il database.'
+            });
+        });
+      }
+      else
+        res.json({
+          result: false,
+          message: 'Codice errato o precedentemente attivato.'
+        });
+    });
 });
 
+//  Test invio email
+app.get('/provaposta', function (req, res) {
+  var servizioPosta = require('nodemailer');
 
+  var postino = servizioPosta.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'banca.unicam@gmail.com',
+      pass: 'programmazioneweb'
+    }
+  });
 
-//Test vedere utenti
+  postino.sendMail({
+    from: 'banca.unicam@gmail.com',
+    to: 'luca.marasca@studenti.unicam.it',
+    subject: 'hello',
+    text: 'hello world from node.js!'
+  }, function (err, info) {
+    if (err)
+      console.log(err);
+    if (info)
+      console.log(info);
+  });
+});
+
+//  Test vedere utenti
 app.get('/list', function (req, res) {
   database.sortUsersByNumberOfAccount(function (result) {
-    result.forEach(function(user) {
+    result.forEach(function (user) {
       console.log(user.email);
     }, this);
     res.json(result);
   });
 });
 
-//Test movimenti in uscita (si può cancellare)
+//  Test movimenti in uscita (si può cancellare)
 app.get('/movimenti-out', function (req, res) {
   database.allMovementsSend(100, function (result) {
     res.json(result);
   });
 });
 
-//Test movimenti in ingresso (si può cancellare)
+//  Test movimenti in ingresso (si può cancellare)
 app.get('/movimenti-in', function (req, res) {
   database.allMovementsReceive(100, function (result) {
     res.json(result);
   });
 });
 
-
-
-//arrivo ultimi 5 avvisi
+//  arrivo ultimi 5 avvisi
 app.get('/get-avvisi', function (req, res) {
   database.returnLastFiveAdvises(function (result) {
     res.json(result);
   });
 });
 
-
-
-
-
-
-
 //  Registra un nuovo utente
 app.post('/singup', function (req, res) {
+
+  if (!req.body.pin || !req.body.email || !req.body.password) {
+    res.json({
+      success: false,
+      message: 'Dati mancanti.'
+    });
+    return;
+  }
+
   database.verifyPin(req.body.pin, function (result) {
     if (!result)  // Se il pin non esiste rispondo con un errore
     {
@@ -251,6 +289,7 @@ app.post('/singup', function (req, res) {
 
     //  Se invece il pin esiste, prelevo i dati personali dell' utente da associare all' email
     var metadata = result.meta;
+    var saldoDefault = result.availableBalance;
 
     //  Controllo che l'email non sia già stata registrata
     database.findUserByEmail(req.body.email, function (result) {
@@ -262,86 +301,102 @@ app.post('/singup', function (req, res) {
         });
         return;
       }
-    //Creo il link dinamico
-    var date = new Date();
-    var milliseconds = date.getMilliseconds;
-    var testo = "Completa la registrazione";
-    var indirizzo = "http://localhost:3001" + milliseconds;
 
+      //  Calcolo il numero del conto del nuovo utente
+      database.findMaxNumberOfAccount(function (result) {
+        var nAccount = 100000; //  Se non esistono altri conti sarà il numero 100000
 
-    //Invio la mail di registrazione
-    var servizioPosta = require('nodemailer');  
-    
-    var postino = servizioPosta.createTransport({  
-      service: 'gmail',  
-      auth: {  
-        user: 'banca.unicam@gmail.com',  
-        pass: 'programmazioneweb'   
-      }  
-    }); 
-    postino.sendMail({  
-        from: 'BANCA UNICAM',  
-        to: req.body.email,  
-        subject: "Conferma registrazione Banca Unicam",  
-        text: document.write(testo.link(indirizzo))
-      }, function(err, info) {  
-        if (err)  
-          console.log(err);  
-        if (info)  
-          console.log(info);   
-      });  
-    });
-    var utente = new UserToVerify();
-    utente.numberOfAccount = req.numberOfAccount;
-    utente.link = indirizzo;
-    database.addUserToVerify(utente, function (result) {
-      //  Se è già registrata non posso registrarla nuovamente
-      if (result) {
-        res.json({
-          success: false,
-          message: "Non è stato possibile aggiungere l' utente da verificare"
+        if (result.length > 0)
+          if (result[0].numberOfAccount != undefined)
+            nAccount = (result[0].numberOfAccount + 1);
+
+        var date = new Date();
+        var today = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+
+        //  Creo il nuovo utente
+        var user = new User({
+          email: req.body.email,
+          password: req.body.password,
+          meta: metadata,
+          numberOfAccount: nAccount,
+          dateOfCreation: today,
+          availableBalance: saldoDefault,
+          active: false,
+          admin: false
         });
-        return;
-      }
-    });
-  });
-});
 
-app.post("/prova", function (req,res) //<-- devo mettere route dinamica
-{
-  //  Se non è registrata procedo
-  //  Calcolo il numero del conto del nuovo utente
-  database.findMaxNumberOfAccount(function (result) {
-    var nAccount = 0; //  Se non esistono altri conti sarà il numero 0
+        //  Lo aggiungo al database
+        database.addUser(user, function (result, messaggio) {
+          if (result) {
+            //  Elimino il pin dalla lista
+            database.deleteRecordPin(req.body.pin);
 
-    if (result.length > 0)
-      if (result[0].numberOfAccount != undefined)
-        nAccount = (result[0].numberOfAccount + 1);
+            //  Creo il link dinamico
+            var date = new Date();
+            var milliseconds = date.getMilliseconds();
+            var indirizzo = "http://localhost:3001/verify/?code=" + (milliseconds + req.body.pin);  //  ######## invece di localhost andrà inserita una variabile contenente l'ip in rete della macchina ############################
 
-    //  Creo il nuovo utente
-    var user = new User({
-      email: req.body.email,
-      password: req.body.password,
-      meta: metadata,
-      numberOfAccount: nAccount,
-      availableBalance: 0
-    });
+            var utente = new UserToVerify({
+              numberOfAccount: nAccount,
+              link: (milliseconds + req.body.pin)
+            });
 
-    //  Lo aggiungo al database
-    database.addUser(user, function (result, messaggio) {
-      if (result) {
-        //  Elimino il pin dalla lista
-        database.deleteRecordPin(req.body.pin);
-      }
+            database.addUserToVerify(utente, function (result) {
+              //  Se è già registrata non posso registrarla nuovamente
+              if (!result) {
+                res.json({
+                  success: false,
+                  message: "Non è stato possibile aggiungere l' utente da verificare."
+                });
+              }
+              else {
+                //  Invio la mail di registrazione
+                var servizioPosta = require('nodemailer');
 
-      //  Rispondo con un messaggio di operazione riuscita (se va a buon fine)
-      res.json({
-        success: result,
-        message: messaggio
+                var postino = servizioPosta.createTransport({
+                  service: 'gmail',
+                  auth: {
+                    user: 'banca.unicam@gmail.com',
+                    pass: 'programmazioneweb'
+                  }
+                });
+
+                postino.sendMail({
+                  from: 'BANCA UNICAM',
+                  to: req.body.email,
+                  subject: "Conferma registrazione Banca Unicam",
+                  text: "Seguire il link per procedere con la registrazione:\n" + indirizzo
+                }, function (err, info) {
+                  if (err) {
+                    console.log(err);
+                    res.json({
+                      success: false,
+                      message: err
+                    });
+                    return;
+                  }
+                  if (info)
+                    console.log(info);
+                });
+
+                res.json({
+                  success: true,
+                  message: "Ti è stata inviata un email per confermare la registrazione."
+                });
+              }
+            });
+          }
+          else
+            res.json({
+              success: result,
+              message: messaggio
+            });
+        });
       });
     });
   });
 });
+
 // API ROUTES -------------------
 
 // get an instance of the router for api routes
@@ -349,12 +404,12 @@ var apiRoutes = express.Router();
 
 // route to authenticate a user
 apiRoutes.post('/authenticate', function (req, res) {
-
-  var result = database.autenticate(req.body.email, req.body.password, function (result, messaggio) {
-
-    if (result == false) {
-      res.json({ success: false, message: 'Authentication failed. User not found.' });
-    }
+  database.autenticate(req.body.email, req.body.password, function (result, messaggio) {
+    if (result == false)
+      res.json({
+        success: false,
+        message: messaggio
+      });
     else {
       // create a token (come dato di creazione del token viene utilizzata l'email associata)
       var token = jwt.sign(req.body.email, app.get('superSecret'), {
@@ -376,7 +431,10 @@ apiRoutes.post('/authenticate', function (req, res) {
           });
         }
         else
-          res.json({ success: false, message: 'Authentication failed. User not found.' });
+          res.json({
+            success: false,
+            message: 'Authentication failed. User not found.'
+          });
       });
     }
   });
@@ -618,17 +676,18 @@ apiRoutes.post('/CalcolaMediaUscite', function (req, res) {
     if (user)
       database.sumCashOutside(user.numberOfAccount, function (result, data) {
 
-        if (!data) {
+        if (!result) {
           res.json({
             success: false,
             message: 'Riscontrati problemi nel database.'
           });
         }
         else
-          if (!data.sumQuantity)
+          if (!data)
             res.json({
-              success: false,
-              message: 'Riscontrati problemi nel database.'
+              success: true,
+              message: 'Dati inviati correttamente.',
+              data: 0
             });
           else {
             var date = new Date();
@@ -676,17 +735,18 @@ apiRoutes.post('/CalcolaMediaEntrate', function (req, res) {
     if (user)
       database.sumCashInside(user.numberOfAccount, function (result, data) {
 
-        if (!data) {
+        if (!result) {
           res.json({
             success: false,
             message: 'Riscontrati problemi nel database.'
           });
         }
         else
-          if (!data.sumQuantity)
+          if (!data)  //  Se non sono mai stati fatti movimenti
             res.json({
-              success: false,
-              message: 'Riscontrati problemi nel database.'
+              success: true,
+              message: 'Dati inviati correttamente.',
+              data: 0
             });
           else {
             var date = new Date();
@@ -698,8 +758,7 @@ apiRoutes.post('/CalcolaMediaEntrate', function (req, res) {
             var days = moment.duration(now.diff(then)).asDays();
 
             //  Se la differenza è negativa ci sono errori con le dati
-            if (days < 0)
-            {
+            if (days < 0) {
               res.json({
                 success: false,
                 message: 'Riscontrati problemi con le date nel database.'
@@ -747,36 +806,36 @@ apiRoutes.post('/invio-avviso', function (req, res) {
     });
   });
 
-  //Invio la mail alle persone interessate
-  var servizioPosta = require('nodemailer');  
-  
-  var postino = servizioPosta.createTransport({  
-    service: 'gmail',  
-    auth: {  
-      user: 'banca.unicam@gmail.com',  
-      pass: 'programmazioneweb'   
-    }  
-  }); 
-  //Richiedo al db la lista degli utenti presenti  
+  //  Invio la mail alle persone interessate
+  var servizioPosta = require('nodemailer');
+
+  var postino = servizioPosta.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'banca.unicam@gmail.com',
+      pass: 'programmazioneweb'
+    }
+  });
+  //  Richiedo al db la lista degli utenti presenti  
   database.sortUsersByNumberOfAccount(function (result) {
-    //Con un foreach invio una e-mail contenente l'avviso a tutte le persone interessate
-    result.forEach(function(user) {
-      postino.sendMail({  
-        from: 'BANCA UNICAM',  
-        to: user.email,  
-        subject: req.body.title,  
-        text: req.body.text  
-      }, function(err, info) {  
-        if (err)  
-          console.log(err);  
-        if (info)  
-          console.log(info);   
-      });  
+    //  Con un foreach invio una e-mail contenente l'avviso a tutte le persone interessate
+    result.forEach(function (user) {
+      postino.sendMail({
+        from: 'BANCA UNICAM',
+        to: user.email,
+        subject: req.body.title,
+        text: req.body.text
+      }, function (err, info) {
+        if (err)
+          console.log(err);
+        if (info)
+          console.log(info);
+      });
 
     }, this);
-    
-  });  
-  
+
+  });
+
 });
 
 //  Funzione per disabilitazione account
@@ -854,27 +913,40 @@ apiRoutes.post('/on', function (req, res) {
       });
   });
 });
-//Inserimento Pin da amministratore
+
+//  Inserimento Pin da amministratore
 apiRoutes.post('/InserisciPin-admin', function (req, res) {
- var megapin = new Pin({
-    number: req.number,
+  if (!req.body.pin) {
+    res.json({
+      success: false,
+      message: 'Impossibile registrare senza il pin.'
+    });
+
+    return;
+  }
+
+  var pin = new Pin({
+    number: req.body.pin,
+
     meta: {
-      //Nome dell'utente
-      firstName: req.firstName,
-      //Cognome dell'utente
-      lastName: req.lastName,
-      //Data di nascita dell'utente
-      dateOfBirth: req.dateOfBirth,
-      //numero di telefono dell'utente
-      numberOfPhone: req.numberOfPhone,
-      //Residenza dell'utente
-      residence: req.residence,
-      //Codice fiscale dell'utente
-      fiscalCode: req.fiscalCode
-    }
+      //  Nome dell'utente
+      firstName: req.body.firstName,
+      //  Cognome dell'utente
+      lastName: req.body.lastName,
+      //  Data di nascita dell'utente
+      dateOfBirth: req.body.dateOfBirth,
+      //  Numero di telefono dell'utente
+      numberOfPhone: req.body.numberOfPhone,
+      //  Residenza dell'utente
+      residence: req.body.residence,
+      //  Codice fiscale dell'utente
+      fiscalCode: req.body.fiscalCode
+    },
+    //  Assegno i fondi di default o 0 se non sono stati specificati
+    availableBalance: req.body.quantity || 0
   });
 
-  database.insertPin(megapin, function (result, messaggio) {
+  database.insertPin(pin, function (result, messaggio) {
     res.json({
       success: result,
       message: messaggio

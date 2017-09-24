@@ -4,7 +4,7 @@
 
 var mongoose = require('mongoose');
 var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://localhost:27017/dbTestNew";
+var url = "mongodb://localhost:27017/dbNew01";
 
 // this function find a user from his number of account
 var findByNumberOfAccount = function (numberOfAccount, callback) {
@@ -38,6 +38,7 @@ exports.init = function () {
     if (err) throw err;
     console.log("Database created!");
     db.close();
+
     // Collections users
     MongoClient.connect(url, function (err, db) {
       if (err) throw err;
@@ -77,7 +78,7 @@ exports.init = function () {
     //Collection advises
     MongoClient.connect(url, function (err, db) {
       if (err) throw err;
-      db.createCollection("advises", function (err, res) {
+      db.createCollection("usersToVerify", function (err, res) {
         if (err) throw err;
         console.log("Collection usersToVerify created!");
         db.close();
@@ -109,20 +110,20 @@ exports.findUserByAccount = function (numberOfAccount, callback) {
 exports.autenticate = function (email, password, callbackRis) {
   MongoClient.connect(url, function (err, db) {
     if (err) {
-      callbackRis(false, "Impossibile connettersi al Database");
+      callbackRis(false, "Impossibile connettersi al Database.");
       throw err;
     }
     db.collection("users").findOne({ email: email, password: password, active: true }, function (err, result) {
       if (err) {
-        callbackRis(false, "Impossibile trovare lo schema del Database");
+        callbackRis(false, "Impossibile trovare lo schema del Database.");
         throw err;
       }
       db.close();
 
       if (!result)
-        callbackRis(false, "Utente o password errati");
+        callbackRis(false, "Utente o password errati.");
       else
-        callbackRis(true, "Login Effettuato");
+        callbackRis(true, "Login Effettuato.");
     });
   });
 }
@@ -294,7 +295,7 @@ exports.findUserByEmail = function (email, callbackRis) {
   });
 }
 
-//this function return the information about user if the pin insert is correct
+//  this function return the information about user if the pin insert is correct
 exports.verifyPin = function (pin, callbackRis) {
   MongoClient.connect(url, function (err, db) {
     if (err) throw err;
@@ -452,7 +453,11 @@ exports.activateAccount = function (user, callbackRis) {
     var myobj = user;
     myobj.active = true;
     db.collection("users").updateOne(myquery, myobj, function (err, res) {
-      if (err) throw err;
+      if (err) {
+        callbackRis(false, 'Errore con il database.');
+        db.close();
+        throw err;
+      }
       console.log("1 document updated");
       db.close();
       callbackRis(true, 'Document modify');
@@ -468,7 +473,11 @@ exports.disactivateAccount = function (user, callbackRis) {
     var myobj = user;
     myobj.active = false;
     db.collection("users").updateOne(myquery, myobj, function (err, res) {
-      if (err) throw err;
+      if (err) {
+        callbackRis(false, 'Errore con il database.');
+        db.close();
+        throw err;
+      }
       console.log("1 document updated");
       db.close();
       callbackRis(true, 'Document modify');
@@ -508,7 +517,7 @@ exports.sumCashOutside = function (numberOfAccount, callbackRis) {
       if (res.length > 0)
         callbackRis(true, res[0]);
       else
-        callbackRis(false, null);
+        callbackRis(true, null);
     });
   });
 }
@@ -557,7 +566,7 @@ exports.sumCashInside = function (numberOfAccount, callbackRis) {
     }
     db.collection("movements").aggregate([
       {
-        $match: { to : numberOfAccount }
+        $match: { to: numberOfAccount }
       },
       {
         $group:
@@ -577,7 +586,7 @@ exports.sumCashInside = function (numberOfAccount, callbackRis) {
       if (res.length > 0)
         callbackRis(true, res[0]);
       else
-        callbackRis(false, null);
+        callbackRis(true, null);
     });
   });
 }
@@ -585,8 +594,8 @@ exports.sumCashInside = function (numberOfAccount, callbackRis) {
 // this function insert an user (email and link) in the collection user to verify
 // DENTRO USER TO VERIFY E' IMPORTANTE CHE ARRIVINO SIA IL NUMERO DI ACCOUNT
 // CHE IL LINK PER AGGIUNGERE L'UTENTE ALLA COLLEZIONE
-exports.addUserToVerify = function (userToVerify, callbackRis){
-  
+exports.addUserToVerify = function (userToVerify, callbackRis) {
+
   MongoClient.connect(url, function (err, db) {
     if (err) {
       callbackRis(false, "Impossibile connettersi al Database");
@@ -606,47 +615,51 @@ exports.addUserToVerify = function (userToVerify, callbackRis){
 }
 
 // this function required a link and it find the corresponsive number of account into the collections
-exports.findUsersByLink = function (link, callbackRis){
-  MongoClient.connect(url, function(err, db) {
+exports.findUsersByLink = function (link, callbackRis) {
+  MongoClient.connect(url, function (err, db) {
     if (err) {
       callbackRis(false, null);
       throw err;
     }
-    db.collection("customers").findOne({ link : link}, function(err, res) {
+    db.collection("usersToVerify").findOne({ link: link }, function (err, res) {
       if (err) {
         callbackRis(false, null);
         throw err;
       }
       db.close();
-      callbackRis(true, res.numberOfAccount);
+
+      if (res)
+        callbackRis(true, res.numberOfAccount);
+      else
+        callbackRis(false);
     });
   });
-} 
+}
 
 //this function required a numberOfAccount and delete the corrisponsive record inside the collection
 //RITORNA FALSO SE LA FUNZIONE NON HA CANCELLATO L'UTENTE
 //RITORNA VERO SE LA FUNZIONE HA CANCELLATO L'UTENTE
-exports.deleteUserToVerify = function (numberOfAccount, callbackRis){
-  MongoClient.connect(url, function(err, db) {
+exports.deleteUserToVerify = function (numberOfAccount, callbackRis) {
+  MongoClient.connect(url, function (err, db) {
     if (err) {
       callbackRis(false, "Utente non cancellato");
       throw err;
     }
-    var myquery = { numberOfAccount : numberOfAccount};
-    db.collection("customers").deleteOne(myquery, function(err, obj) {
+    var myquery = { numberOfAccount: numberOfAccount };
+    db.collection("customers").deleteOne(myquery, function (err, obj) {
       if (err) {
         callbackRis(false, "Utente non cancellato");
         throw err;
-      } 
+      }
       console.log("1 document deleted");
       db.close();
-      callbackRis(true,"Utente Cancellato")
+      callbackRis(true, "Utente Cancellato")
     });
   });
 }
 
 //this function update the current balance with the cash insert by the admin 
-exports.updateCash = function (user, newBalance, callbackRis){
+exports.updateCash = function (user, newBalance, callbackRis) {
   MongoClient.connect(url, function (err, db) {
     if (err) throw err;
     var myquery = { numberOfAccount: user.numberOfAccount };
