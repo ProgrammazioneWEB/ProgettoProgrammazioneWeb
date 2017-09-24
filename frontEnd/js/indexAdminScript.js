@@ -27,6 +27,10 @@ indexAdminApp.config(function ($routeProvider) {
             templateUrl: "/html/admin/adminHome/adminHome.html",
             controller: 'changeSite'
         })
+        .when("/newCount", {
+            templateUrl: "/html/admin/adminRegistraUtente/adminRegistraUtente.html",
+            controller: 'adminRegistraUtente'
+        })
 });
 //admin Profile
 var adminProfile = {};
@@ -93,7 +97,7 @@ indexAdminApp.controller('changeSite', function ($scope, $window) {
 //define alert controller
 indexAdminApp.controller('adminAlertController', function ($scope, $http, $localStorage, $window) {
     //message
-    $scope.message = "Benvenuto "+ adminProfile.meta.firstName+", da qui potrai scrivere un avviso da inviare a tutti coloro che posseggono un conto Bancario presso la nostra Banca.Ricorda che l'avviso dovrà avere almeno 20 caratteri!";
+    $scope.message = "Benvenuto " + adminProfile.meta.firstName + ", da qui potrai scrivere un avviso da inviare a tutti coloro che posseggono un conto Bancario presso la nostra Banca.Ricorda che l'avviso dovrà avere almeno 20 caratteri!";
     //alert to create
     $scope.alert = "";
     //alert getted
@@ -151,7 +155,7 @@ indexAdminApp.controller('adminAlertController', function ($scope, $http, $local
 //controller for transaction
 indexAdminApp.controller('adminBonificoController', function ($scope, $http, $window) {
     //message
-    $scope.message = "Benvenuto "+ adminProfile.meta.firstName+", da qui potrai effettuare un bonifico tra due utenti, per accertarti che la somma del bonifico possa essere effettivamente pagata vai nella sezione" +
+    $scope.message = "Benvenuto " + adminProfile.meta.firstName + ", da qui potrai effettuare un bonifico tra due utenti, per accertarti che la somma del bonifico possa essere effettivamente pagata vai nella sezione" +
         "Visiona stato di un utente";
     //errors that could be thrown
     $scope.paymentErrors =
@@ -196,7 +200,7 @@ indexAdminApp.controller('adminBonificoController', function ($scope, $http, $wi
                 alert(response.data.message);
                 $window.location.reload();
             }
-            else{
+            else {
                 //error
                 alert(response.data.message)
             }
@@ -209,7 +213,7 @@ indexAdminApp.controller('adminBonificoController', function ($scope, $http, $wi
 //define userVisionController
 indexAdminApp.controller('adminUserVisionController', function ($scope, $http) {
     //message
-    $scope.message = "Benvenuto "+ adminProfile.meta.firstName+", da qui potrai controllare lo stato di un correntista";
+    $scope.message = "Benvenuto " + adminProfile.meta.firstName + ", da qui potrai controllare lo stato di un correntista";
     //count number insert by admin
     $scope.countNumber;
     //user data
@@ -274,7 +278,7 @@ indexAdminApp.controller('adminUserVisionController', function ($scope, $http) {
 //define adminAbilitaController
 indexAdminApp.controller('adminAbilitaController', function ($scope, $http) {
     //message
-    $scope.message = "Benvenuto "+ adminProfile.meta.firstName+", da qui puoi abilitare o disabilitare un correntista. Cosa vuoi fare?";
+    $scope.message = "Benvenuto " + adminProfile.meta.firstName + ", da qui puoi abilitare o disabilitare un correntista. Cosa vuoi fare?";
     //booleans to check admin choose
     $scope.decisioneAbilitaNonPresaBooleano = true;
     $scope.decisioneDisabilitaNonPresaBooleano = true;
@@ -335,5 +339,54 @@ indexAdminApp.controller('adminAbilitaController', function ($scope, $http) {
         });
     }
 
+});
+//Define adminRegistraUtente
+indexAdminApp.controller('adminRegistraUtente', function ($scope, $http, $window) {
+    //message
+    $scope.message = "Benvenuto " + adminProfile.meta.firstName + ", da qui potrai creare un nuovo conto corrente.Per crearlo" +
+        " ti basterà inserire il nuovo numero di conto del cliente, assieme al pin per registrare il conto home banking e "
+        + " la cifra iniziale versata dal cliente";
+    //field to compile 
+    $scope.pin="";
+    $scope.money="";
+    $scope.countNumber="";
+    $scope.firstName="";
+    $scope.lastName="";
+    $scope.dateOfBirth="";
+    $scope.numberOfPhone="";
+    $scope.residence="";
+    $scope.fiscalCode="";
+    //function to control if fields are correct
+    $scope.checkForm = function(){
+        //to define
+      return false;
+    }
+    //function to register account
+    $scope.registerUser=function(){
+        $http({
+            method:'POST',
+            url:'http://localhost:3001/api/InserisciPin-admin',
+            headers: { 'Content-Type': 'application/json' },
+            data:{
+                'token':curToken.value,
+                'pin':$scope.pin,
+                'countNumber':$scope.countNumber,
+                'firstName':$scope.firstName,
+                'lastName':$scope.lastName,
+                'dateOfBirth':$scope.dateOfBirth,
+                'numberOfPhone':$scope.numberOfPhone,
+                'residence':$scope.residence,
+                'fiscalCode':$scope.fiscalCode,
+                'quantity':$scope.money,
+            }
+        }).then(function(response){
+            if(response.data.success){
+                alert(response.data.message);
+            }
+            else{
+                alert("Errore nel server o nel db");
+            }
+        });
+    }
 });
 

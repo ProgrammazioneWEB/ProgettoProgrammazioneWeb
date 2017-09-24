@@ -1,0 +1,51 @@
+<h1>{{message}}</h1>
+<form name="form" class="form-horizontal" ng-model="form" invalid>
+    <!--count number-->
+    <div class="form-group formElementCenter">
+        <input type="text" class="form-control" required ng-model="countNumber" placeholder="Inserisci qui il nuovo numero di conto"
+        />
+    </div>
+    <!--pin number-->
+    <div class="form-group formElementCenter">
+        <input type="number" class="form-control" required ng-model="pin" placeholder="Inserisci qui il pin associato al conto" />
+    </div>
+    <!--firstname-->
+    <div class="form-group formElementCenter">
+        <input type="text" class="form-control" required ng-model="firstName" placeholder="Inserisci qui il nome del correntista"
+        />
+    </div>
+    <!--last name-->
+    <div class="form-group formElementCenter">
+        <input type="text" class="form-control" required ng-model="lastName" placeholder="Inserisci qui il cognome del correntista"
+        />
+    </div>
+    <!--residence-->
+    <div class="form-group formElementCenter">
+        <input type="text" class="form-control" required ng-model="residence" placeholder="Inserisci qui la residenza del correntista"
+        />
+    </div>
+    <!--date of birth-->
+    <div class="form-group formElementCenter">
+        <input type="date" class="form-control" required ng-model="dateOfBirth" placeholder="Inserisci qui la data di nascita del correntista"
+        />
+    </div>
+    <!--number of phone-->
+    <div class="form-group formElementCenter">
+        <input type="text" class="form-control" required ng-model="numberOfPhone" placeholder="Inserisci qui il numero di telefono del correntista"
+        />
+    </div>
+    <!--fiscal code-->
+    <div class="form-group formElementCenter">
+        <input type="text" class="form-control" required ng-model="fiscalCode" placeholder="Inserisci qui il codice fiscale del conto"
+        />
+    </div>
+    <!--money-->
+    <div class="form-group formElementCenter">
+        <input type="text" class="form-control" required ng-model="money" placeholder="Inserisci qui la quota iniziale versata dal correntista"
+        />
+    </div>
+    <!--send button-->
+    <div class="form-group formElementCenter">
+        <button type="submit" class="btn btn-primary" ng-disabled="checkForm()" ng-click="registerUser()" /> Registra utente
+    </div>
+</form>
