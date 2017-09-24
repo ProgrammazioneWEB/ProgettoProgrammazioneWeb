@@ -644,3 +644,19 @@ exports.deleteUserToVerify = function (numberOfAccount, callbackRis){
     });
   });
 }
+
+//this function update the current balance with the cash insert by the admin 
+exports.updateCash = function (user, newBalance, callbackRis){
+  MongoClient.connect(url, function (err, db) {
+    if (err) throw err;
+    var myquery = { numberOfAccount: user.numberOfAccount };
+    var myobj = user;
+    myobj.availableBalance = newBalance;
+    db.collection("users").updateOne(myquery, myobj, function (err, res) {
+      if (err) throw err;
+      console.log("1 document updated");
+      db.close();
+      callbackRis(true, 'Document modify');
+    });
+  });
+}

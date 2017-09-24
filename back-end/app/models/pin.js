@@ -36,6 +36,11 @@ var pin = new Schema({
             unique : true
         }
     },
+    availableBalance : {
+        type : Number,
+        required : true,
+        default : 0
+    }
 });
 
 module.exports = mongoose.model('Pin', pin);
