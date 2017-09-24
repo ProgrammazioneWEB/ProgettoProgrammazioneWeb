@@ -737,7 +737,7 @@ apiRoutes.post('/invio-avviso', function (req, res) {
       postino.sendMail({  
         from: 'BANCA UNICAM',  
         to: user.email,  
-        subject: 'AVVISO BANCA UNICAM',  
+        subject: req.body.title,  
         text: req.body.text  
       }, function(err, info) {  
         if (err)  
