@@ -167,30 +167,6 @@ app.get('/', function (req, res) {
       });
     });
   });
-  /*var megapin = new Pin({
-    number: 55555,
-    meta: {
-      //Nome dell'utente
-      firstName: 'Nome',
-      //Cognome dell'utente
-      lastName: 'Cognome',
-      //Data di nascita dell'utente
-      dateOfBirth: '1950-01-01',
-      //numero di telefono dell'utente
-      numberOfPhone: '059239845',
-      //Residenza dell'utente
-      residence: 'Casa',
-      //Codice fiscale dell'utente
-      fiscalCode: 'NCGM01B0150'
-    }
-  });
-
-  database.insertPin(megapin, function (result, messaggio) {
-    res.json({
-      success: result,
-      message: messaggio
-    });
-  });*/
 });
 
 
@@ -254,6 +230,12 @@ app.get('/get-avvisi', function (req, res) {
     res.json(result);
   });
 });
+
+
+
+
+
+
 
 //  Registra un nuovo utente
 app.post('/singup', function (req, res) {
@@ -870,6 +852,33 @@ apiRoutes.post('/on', function (req, res) {
         success: false,
         message: 'Riscontrati problemi nel database.'
       });
+  });
+});
+//Inserimento Pin da amministratore
+apiRoutes.post('/InserisciPin-admin', function (req, res) {
+ var megapin = new Pin({
+    number: req.number,
+    meta: {
+      //Nome dell'utente
+      firstName: req.firstName,
+      //Cognome dell'utente
+      lastName: req.lastName,
+      //Data di nascita dell'utente
+      dateOfBirth: req.dateOfBirth,
+      //numero di telefono dell'utente
+      numberOfPhone: req.numberOfPhone,
+      //Residenza dell'utente
+      residence: req.residence,
+      //Codice fiscale dell'utente
+      fiscalCode: req.fiscalCode
+    }
+  });
+
+  database.insertPin(megapin, function (result, messaggio) {
+    res.json({
+      success: result,
+      message: messaggio
+    });
   });
 });
 
