@@ -167,31 +167,9 @@ app.get('/', function (req, res) {
       });
     });
   });
-  /*var megapin = new Pin({
-    number: 55555,
-    meta: {
-      //Nome dell'utente
-      firstName: 'Nome',
-      //Cognome dell'utente
-      lastName: 'Cognome',
-      //Data di nascita dell'utente
-      dateOfBirth: '1950-01-01',
-      //numero di telefono dell'utente
-      numberOfPhone: '059239845',
-      //Residenza dell'utente
-      residence: 'Casa',
-      //Codice fiscale dell'utente
-      fiscalCode: 'NCGM01B0150'
-    }
-  });
-
-  database.insertPin(megapin, function (result, messaggio) {
-    res.json({
-      success: result,
-      message: messaggio
-    });
-  });*/
 });
+
+
 //Test invio email
 
 app.get('/provaposta', function (req, res) {
@@ -253,6 +231,12 @@ app.get('/get-avvisi', function (req, res) {
   });
 });
 
+
+
+
+
+
+
 //  Registra un nuovo utente
 app.post('/singup', function (req, res) {
   database.verifyPin(req.body.pin, function (result) {
@@ -278,43 +262,86 @@ app.post('/singup', function (req, res) {
         });
         return;
       }
+    //Creo il link dinamico
+    var date = new Date();
+    var milliseconds = date.getMilliseconds;
+    var testo = "Completa la registrazione";
+    var indirizzo = "http://localhost:3001" + milliseconds;
 
-      //  Se non è registrata procedo
-      //  Calcolo il numero del conto del nuovo utente
-      database.findMaxNumberOfAccount(function (result) {
-        var nAccount = 0; //  Se non esistono altri conti sarà il numero 0
 
-        if (result.length > 0)
-          if (result[0].numberOfAccount != undefined)
-            nAccount = (result[0].numberOfAccount + 1);
-
-        //  Creo il nuovo utente
-        var user = new User({
-          email: req.body.email,
-          password: req.body.password,
-          meta: metadata,
-          numberOfAccount: nAccount,
-          availableBalance: 0
+    //Invio la mail di registrazione
+    var servizioPosta = require('nodemailer');  
+    
+    var postino = servizioPosta.createTransport({  
+      service: 'gmail',  
+      auth: {  
+        user: 'banca.unicam@gmail.com',  
+        pass: 'programmazioneweb'   
+      }  
+    }); 
+    postino.sendMail({  
+        from: 'BANCA UNICAM',  
+        to: req.body.email,  
+        subject: "Conferma registrazione Banca Unicam",  
+        text: document.write(testo.link(indirizzo))
+      }, function(err, info) {  
+        if (err)  
+          console.log(err);  
+        if (info)  
+          console.log(info);   
+      });  
+    });
+    var utente = new UserToVerify();
+    utente.numberOfAccount = req.numberOfAccount;
+    utente.link = indirizzo;
+    database.addUserToVerify(utente, function (result) {
+      //  Se è già registrata non posso registrarla nuovamente
+      if (result) {
+        res.json({
+          success: false,
+          message: "Non è stato possibile aggiungere l' utente da verificare"
         });
-
-        //  Lo aggiungo al database
-        database.addUser(user, function (result, messaggio) {
-          if (result) {
-            //  Elimino il pin dalla lista
-            database.deleteRecordPin(req.body.pin);
-          }
-
-          //  Rispondo con un messaggio di operazione riuscita (se va a buon fine)
-          res.json({
-            success: result,
-            message: messaggio
-          });
-        });
-      });
+        return;
+      }
     });
   });
 });
 
+app.post("/prova", function (req,res) //<-- devo mettere route dinamica
+{
+  //  Se non è registrata procedo
+  //  Calcolo il numero del conto del nuovo utente
+  database.findMaxNumberOfAccount(function (result) {
+    var nAccount = 0; //  Se non esistono altri conti sarà il numero 0
+
+    if (result.length > 0)
+      if (result[0].numberOfAccount != undefined)
+        nAccount = (result[0].numberOfAccount + 1);
+
+    //  Creo il nuovo utente
+    var user = new User({
+      email: req.body.email,
+      password: req.body.password,
+      meta: metadata,
+      numberOfAccount: nAccount,
+      availableBalance: 0
+    });
+
+    //  Lo aggiungo al database
+    database.addUser(user, function (result, messaggio) {
+      if (result) {
+        //  Elimino il pin dalla lista
+        database.deleteRecordPin(req.body.pin);
+      }
+
+      //  Rispondo con un messaggio di operazione riuscita (se va a buon fine)
+      res.json({
+        success: result,
+        message: messaggio
+      });
+    });
+  });
+});
 // API ROUTES -------------------
 
 // get an instance of the router for api routes
@@ -825,6 +852,33 @@ apiRoutes.post('/on', function (req, res) {
         success: false,
         message: 'Riscontrati problemi nel database.'
       });
+  });
+});
+//Inserimento Pin da amministratore
+apiRoutes.post('/InserisciPin-admin', function (req, res) {
+ var megapin = new Pin({
+    number: req.number,
+    meta: {
+      //Nome dell'utente
+      firstName: req.firstName,
+      //Cognome dell'utente
+      lastName: req.lastName,
+      //Data di nascita dell'utente
+      dateOfBirth: req.dateOfBirth,
+      //numero di telefono dell'utente
+      numberOfPhone: req.numberOfPhone,
+      //Residenza dell'utente
+      residence: req.residence,
+      //Codice fiscale dell'utente
+      fiscalCode: req.fiscalCode
+    }
+  });
+
+  database.insertPin(megapin, function (result, messaggio) {
+    res.json({
+      success: result,
+      message: messaggio
+    });
   });
 });
 
