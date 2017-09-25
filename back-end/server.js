@@ -669,9 +669,6 @@ apiRoutes.post('/invio-bonifico-admin', function (req, res) {
 apiRoutes.post('/invio-bonifico-user', function (req, res) {
   var date = new Date();
   var today = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
-
-  
-
   
   //  Cerco il numero di conto di chi ha richiesto il bonifico (req.decoded contiene l'email del user loggato)
   database.findUserByEmail(req.decoded, function (result) {
@@ -693,8 +690,15 @@ apiRoutes.post('/invio-bonifico-user', function (req, res) {
         return;
       }
         database.findUserByAccount(bonifico.to, function (success, result_admin1) {
-          console.log(bonifico.to);
-          console.log(result_admin1.admin);
+          if(success == false)
+          {
+            res.json({
+              message: "Numero di conto inesistente!!",
+              success: false
+            });
+            return
+          }
+          
           //Controllo che l'utente a cui sto mandando denaro sia admin
           if(result_admin1.admin)
           {
