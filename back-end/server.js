@@ -644,6 +644,9 @@ apiRoutes.post('/invio-bonifico-user', function (req, res) {
   var date = new Date();
   var today = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
 
+  
+
+  
   //  Cerco il numero di conto di chi ha richiesto il bonifico (req.decoded contiene l'email del user loggato)
   database.findUserByEmail(req.decoded, function (result) {
     if (result) {
@@ -653,6 +656,16 @@ apiRoutes.post('/invio-bonifico-user', function (req, res) {
         date: today,
         quantity: req.body.quantity
       });
+      console.log(bonifico.from);
+      console.log(bonifico.to);
+      if(bonifico.from == bonifico.to)
+      {
+        res.json({
+          message: "ERRORE, non è possibile inviare bonifico tra due account con lo stesso numero di conto",
+          success: false
+        });
+        return;
+      }
       //  Aggiungo la transazione al db e rispondo all' utente il messaggio di riuscita o errore
       database.addTransaction(bonifico, function (result, messaggio) {
         res.json({
