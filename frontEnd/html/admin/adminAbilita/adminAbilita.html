@@ -18,16 +18,19 @@
 </div>
 <!--active user section-->
 <div ng-show="!decisioneAbilitaNonPresa()">
-    <form class="form-horizontal" name="form" invalid>
+    <form class="form-horizontal" name="formAbilita" novalidate>
         <div class="form-group formElementCenter">
             <label class="adminTitle">
                                 Inserisci il numero di conto del correntista da abilitare
                         </label>
-            <input type="number" class="form-control" name="countNumberDaAbilitare" ng-model="countNumberDaAbilitare" required placeholder="Inserisci qui il numero di conto da abilitare"
+            <input type="number" class="form-control" ng-blur="controlCountNumberAbilita()" name="countNumberDaAbilitare" ng-model="countNumberDaAbilitare" required placeholder="Inserisci qui il numero di conto da abilitare"
             />
+            <span class="leftAlignError" 
+            ng-show="formAbilita.countNumberDaAbilitare.$invalid">{{countNumberDaAbilitareErrors.error}}</span>
         </div>
         <div class="form-group">
-            <button type="submit" class="btn btn-primary" name="enableUser" ng-model="enableUser" ng-click="enableUser()" />            Abilita utente
+            <button type="submit" class="btn btn-primary" ng-disabled="formAbilita.countNumberDaAbilitare.$invalid"
+            name="enableUser" ng-model="enableUser" ng-click="enableUser()" />Abilita utente
         </div>
         <div class="form-group">
             <button type="submit" class="btn btn-default leftArrow" name="resetShow" ng-model="resetShow" ng-click="resetShow()"> 
@@ -38,16 +41,18 @@
 </div>
 <!--block user section-->
 <div ng-show="!decisioneDisabilitaNonPresa()">
-    <form class="form-horizontal" name="form" invalid>
+    <form class="form-horizontal" name="formDisabilita" novalidate>
         <div class="form-group formElementCenter">
             <label class="adminTitle">
                                 Inserisci il numero di conto del correntista da disabilitare
                         </label>
-            <input type="number" class="form-control" name="countNumberDaDisabilitare" ng-model="countNumberDaDisabilitare" required placeholder="Inserisci qui il numero di conto da disabilitare"
+            <input type="number" ng-blur="controlCountNumberDisabilita()"class="form-control" name="countNumberDaDisabilitare" ng-model="countNumberDaDisabilitare" required placeholder="Inserisci qui il numero di conto da disabilitare"
             />
+            <span class="leftAlignError"
+            ng-show="formDisabilita.countNumberDaDisabilitare.$invalid">{{countNumberDaDisabilitareErrors.error}}</span>
         </div>
         <div class="form-group">
-            <button type="submit" class="btn btn-primary" name="disableUser" ng-model="disableUser" ng-click="disableUser()"
+            <button type="submit" class="btn btn-primary" ng-disabled="formDisabilita.countNumberDaDisabilitare.$invalid" name="disableUser" ng-model="disableUser" ng-click="disableUser()"
             /> Disabilita utente
         </div>
         <div class="form-group">

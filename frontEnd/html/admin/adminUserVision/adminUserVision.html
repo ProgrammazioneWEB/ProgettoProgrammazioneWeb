@@ -1,16 +1,18 @@
 <!--adminUserVisionPage-->
 <h1> {{message}}</h1>
 <!--form-->
-<form class="form-horizontal" name="form" ng-show="informazioniUserVuote()" invalid>
+<form class="form-horizontal" name="form" ng-model="form" ng-show="informazioniUserVuote()" novalidate>
     <div class="form-group formElementCenter">
         <label class="adminTitle">
             Inserisci il numero di conto del correntista
         </label>
-        <input type="number" class="form-control" name="countNumber" ng-model="countNumber" placeholder="Inserisci il numero di conto del correntista"
+        <input type="number" class="form-control" name="countNumber" ng-blur="controlCountNumber()" ng-model="countNumber" placeholder="Inserisci il numero di conto del correntista"
             required/>
+        <span class="leftAlignError" ng-show="form.countNumber.$invalid">{{countNumberErrors.error}}</span>
     </div>
     <div class="form-group">
-        <button type="submit" class="btn btn-primary" name="searchUser" ng-model="searchUser" ng-click="getUserData()" />        Cerca utente
+        <button type="submit" class="btn btn-primary" ng-disabled="form.countNumber.$invalid"
+        name="searchUser" ng-model="searchUser" ng-click="getUserData()" /> Cerca utente
     </div>
 </form>
 
@@ -48,34 +50,34 @@
             </td>
             <!--secondo column-->
             <td>
-                    <ul class="list-group">
-                            <li class="list-group-item">
-                                    {{userName}}
-                            </li>
-                            <li class="list-group-item">
-                                    {{userSurname}}
-                            </li>
-                            <li class="list-group-item">
-                                    {{userEmail}}
-                            </li>
-                            <li class="list-group-item">
-                                    {{userMoney}}
-                            </li>
-                            <li class="list-group-item">
-                                    {{userResidence}}
-                            </li>
-                            <li class="list-group-item">
-                                    {{userPhoneNumber}}
-                            </li>
-                            <li class="list-group-item">
-                                {{userEnable}}
-                        </li>
-                    </ul>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        {{userName}}
+                    </li>
+                    <li class="list-group-item">
+                        {{userSurname}}
+                    </li>
+                    <li class="list-group-item">
+                        {{userEmail}}
+                    </li>
+                    <li class="list-group-item">
+                        {{userMoney}}
+                    </li>
+                    <li class="list-group-item">
+                        {{userResidence}}
+                    </li>
+                    <li class="list-group-item">
+                        {{userPhoneNumber}}
+                    </li>
+                    <li class="list-group-item">
+                        {{userEnable}}
+                    </li>
+                </ul>
             </td>
-        </tr>       
+        </tr>
     </table>
     <!--form per dare un giusto layout al button-->
-    <form class="form-horizontal" name="form" invalid>
+    <form class="form-horizontal" invalid>
         <div class="form-group">
             <button type="submit" class="btn btn-primary leftArrow" name="resetUser" ng-model="resetUser" ng-click="resetUser()"> 
              <img src="../../../CSS/images/arrows/blue_arrow.png" class="leftArrow">

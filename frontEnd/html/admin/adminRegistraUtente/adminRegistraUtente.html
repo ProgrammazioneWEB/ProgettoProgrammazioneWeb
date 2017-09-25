@@ -1,13 +1,9 @@
 <h1>{{message}}</h1>
-<form name="form" class="form-horizontal" ng-model="form" invalid>
-    <!--count number-->
-    <div class="form-group formElementCenter">
-        <input type="text" class="form-control" required ng-model="countNumber" placeholder="Inserisci qui il nuovo numero di conto"
-        />
-    </div>
+<form name="form" class="form-horizontal" ng-model="form" novalidate>
     <!--pin number-->
     <div class="form-group formElementCenter">
-        <input type="number" class="form-control" required ng-model="pin" placeholder="Inserisci qui il pin associato al conto" />
+        <input type="number" class="form-control" ng-blur="checkPin()" required name="pin" ng-model="pin" placeholder="Inserisci qui il pin associato al conto" />
+        <span class="leftAlignError" ng-show="form.pin.$invalid">{{pinErrors.error}}</span>
     </div>
     <!--firstname-->
     <div class="form-group formElementCenter">
@@ -41,7 +37,7 @@
     </div>
     <!--money-->
     <div class="form-group formElementCenter">
-        <input type="text" class="form-control" required ng-model="money" placeholder="Inserisci qui la quota iniziale versata dal correntista"
+        <input type="number" class="form-control" required ng-model="money" placeholder="Inserisci qui la quota iniziale versata dal correntista"
         />
     </div>
     <!--send button-->

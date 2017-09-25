@@ -162,7 +162,76 @@ indexAdminApp.controller('adminBonificoController', function ($scope, $http, $wi
         {
             error: ""
         };
-
+    $scope.countOrderErrors =
+        {
+            error: ""
+        };
+    $scope.countBenErrors =
+        {
+            error: ""
+        };
+    //function to controll countNumber
+    $scope.controlCountNumberOrd = function () {
+        if ($scope.countNumberOrd === undefined) {
+            $scope.form.countNumberOrd.$invalid = true;
+            $scope.countOrderErrors = {
+                error: "*Non hai scritto il pin"
+            };
+        }
+        else {
+            //save pin like string
+            $scope.countNumberOrdString = $scope.countNumberOrd.toString();
+            if ($scope.countNumberOrdString.length < 6) {
+                $scope.form.countNumberOrd.$invalid = true;
+                $scope.countOrderErrors = {
+                    error: "*Il pin è troppo corto"
+                };
+            }
+            else if ($scope.countNumberOrdString.length > 6) {
+                $scope.form.countNumberOrd.$invalid = true;
+                $scope.countOrderErrors = {
+                    error: "*Il pin è troppo lungo"
+                };
+            }
+            else {
+                $scope.form.countNumberOrd.$invalid = false;
+                $scope.countOrderErrors = {
+                    error: ""
+                };
+            }
+        }
+    }
+    //function to controll countNumber
+    $scope.controlCountNumberBen = function () {
+        if ($scope.countNumberBen === undefined) {
+            $scope.form.countNumberBen.$invalid = true;
+            $scope.countBenErrors = {
+                error: "*Non hai scritto il pin"
+            };
+        }
+        else {
+            //save pin like string
+            $scope.countNumberBenString = $scope.countNumberBen.toString();
+            if ($scope.countNumberBenString.length < 6) {
+                $scope.form.countNumberBen.$invalid = true;
+                $scope.countBenErrors = {
+                    error: "*Il pin è troppo corto"
+                };
+            }
+            else if ($scope.countNumberBenString.length > 6) {
+                $scope.form.countNumberBen.$invalid = true;
+                $scope.countBenErrors = {
+                    error: "*Il pin è troppo lungo"
+                };
+            }
+            else {
+                $scope.form.countNumberBen.$invalid = false;
+                $scope.countBenErrors = {
+                    error: ""
+                };
+            }
+        }
+    }
     //function that control import
     $scope.checkImport = function () {
         if ($scope.payment == undefined) {
@@ -215,9 +284,41 @@ indexAdminApp.controller('adminUserVisionController', function ($scope, $http) {
     //message
     $scope.message = "Benvenuto " + adminProfile.meta.firstName + ", da qui potrai controllare lo stato di un correntista";
     //count number insert by admin
-    $scope.countNumber;
+    $scope.countNumber = undefined;
+    //errors to show
+    $scope.countNumberErrors = { error: "" };
     //user data
     $scope.userData = null;
+    //function to controll countNumber
+    $scope.controlCountNumber = function () {
+        //save pin like string
+        $scope.countNumberString = $scope.countNumber.toString();
+        if ($scope.countNumber === undefined) {
+            $scope.form.countNumber.$invalid = true;
+            $scope.countNumberErrors = {
+                error: "*Non hai scritto il pin"
+            };
+        }
+        else if ($scope.countNumberString.length < 6) {
+            $scope.form.countNumber.$invalid = true;
+            $scope.countNumberErrors = {
+                error: "*Il pin è troppo corto"
+            };
+        }
+        else if ($scope.countNumberString.length > 6) {
+            $scope.form.countNumber.$invalid = true;
+            $scope.countNumberErrors = {
+                error: "*Il pin è troppo lungo"
+            };
+        }
+        else {
+            $scope.form.countNumber.$invalid = false;
+            $scope.countNumberErrors = {
+                error: ""
+            };
+        }
+
+    };
     //function to get userData from server
     $scope.getUserData = function () {
         //get user data from server
@@ -282,6 +383,73 @@ indexAdminApp.controller('adminAbilitaController', function ($scope, $http) {
     //booleans to check admin choose
     $scope.decisioneAbilitaNonPresaBooleano = true;
     $scope.decisioneDisabilitaNonPresaBooleano = true;
+    //errors to show
+    $scope.countNumberDaAbilitareErrors = { error: "" };
+    $scope.countNumberDaDisabilitareErrors = { error: "" };
+    //function to controll countNumber
+    $scope.controlCountNumberAbilita = function () {
+        if ($scope.countNumberDaAbilitare === undefined) {
+            $scope.formAbilita.countNumberDaAbilitare.$invalid = true;
+            $scope.countNumberDaAbilitareErrors = {
+                error: "*Non hai scritto il pin"
+            };
+        }
+        else {
+            //save pin like string
+            $scope.countNumberDaAbilitareString = $scope.countNumberDaAbilitare.toString();
+            if ($scope.countNumberDaAbilitareString.length < 6) {
+                $scope.formAbilita.countNumberDaAbilitare.$invalid = true;
+                $scope.countNumberDaAbilitareErrors = {
+                    error: "*Il pin è troppo corto"
+                };
+            }
+            else if ($scope.countNumberDaAbilitareString.length > 6) {
+                $scope.formAbilita.countNumberDaAbilitare.$invalid = true;
+                $scope.countNumberDaAbilitareErrors = {
+                    error: "*Il pin è troppo lungo"
+                };
+            }
+            else {
+                $scope.formAbilita.countNumberDaAbilitare.$invalid = false;
+                $scope.countNumberDaAbilitareErrors = {
+                    error: ""
+                };
+            }
+        }
+
+    }
+    //function to controll countNumber
+    $scope.controlCountNumberDisabilita = function () {
+        if ($scope.countNumberDaDisabilitare === undefined) {
+            $scope.formDisabilita.countNumberDaDisabilitare.$invalid = true;
+            $scope.countNumberDaDisabilitareErrors = {
+                error: "*Non hai scritto il pin"
+            };
+        }
+        else {
+            //save pin like string
+            $scope.countNumberDaDisabilitareString = $scope.countNumberDaDisabilitare.toString();
+            if ($scope.countNumberDaDisabilitareString.length < 6) {
+                $scope.formDisabilita.countNumberDaDisabilitare.$invalid = true;
+                $scope.countNumberDaDisabilitareErrors = {
+                    error: "*Il pin è troppo corto"
+                };
+            }
+            else if ($scope.countNumberDaDisabilitareString.length > 6) {
+                $scope.formDisabilita.countNumberDaDisabilitare.$invalid = true;
+                $scope.countNumberDaDisabilitareErrors = {
+                    error: "*Il pin è troppo lungo"
+                };
+            }
+            else {
+                $scope.formDisabilita.countNumberDaDisabilitare.$invalid = false;
+                $scope.countNumberDaDisabilitareErrors = {
+                    error: ""
+                };
+            }
+        }
+
+    }
     //functions to check that admin doesn't click any button yet
     $scope.decisioneAbilitaNonPresa = function () {
         return $scope.decisioneAbilitaNonPresaBooleano;
@@ -347,43 +515,62 @@ indexAdminApp.controller('adminRegistraUtente', function ($scope, $http, $window
         " ti basterà inserire il nuovo numero di conto del cliente, assieme al pin per registrare il conto home banking e "
         + " la cifra iniziale versata dal cliente";
     //field to compile 
-    $scope.pin="";
-    $scope.money="";
-    $scope.countNumber="";
-    $scope.firstName="";
-    $scope.lastName="";
-    $scope.dateOfBirth="";
-    $scope.numberOfPhone="";
-    $scope.residence="";
-    $scope.fiscalCode="";
+    $scope.pin = "";
+    $scope.money = "";
+    $scope.firstName = "";
+    $scope.lastName = "";
+    $scope.dateOfBirth = "";
+    $scope.numberOfPhone = "";
+    $scope.residence = "";
+    $scope.fiscalCode = "";
+    //pin errors    
+    $scope.pinErrors = { error: "" };
+    //function to control pin
+    $scope.checkPin = function () {
+        if ($scope.pin === "" || $scope.pin===undefined) {
+            $scope.form.pin.$invalid = true;
+            $scope.pinErrors = { error: "Non hai scritto il pin!" };
+        }
+        else {
+            $scope.pinString = $scope.pin.toString();
+            if ($scope.pinString.length != 5) {
+                $scope.form.pin.$invalid = true;
+                $scope.pinErrors = { error: "Il pin deve essere lungo 5 cifre" };
+            }
+        }
+    };
     //function to control if fields are correct
-    $scope.checkForm = function(){
-        //to define
-      return false;
+    $scope.checkForm = function () {
+        if ($scope.pin == "" || $scope.money == "" || $scope.firstName == "" ||
+            $scope.lastName == "" || $scope.dateOfBirth == "" || $scope.numberOfPhone == ""
+            || $scope.residence == "" || $scope.fiscalCode == "")
+            return true;
+        else
+            return false;
     }
     //function to register account
-    $scope.registerUser=function(){
+    $scope.registerUser = function () {
         $http({
-            method:'POST',
-            url:'http://localhost:3001/api/InserisciPin-admin',
+            method: 'POST',
+            url: 'http://localhost:3001/api/InserisciPin-admin',
             headers: { 'Content-Type': 'application/json' },
-            data:{
-                'token':curToken.value,
-                'pin':$scope.pin,
-                'countNumber':$scope.countNumber,
-                'firstName':$scope.firstName,
-                'lastName':$scope.lastName,
-                'dateOfBirth':$scope.dateOfBirth,
-                'numberOfPhone':$scope.numberOfPhone,
-                'residence':$scope.residence,
-                'fiscalCode':$scope.fiscalCode,
-                'quantity':$scope.money,
+            data: {
+                'token': curToken.value,
+                'pin': $scope.pin,
+                'firstName': $scope.firstName,
+                'lastName': $scope.lastName,
+                'dateOfBirth': $scope.dateOfBirth,
+                'numberOfPhone': $scope.numberOfPhone,
+                'residence': $scope.residence,
+                'fiscalCode': $scope.fiscalCode,
+                'quantity': $scope.money,
             }
-        }).then(function(response){
-            if(response.data.success){
+        }).then(function (response) {
+            if (response.data.success) {
                 alert(response.data.message);
+                $window.location.reload();
             }
-            else{
+            else {
                 alert("Errore nel server o nel db");
             }
         });

@@ -31,10 +31,6 @@ indexApp.config(function ($routeProvider) {
       templateUrl: './html/loading/loading.html',
       controller: 'filterUserController'
     })
-    .when('/admin', {
-      templateUrl: './html/login/login.html',
-      controller: 'filterAdminController'
-    })
     .when('/logOut', {
       templateUrl: './html/loading/loading.html',
       controller: 'logOutController'
@@ -291,13 +287,6 @@ indexApp.controller("filterUserController", function ($scope, $http, $window, $l
   else {
     $location.path("/login");
   }
-});
-
-//TO CANCEL
-//controller che filtra se l'utente è loggato o meno
-indexApp.controller("filterAdminController", function ($scope, $http, $window, $location) {
-  //TO DEFINE
-  $window.location.href = '../indexAdmin.html';
 });
 
 //controller che si occupa del logout

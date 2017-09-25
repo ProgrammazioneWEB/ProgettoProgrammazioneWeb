@@ -5,15 +5,21 @@
     </h1>
     <!--iban ordinante -->
     <div class="form-group formElementCenter">
-        <input type="text" name="countNumberOrd" class="form-control" ng-model="countNumberOrd" placeholder="Scrivi qui il numero di conto dell'ordinante"
+        <input type="text" name="countNumberOrd" ng-blur="controlCountNumberOrd()"
+        class="form-control" ng-model="countNumberOrd" 
+        placeholder="Scrivi qui il numero di conto dell'ordinante"
             required>
         </input>
+        <span class="leftAlignError" ng-show="form.countNumberOrd.$invalid">{{countOrderErrors.error}}</span>
     </div>
     <!--iban beneficiante -->
     <div class="form-group formElementCenter">
-        <input type="text" name="countNumberBen" class="form-control" ng-model="countNumberBen" placeholder="Scrivi qui il numero di conto  del beneficiante"
+        <input type="text" name="countNumberBen" ng-blur="controlCountNumberBen()"
+        class="form-control" ng-model="countNumberBen" placeholder="Scrivi qui il numero di conto  del beneficiante"
             required>
         </input>
+        <span class="leftAlignError" ng-show="form.countNumberBen.$invalid">{{countBenErrors.error}}</span>
+        
     </div>
     <!--importo -->
     <div class="form-group formElementCenter">
@@ -26,6 +32,8 @@
     </div>
     <!--submit button -->
     <div class="form-group">
-        <button type="submit" class="btn btn-primary" ng-click="makeTransaction()">Esegui Bonifico</button>
+        <button type="submit" class="btn btn-primary" ng-disabled="form.payment.$invalid 
+        || form.countNumberOrd.$invalid || form.countNumberBen.$invalid" 
+        ng-click="makeTransaction()">Esegui Bonifico</button>
     </div>
 </form>
