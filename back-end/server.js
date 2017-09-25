@@ -642,12 +642,54 @@ apiRoutes.post('/invio-bonifico-admin', function (req, res) {
           quantity: req.body.quantity
         });
 
-        database.addTransaction(bonifico, function (result, messaggio) {
-          res.json({
-            message: messaggio,
-            success: result
-          });
+        //Controllo che l'utente non effettui un bonifico a se stesso
+      if(bonifico.from == bonifico.to)
+      {
+        res.json({
+          message: "ERRORE, non è possibile inviare bonifico tra due account con lo stesso numero di conto",
+          success: false
         });
+        return;
+      }
+        database.findUserByAccount(bonifico.from, function (success1, result_admin1) {
+          database.findUserByAccount(bonifico.to, function (success2, result_admin2) {
+            if(success1 == false)
+            {
+              res.json({
+                message: "Numero di conto inesistente!!",
+                success: false
+              });
+              return
+            }
+            if(success2 == false)
+            {
+              res.json({
+                message: "Numero di conto inesistente!!",
+                success: false
+              });
+              return
+            }
+            //Controllo che l'utente a cui sto mandando denaro sia admin
+            if(result_admin1.admin || result_admin2.admin)
+            {
+              res.json({
+                message: "Non è possibile effettuare transazioni verso o da un admin, in quando l'admin non contiene un conto bancario",
+                success: false
+              });
+              return;
+            }
+            else
+            {
+              //  Aggiungo la transazione al db e rispondo all' utente il messaggio di riuscita o errore
+              database.addTransaction(bonifico, function (result, messaggio) {
+                res.json({
+                  message: messaggio,
+                  success: result
+                });
+              });
+            }
+          });
+      });
       }
       else {  //  Se non è admin restituisco errore
         res.json({
@@ -698,7 +740,6 @@ apiRoutes.post('/invio-bonifico-user', function (req, res) {
             });
             return
           }
-          
           //Controllo che l'utente a cui sto mandando denaro sia admin
           if(result_admin1.admin)
           {
@@ -719,7 +760,6 @@ apiRoutes.post('/invio-bonifico-user', function (req, res) {
             });
           }
         });
-        
     }
     else {  //  Se non trovo il numero di conto (si dovrebbe verificare solo in caso di errori nel db)
       res.json({
