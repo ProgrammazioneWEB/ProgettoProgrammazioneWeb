@@ -60,6 +60,29 @@ database.init();
 app.get('/', function (req, res) {
   var date = new Date();
   var today = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+// creo il nuovo utente con i dati 
+var user1 = new User({
+  email: 'nicolo.ruggeri@studenti.unicam.it',
+  password: 'password',
+  meta: {
+    //Nome dell'utente
+    firstName: 'Nicolo',
+    //Cognome dell'utente
+    lastName: 'Ruggeri',
+    //Data di nascita dell'utente
+    dateOfBirth: 'non lo so',
+    //numero di telefono dell'utente
+    numberOfPhone: '0345753978',
+    //Residenza dell'utente
+    residence: 'casa mia',
+    //Codice fiscale dell'utente
+    fiscalCode: '3g43q4g465g'
+  },
+  numberOfAccount: 100002,
+  availableBalance: 5000,
+  active: true,
+  dateOfCreation: today
+});
 
   // creo il nuovo utente con i dati 
   var user2 = new User({
@@ -125,47 +148,50 @@ app.get('/', function (req, res) {
       });
       return;
     }
-    database.addUser(user2, function (result, messaggio) {
+    database.addUser(user1, function (result, messaggio) {
       console.log(messaggio);
-      database.addUser(admin, function (result, messaggio) {
-        console.log(messaggio);
-        database.sortUsersByNumberOfAccount(function (result) {
-          console.log(result);
-        });
-        database.addTransaction(mov, function (result, messaggio) {
+        database.addUser(user2, function (result, messaggio) {
           console.log(messaggio);
-          database.allMovementsSend(100, function (result) {
-            console.log(result);
-          });
-          mov = new Movimento({
-            from: 100001,
-            to: 100000,
-            date: today,
-            quantity: 1500
-          });
-          database.addTransaction(mov, function (result, messaggio) {
+          database.addUser(admin, function (result, messaggio) {
             console.log(messaggio);
-            database.allMovementsSend(200, function (result) {
+            database.sortUsersByNumberOfAccount(function (result) {
               console.log(result);
-            });
-            mov = new Movimento({
-              from: 100000,
-              to: 100001,
-              date: today,
-              quantity: 500
             });
             database.addTransaction(mov, function (result, messaggio) {
               console.log(messaggio);
               database.allMovementsSend(100, function (result) {
                 console.log(result);
               });
-              res.json({
-                success: result,
-                message: messaggio
+              mov = new Movimento({
+                from: 100001,
+                to: 100000,
+                date: today,
+                quantity: 1500
+              });
+              database.addTransaction(mov, function (result, messaggio) {
+                console.log(messaggio);
+                database.allMovementsSend(200, function (result) {
+                  console.log(result);
+                });
+                mov = new Movimento({
+                  from: 100000,
+                  to: 100001,
+                  date: today,
+                  quantity: 500
+                });
+                database.addTransaction(mov, function (result, messaggio) {
+                  console.log(messaggio);
+                  database.allMovementsSend(100, function (result) {
+                    console.log(result);
+                  });
+                  res.json({
+                    success: result,
+                    message: messaggio
+                  });
+                });
               });
             });
           });
-        });
       });
     });
   });
@@ -669,12 +695,12 @@ apiRoutes.post('/invio-bonifico-user', function (req, res) {
         database.findUserByAccount(bonifico.to, function (success, result_admin1) {
           console.log(bonifico.to);
           console.log(result_admin1.admin);
-          
+          //Controllo che l'utente a cui sto mandando denaro sia admin
           if(result_admin1.admin)
           {
             res.json({
               message: "Non è possibile effettuare transazioni verso un admin, in quando l'admin non contiene un conto bancario",
-              success: result
+              success: false
             });
             return;
           }
@@ -688,7 +714,8 @@ apiRoutes.post('/invio-bonifico-user', function (req, res) {
               });
             });
           }
-        });     
+        });
+        
     }
     else {  //  Se non trovo il numero di conto (si dovrebbe verificare solo in caso di errori nel db)
       res.json({
