@@ -656,8 +656,8 @@ apiRoutes.post('/invio-bonifico-user', function (req, res) {
         date: today,
         quantity: req.body.quantity
       });
-      console.log(bonifico.from);
-      console.log(bonifico.to);
+      
+      //Controllo che l'utente non effettui un bonifico a se stesso
       if(bonifico.from == bonifico.to)
       {
         res.json({
@@ -666,13 +666,29 @@ apiRoutes.post('/invio-bonifico-user', function (req, res) {
         });
         return;
       }
-      //  Aggiungo la transazione al db e rispondo all' utente il messaggio di riuscita o errore
-      database.addTransaction(bonifico, function (result, messaggio) {
-        res.json({
-          message: messaggio,
-          success: result
-        });
-      });
+        database.findUserByAccount(bonifico.to, function (success, result_admin1) {
+          console.log(bonifico.to);
+          console.log(result_admin1.admin);
+          
+          if(result_admin1.admin)
+          {
+            res.json({
+              message: "Non è possibile effettuare transazioni verso un admin, in quando l'admin non contiene un conto bancario",
+              success: result
+            });
+            return;
+          }
+          else
+          {
+            //  Aggiungo la transazione al db e rispondo all' utente il messaggio di riuscita o errore
+            database.addTransaction(bonifico, function (result, messaggio) {
+              res.json({
+                message: messaggio,
+                success: result
+              });
+            });
+          }
+        });     
     }
     else {  //  Se non trovo il numero di conto (si dovrebbe verificare solo in caso di errori nel db)
       res.json({
