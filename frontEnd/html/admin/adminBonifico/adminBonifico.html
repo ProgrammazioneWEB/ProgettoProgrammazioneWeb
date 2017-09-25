@@ -5,24 +5,30 @@
     </h1>
     <!--iban ordinante -->
     <div class="form-group formElementCenter">
-        <input type="text" name="countNumberOrd" ng-blur="controlCountNumberOrd()"
-        class="form-control" ng-model="countNumberOrd" 
-        placeholder="Scrivi qui il numero di conto dell'ordinante"
-            required>
+        <label class="adminTitle" style="float:left">
+                    Conto corrente ordinante
+            </label>
+        <input type="number" name="countNumberOrd" ng-blur="controlCountNumberOrd()" class="form-control" ng-model="countNumberOrd"
+            placeholder="Scrivi qui il numero di conto dell'ordinante" required>
         </input>
         <span class="leftAlignError" ng-show="form.countNumberOrd.$invalid">{{countOrderErrors.error}}</span>
     </div>
     <!--iban beneficiante -->
     <div class="form-group formElementCenter">
-        <input type="text" name="countNumberBen" ng-blur="controlCountNumberBen()"
-        class="form-control" ng-model="countNumberBen" placeholder="Scrivi qui il numero di conto  del beneficiante"
-            required>
+        <label class="adminTitle" style="float:left">
+                    Conto corrente beneficiario
+            </label>
+        <input type="number" name="countNumberBen" ng-blur="controlCountNumberBen()" class="form-control" ng-model="countNumberBen"
+            placeholder="Scrivi qui il numero di conto  del beneficiante" required>
         </input>
         <span class="leftAlignError" ng-show="form.countNumberBen.$invalid">{{countBenErrors.error}}</span>
-        
+
     </div>
     <!--importo -->
     <div class="form-group formElementCenter">
+        <label class="adminTitle" style="float:left">
+                    Importo del bonifico
+            </label>
         <input type="number" name="payment" class="form-control" ng-model="payment" placeholder=" Scrivi qui l'importo del bonifico"
             required ng-blur="checkImport()">
         </input>
@@ -32,8 +38,8 @@
     </div>
     <!--submit button -->
     <div class="form-group">
+            <span class="leftAlignError" ng-show="checkForm()">*Devi compilare tutti i campi prima di poter registrate l'utente!<br></span>
         <button type="submit" class="btn btn-primary" ng-disabled="form.payment.$invalid 
-        || form.countNumberOrd.$invalid || form.countNumberBen.$invalid" 
-        ng-click="makeTransaction()">Esegui Bonifico</button>
+        || form.countNumberOrd.$invalid || form.countNumberBen.$invalid" ng-click="makeTransaction()">Esegui Bonifico</button>
     </div>
 </form>

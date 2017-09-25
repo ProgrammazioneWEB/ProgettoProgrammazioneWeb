@@ -10,7 +10,6 @@ indexApp.config(function ($routeProvider) {
     })
     .when('/about', {
       templateUrl: './html/about/about.html',
-      controller: 'aboutUsController'
     })
     .when('/photoGallery', {
       templateUrl: './html/photoGallery/photoGallery.html',
@@ -21,7 +20,8 @@ indexApp.config(function ($routeProvider) {
       controller: 'gestisciLogin'
     })
     .when('/contact', {
-      templateUrl: './html/contact/contact.html'
+      templateUrl: './html/contact/contact.html',
+      controller:'contactUsController'
     })
     .when('/signUp', {
       templateUrl: './html/signUp/signUp.html',
@@ -821,3 +821,42 @@ indexApp.controller('aboutUsController', function ($scope) {
     }
   };
 });
+
+//controller of contact us page
+indexApp.controller('contactUsController',function($scope){
+  // Set of users
+  $scope.users = [
+    {
+      name: 'Lorenzo',
+      surname: 'Stacchio',
+      picProfile: 'CSS/images/Fondatori/Ls.png',
+      instagramUrl:'https://www.instagram.com/lorenzostacchio/',
+      facebookUrl:'https://www.facebook.com/lorenzo.stacchio',
+      mailAddress:'lorenzo.stacchio@studenti.unicam.it'
+    },
+    {
+      name: 'Luca',
+      surname: 'Marasca',
+      picProfile: './CSS/images/Fondatori/Lm.png',
+      instagramUrl:'https://www.instagram.com/__r3x__/',
+      facebookUrl:'https://www.facebook.com/luca.m.marasca',
+      mailAddress:'luca.marasca@studenti.unicam.it'
+    },
+    {
+      name: 'Matteo',
+      surname: 'Lupini',
+      picProfile: './CSS/images/Fondatori/Ml.png',
+      instagramUrl:'https://www.instagram.com/matteolupini/',
+      facebookUrl:'https://www.facebook.com/matteo.lupin',
+      mailAddress:'matteo.lupini@studenti.unicam.it'
+    },
+    {
+      name: 'Nicolò',
+      surname: 'Ruggeri',
+      picProfile: './CSS/images/Fondatori/Nr.png',
+      instagramUrl:'https://www.instagram.com/nicoloRuggeri/',
+      facebookUrl:'https://www.facebook.com/nicolo.ruggeri.12',
+      mailAddress:'CSS/images/Logos/gmail.jpg'
+    }
+  ];
+})

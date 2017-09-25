@@ -4,34 +4,65 @@
 </div>
 <!--Photo gallery table-->
 <table id="photoGalleryUser" class="table photo center">
+    <!--Lorenzo Stacchio-->
     <tr>
-        <td></td>
-        <td>
-            <div class="jumbotron blueBackGround whiteFont"> {{presentPhoto.title}}</div>
+        <td style="width:50%">
+            <div class="jumbotron text-center blueBackground whiteFont">Lorenzo Stacchio
+                <img src="./CSS/images/Fondatori/Ls.png" class="userProfile">
+            </div>
         </td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>
-            <button class="btn btn-primary" ng-model="previousPhoto" ng-disabled="previousPhotoDisabled" ng-click="previousPhotoFunction()">
-            Previous Photo
-        </button></td>
-        <td>
-            <img src="{{presentPhoto.src}}" alt="{{presentPhoto.title}}" title="{{presentPhoto.title}}" />
-        </td>
-        <td>
-
-            <button class="btn btn-primary" ng-model="nextPhoto" ng-disabled="nextPhotoDisabled" ng-click="nextPhotoFunction()">
-       NextPhoto
-        </button>
-
+        <td style="width:50%">
+            <div class="jumbotron text-center whiteBackground blueFont">
+                Front-Ender<br><br>
+                <img src="./CSS/images/Logos/angular.png" class="iconAbout">
+                <img src="./CSS/images/Logos/html.png" class="iconAbout">  
+                <img src="./CSS/images/Logos/css.png" class="iconAbout">
+            </div>
         </td>
     </tr>
+    <!--Matteo Lupini-->
     <tr>
-        <td></td>
-        <td>
-            <label class="label label-primary bigger"> {{indexPhoto+1}}/{{lenghtOfArray}}</label>
+        <td style="width:50%">
+            <div class="jumbotron text-center whiteBackground blueFont">
+                Database administrator
+                <br><br>
+                <img src="./CSS/images/Logos/mongo.png" class="iconAbout">
+            </div>
         </td>
-        <td></td>
+        <td style="width:50%">
+            <div class="jumbotron text-center blueBackground whiteFont">
+                <img src="./CSS/images/Fondatori/Ml.png" class="userProfile"> Matteo Lupini
+            </div>
+        </td>
     </tr>
+     <!--Luca Marasca-->
+     <tr>
+            <td style="width:50%">
+                <div class="jumbotron text-center blueBackground whiteFont">Luca Marasca
+                    <img src="./CSS/images/Fondatori/Lm.png" class="userProfile">
+                </div>
+            </td>
+            <td style="width:50%">
+                <div class="jumbotron text-center whiteBackground blueFont">
+                    Back-ender
+                    <br><br>
+                    <img src="./CSS/images/Logos/node.png" class="iconAbout">
+                </div>
+            </td>
+        </tr>
+        <!--Nicolò Ruggeri-->
+    <tr>
+            <td style="width:50%">
+                <div class="jumbotron text-center whiteBackground blueFont">
+                    Back-ender
+                    <br><br>
+                    <img src="./CSS/images/Logos/node.png" class="iconAbout">
+                </div>
+            </td>
+            <td style="width:50%">
+                <div class="jumbotron text-center blueBackground whiteFont">
+                    <img src="./CSS/images/Fondatori/Nr.png" class="userProfile"> Nicolò Ruggeri
+                </div>
+            </td>
+        </tr>
 </table>

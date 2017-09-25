@@ -2,46 +2,72 @@
 <form name="form" class="form-horizontal" ng-model="form" novalidate>
     <!--pin number-->
     <div class="form-group formElementCenter">
-        <input type="number" class="form-control" ng-blur="checkPin()" required name="pin" ng-model="pin" placeholder="Inserisci qui il pin associato al conto" />
+        <label class="adminTitle" style="float:left">
+                   Inserisci pin di validazione
+            </label>
+        <input type="number" class="form-control" ng-blur="checkPin()" required name="pin" ng-model="pin" placeholder="Inserisci qui il pin associato al conto"
+        />
         <span class="leftAlignError" ng-show="form.pin.$invalid">{{pinErrors.error}}</span>
     </div>
     <!--firstname-->
     <div class="form-group formElementCenter">
+        <label class="adminTitle" style="float:left">
+                   Nome 
+             </label>
         <input type="text" class="form-control" required ng-model="firstName" placeholder="Inserisci qui il nome del correntista"
         />
     </div>
     <!--last name-->
     <div class="form-group formElementCenter">
+        <label class="adminTitle" style="float:left">
+                    Cognome 
+              </label>
         <input type="text" class="form-control" required ng-model="lastName" placeholder="Inserisci qui il cognome del correntista"
         />
     </div>
     <!--residence-->
     <div class="form-group formElementCenter">
+        <label class="adminTitle" style="float:left">
+                    Residenza 
+              </label>
         <input type="text" class="form-control" required ng-model="residence" placeholder="Inserisci qui la residenza del correntista"
         />
     </div>
     <!--date of birth-->
     <div class="form-group formElementCenter">
+        <label class="adminTitle" style="float:left">
+                    Data di nascita 
+              </label>
         <input type="date" class="form-control" required ng-model="dateOfBirth" placeholder="Inserisci qui la data di nascita del correntista"
         />
     </div>
     <!--number of phone-->
     <div class="form-group formElementCenter">
+        <label class="adminTitle" style="float:left">
+                    Recapito telefonico
+              </label>
         <input type="text" class="form-control" required ng-model="numberOfPhone" placeholder="Inserisci qui il numero di telefono del correntista"
         />
     </div>
     <!--fiscal code-->
     <div class="form-group formElementCenter">
+        <label class="adminTitle" style="float:left">
+                Codice Fiscale 
+          </label>
         <input type="text" class="form-control" required ng-model="fiscalCode" placeholder="Inserisci qui il codice fiscale del conto"
         />
     </div>
     <!--money-->
     <div class="form-group formElementCenter">
+        <label class="adminTitle" style="float:left">
+                    Importo iniziale versato dall'utente
+              </label>
         <input type="number" class="form-control" required ng-model="money" placeholder="Inserisci qui la quota iniziale versata dal correntista"
         />
     </div>
     <!--send button-->
     <div class="form-group formElementCenter">
+            <span class="leftAlignError" ng-show="checkForm()">*Devi compilare tutti i campi prima di poter registrate l'utente!<br></span>
         <button type="submit" class="btn btn-primary" ng-disabled="checkForm()" ng-click="registerUser()" /> Registra utente
     </div>
 </form>

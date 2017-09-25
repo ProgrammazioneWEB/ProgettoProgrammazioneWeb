@@ -9,9 +9,23 @@
 .blueBackground{
     background-color: #3E50F3;
 }
+.whiteBackground{
+    background-color: white;
+}
 .whiteFont{
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: white;
+    font-size: 20;
+    font-weight: bold;
+}
+img.iconAbout{
+    max-height: 20%;
+    max-width: 20%;
+}
+.blueFont{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #3E50F3;
+    font-size: 20;
     font-weight: bold;
 }
 

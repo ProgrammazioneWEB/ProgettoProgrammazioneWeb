@@ -1,6 +1,6 @@
 // create the module for the indexUser
-var indexUserApp = angular.module('indexUserApp', ['ngRoute', 'ngAnimate', 'ngTouch', 
-'zingchart-angularjs', 'ngStorage',]);
+var indexUserApp = angular.module('indexUserApp', ['ngRoute', 'ngAnimate', 'ngTouch',
+    'zingchart-angularjs', 'ngStorage',]);
 
 // configuring routes
 indexUserApp.config(function ($routeProvider) {
@@ -167,8 +167,6 @@ indexUserApp.controller('changeSite', function ($scope, $window) {
 
 //user movements controller
 indexUserApp.controller('userTransactionController', function ($scope, $http, $window, $localStorage) {
-    //iban filter 
-    var ibanFilter = "";
     //ERRORS
     //errors that could be thrown
     $scope.paymentErrors =
@@ -176,7 +174,7 @@ indexUserApp.controller('userTransactionController', function ($scope, $http, $w
             error: ""
         };
     //errors that could be thrown
-    $scope.ibanErrors =
+    $scope.countNumberErrors =
         {
             error: ""
         };
@@ -212,33 +210,40 @@ indexUserApp.controller('userTransactionController', function ($scope, $http, $w
             this.user.saldo = this.user.saldo - payment;
         }
     };
-    //function that control validity of iban
-    $scope.controlIban = function () {
-        if ($scope.iban == undefined) {
-            //user didn't write nothing yet, it' not an error
-            $scope.form.iban.$invalid = false;
-            $scope.ibanErrors.error = "";
+    //function to controll countNumber
+    $scope.controlCountNumber = function () {
+        //save pin like string
+        $scope.countNumberString = $scope.countNumber.toString();
+        if ($scope.countNumber === undefined || $scope.countNumber == "") {
+            $scope.form.countNumber.$invalid = true;
+            $scope.countNumberErrors = {
+                error: "*Non hai scritto il pin"
+            };
         }
-        /**TO DEFINE AFTER CHOOSE THE FILTER 
-        // alert(ibanFilter.test($scope.iban));
-        else if (!(ibanFilter.test($scope.iban))) {
-            //error
-            //alert("iban scorretto");
-            $scope.form.iban.$invalid = true;
-            $scope.ibanErrors.error = "*Iban in formato errato";
-        }*/
+        else if ($scope.countNumberString.length < 6) {
+            $scope.form.countNumber.$invalid = true;
+            $scope.countNumberErrors = {
+                error: "*Il pin è troppo corto"
+            };
+        }
+        else if ($scope.countNumberString.length > 6) {
+            $scope.form.countNumber.$invalid = true;
+            $scope.countNumberErrors = {
+                error: "*Il pin è troppo lungo"
+            };
+        }
         else {
-            //error
-            //alert("iban corretto");              
-            $scope.form.iban.$invalid = false;
-            $scope.ibanErrors.error = "";
+            $scope.form.countNumber.$invalid = false;
+            $scope.countNumberErrors = {
+                error: ""
+            };
         }
 
     };
     //function that control if form is valid
     $scope.formNotValid = function () {
         if ($scope.form.$invalid ||
-            $scope.form.iban.$invalid ||
+            $scope.form.countNumber.$invalid ||
             $scope.form.payment.$invalid) {
             return true;
         }
@@ -269,7 +274,7 @@ indexUserApp.controller('userTransactionController', function ($scope, $http, $w
             headers: { 'Content-Type': 'application/json' },
             data: {
                 'token': curToken.value,
-                'to': $scope.iban,
+                'to': $scope.countNumber,
                 'quantity': $scope.payment
             }
         }).then(function (response) {
@@ -325,7 +330,7 @@ indexUserApp.controller('userAverageController', function ($scope, $http) {
             $scope.averageEntrance = response.data.data;
         }
         else {
-            alert(response.data.message);        
+            alert(response.data.message);
         }
     });
 
