@@ -1,8 +1,26 @@
 <!--page for admin's alerta -->
-<form class="form-group" name="form">
-    <h1>
-        {{message}}
-    </h1>
+<h1>
+    {{message}}
+</h1>
+<!--section to choose if create or delete-->
+<div ng-show="decisioneCreaNonPresa() && decisioneEliminaNonPresa()">
+    <table class="table center">
+        <tr>
+            <td>
+                <button type="button" class="btn btn-default" name="showCrea" ng-model="showCrea" ng-click="showCrea()">
+                    <img src="../../../CSS/images/iconsForAdmin/alertPlus.png"> <br>Crea nuovo avviso
+                    </button>
+            </td>
+            <td>
+                <button type="button" class="btn btn-default" name="showElimina" ng-model="showElimina" ng-click="showElimina()">
+                        <img src="../../../CSS/images/iconsForAdmin/alertMinus.png"> <br>Elimina avviso esistente
+                        </button>
+            </td>
+        </tr>
+    </table>
+</div>
+<!--section to create alert-->
+<form class="form-group" name="formCreate" ng-show="!decisioneCreaNonPresa()">
     <div class="form-group formElementCenter">
         <textarea name="alert" rows="8" class="form-control adminTextArea" ng-model="alert" placeholder="Scrivi qui l'avviso che vuoi inviare a tutti">
         </textarea>
@@ -10,17 +28,39 @@
     <div class="form-group">
         <button type="submit" class="btn btn-primary" ng-click="createAlert()" ng-disabled="textAreaInvalida()">Invia avviso</button>
     </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-default leftArrow" name="resetShow" ng-model="resetShow" ng-click="resetShow()"> 
+                        <img src="../../../CSS/images/arrows/blue_arrow.png" class="leftArrow">
+                </button>
+    </div>
+</form>
+<!--section to delete alert-->
+<form class="form-group" name="formDelete" ng-show="!decisioneEliminaNonPresa()">
     <div class="form-group" ng-show="!showAlertsB">
         <button type="submit" class="btn btn-primary" ng-click="getAlerts();showAlerts()">Leggi gli ultimi avvisi creati(massimo 5)</button>
     </div>
     <div class="form-group" ng-show="showAlertsB">
-            <button type="submit" class="btn btn-primary" ng-click="showAlerts()">Chiudi sezione avvisi</button>
+        <button type="submit" class="btn btn-primary" ng-click="showAlerts()">Chiudi sezione avvisi</button>
     </div>
     <div ng-show="showAlertsB" ng-repeat="avviso in alerts">
-            <ul class="list-group">
-                <li class="list-group-item adminAlertTitle">{{avviso.title}}</li>
-                <li class="list-group-item adminAlertDescription">{{avviso.text}}</li>
-                <li class="list-group-item adminAlertDate">{{avviso.date}}</li>
-            </ul>
+        <table class="table">
+            <tr>
+                <td style="width:70%;text-align:center">
+                    <ul class="list-group">
+                        <li class="list-group-item adminAlertTitle">{{avviso.title}}</li>
+                        <li class="list-group-item adminAlertDescription">{{avviso.text}}</li>
+                        <li class="list-group-item adminAlertDate">{{avviso.date}}</li>
+                    </ul>
+                </td>
+                <td style="width:30%;text-align:center">
+                    <button type="button" class="btn btn-primary" ng-click="deleteAlert(avviso)">Elimina questo avviso</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-default leftArrow" name="resetShow" ng-model="resetShow" ng-click="resetShow()"> 
+                        <img src="../../../CSS/images/arrows/blue_arrow.png" class="leftArrow">
+                </button>
     </div>
 </form>

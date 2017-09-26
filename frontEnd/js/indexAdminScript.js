@@ -100,11 +100,41 @@ indexAdminApp.controller('changeSite', function ($scope, $window) {
 //define alert controller
 indexAdminApp.controller('adminAlertController', function ($scope, $http, $localStorage, $window) {
     //message
-    $scope.message = "Benvenuto " + adminProfile.meta.firstName + ", da qui potrai scrivere un avviso da inviare a tutti coloro che posseggono un conto Bancario presso la nostra Banca.Ricorda che l'avviso dovrà avere almeno 20 caratteri!";
+    $scope.message = "Benvenuto " + adminProfile.meta.firstName + ", nella sezione avvisi! Cosa vuoi fare?";
     //alert to create
     $scope.alert = "";
     //alert getted
     $scope.alerts = {};
+    //booleans that have the function to show respectively
+    $scope.decisioneCreaNonPresaB = true;
+    $scope.decisioneEliminaNonPresaB = true;
+    //functions that have the duty of showing section
+    $scope.showCrea=function(){
+        $scope.message="Da qui potrai scrivere un avviso da inviare a tutti coloro che"+
+         "posseggono un conto Bancario presso la nostra Banca."+
+         "Ricorda che l'avviso dovrà avere almeno 20 caratteri!";
+        $scope.decisioneCreaNonPresaB = false;
+        $scope.decisioneEliminaNonPresaB = true;
+    };
+    $scope.showElimina=function(){
+        $scope.message="Da qui potrai eliminare un avviso. Scegli un avviso tra quelli creati e"+
+        "seleziona il comando elimina per eliminarlo.";
+        $scope.decisioneCreaNonPresaB = true;
+        $scope.decisioneEliminaNonPresaB = false;
+    };
+    //function that has the duty to resent choose
+    $scope.resetShow=function(){
+        $scope.message = "Benvenuto " + adminProfile.meta.firstName + ", nella sezione avvisi! Cosa vuoi fare?";        
+        $scope.decisioneCreaNonPresaB = true;
+        $scope.decisioneEliminaNonPresaB = true;
+    }
+    //return booleans show function
+    $scope.decisioneCreaNonPresa =function(){
+        return $scope.decisioneCreaNonPresaB;
+    }
+    $scope.decisioneEliminaNonPresa =function(){
+        return $scope.decisioneEliminaNonPresaB;
+    }
     //Define function that create alert
     $scope.createAlert = function () {
         //function to send alerts to users
@@ -124,6 +154,10 @@ indexAdminApp.controller('adminAlertController', function ($scope, $http, $local
             $window.location.reload();
         });
     };
+    //define function that delete alert
+    $scope.deleteAlert= function(avviso){
+        alert(avviso.text);
+    }
     //boolean to show section advise
     $scope.showAlertsB = false;
     //defin function to get alert
