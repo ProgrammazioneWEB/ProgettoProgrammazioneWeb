@@ -160,7 +160,7 @@ indexAdminApp.controller('adminAlertController', function ($scope, $http, $local
         alert(avviso.number);
         $http({
             method: 'POST',
-            url: 'http://locahost:3001/api/deleteAlert',
+            url: 'http://localhost:3001/api/deleteAlert',
             data: {
                 'token': curToken.value,
                 'number': avviso.number

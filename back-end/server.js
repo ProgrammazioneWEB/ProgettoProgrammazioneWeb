@@ -694,9 +694,9 @@ apiRoutes.post('/invio-bonifico-admin', function (req, res) {
         });
       }
     }
-    else {  //  Se non trovo l'user nel db (si dovrebbe verificare solo in caso di errori nel db)
+    else {  //  Se non trovo l'user nel db
       res.json({
-        message: 'Errore interno al database, impossibile verificare che si è loggati come admin.',
+        message: 'Errore interno al database, utente non trovato.',
         success: false
       });
     }
@@ -882,52 +882,117 @@ apiRoutes.post('/CalcolaMediaEntrate', function (req, res) {
 
 //  invio avvisi
 apiRoutes.post('/invio-avviso', function (req, res) {
-  var date = new Date();
-  var today = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+  database.findUserByEmail(req.decoded, function (result) {
+    if (result)
+      if (result.admin) {
+        var date = new Date();
+        var today = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
 
-  var avviso = new Advise({
-    title: req.body.title,
-    text: req.body.text,
-    date: today
-  });
+        database.maxNumberOfAdvise(function (num) {
+          var numero = 0;
 
-  database.addAdvise(avviso, function (result, messaggio) {
-    res.json({
-      success: result,
-      message: messaggio
-    });
-  });
+          if (num.length > 0)
+            if (num[0].number != undefined)
+              numero = (num[0].number + 1);
 
-  //  Invio la mail alle persone interessate
-  var servizioPosta = require('nodemailer');
+          var avviso = new Advise({
+            number: numero,
+            title: req.body.title,
+            text: req.body.text,
+            date: today
+          });
 
-  var postino = servizioPosta.createTransport({
-    service: 'gmail',
-    auth: {
-      user: 'banca.unicam@gmail.com',
-      pass: 'programmazioneweb'
-    }
-  });
-  //  Richiedo al db la lista degli utenti presenti  
-  database.sortUsersByNumberOfAccount(function (result) {
-    //  Con un foreach invio una e-mail contenente l'avviso a tutte le persone interessate
-    result.forEach(function (user) {
-      postino.sendMail({
-        from: 'BANCA UNICAM',
-        to: user.email,
-        subject: req.body.title,
-        text: req.body.text
-      }, function (err, info) {
-        if (err)
-          console.log(err);
-        if (info)
-          console.log(info);
+          console.log("\n\nAvviso:\n" + avviso + "\n\n");
+
+          database.addAdvise(avviso, function (result, messaggio) {
+            if (result) {
+              //  Invio la mail alle persone interessate
+              var servizioPosta = require('nodemailer');
+              var postino = servizioPosta.createTransport({
+                service: 'gmail',
+                auth: {
+                  user: 'banca.unicam@gmail.com',
+                  pass: 'programmazioneweb'
+                }
+              });
+
+              res.json({
+                success: result,
+                message: messaggio
+              });
+
+              //  Richiedo al db la lista degli utenti presenti  
+              database.sortUsersByNumberOfAccount(function (result) {
+                //  Con un foreach invio una e-mail contenente l'avviso a tutte le persone interessate
+                result.forEach(function (user) {
+                  postino.sendMail({
+                    from: 'BANCA UNICAM',
+                    to: user.email,
+                    subject: req.body.title,
+                    text: req.body.text
+                  }, function (err, info) {
+                    if (err)
+                      console.log(err);
+                    if (info)
+                      console.log(info);
+                  });
+
+                }, this);
+              });
+            }
+            else
+              res.json({
+                success: result,
+                message: messaggio
+              });
+          });
+        });
+      }
+      else {
+        res.json({
+          success: false,
+          message: 'Impossibile inviare un avviso senza essere admin.'
+        });
+      }
+    else
+      res.json({
+        success: false,
+        message: 'Riscontrati problemi con il database.'
       });
-
-    }, this);
-
   });
+});
 
+//  invio avvisi
+apiRoutes.post('/deleteAlert', function (req, res) {
+  database.findUserByEmail(req.decoded, function (result) {
+    if (result)
+      if (result.admin) {
+        if (req.body.number != undefined) {
+          database.deleteAdvise(req.body.number, function (ris, message) {
+            res.json({
+              success: ris,
+              message: message
+            });
+          });
+        }
+        else
+          res.json({
+            success: false,
+            message: 'Errore! Impossibile cancellare un avviso senza id.'
+          });
+      }
+      else {
+        res.json({
+          success: false,
+          message: 'Impossibile Impossibile cancellare un avviso senza essere admin.'
+        });
+      }
+    else
+      res.json({
+        success: false,
+        message: 'Riscontrati problemi con il database.'
+      });
+  });
 });
 
 //  Funzione per disabilitazione account

@@ -4,7 +4,7 @@
 
 var mongoose = require('mongoose');
 var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://localhost:27017/dbNew_1";
+var url = "mongodb://localhost:27017/DBMongos";
 
 // this function find a user from his number of account
 var findByNumberOfAccount = function (numberOfAccount, callback) {
@@ -113,7 +113,7 @@ exports.autenticate = function (email, password, callbackRis) {
       callbackRis(false, "Impossibile connettersi al Database.");
       throw err;
     }
-    db.collection("users").findOne({ email: email, password: password, active: true }, function (err, result) {
+    db.collection("users").findOne({ email: email, password: password }, function (err, result) {
       if (err) {
         callbackRis(false, "Impossibile trovare lo schema del Database.");
         throw err;
@@ -122,8 +122,12 @@ exports.autenticate = function (email, password, callbackRis) {
 
       if (!result)
         callbackRis(false, "Utente o password errati.");
-      else
-        callbackRis(true, "Login Effettuato.");
+      else {
+        if (result.active)
+          callbackRis(true, "Login Effettuato.");
+        else
+          callbackRis(false, "Utente non abilitato.");
+      }
     });
   });
 }
@@ -408,24 +412,24 @@ exports.sortUsersByNumberOfAccount = function (callbackRis) {
 exports.addAdvise = function (advise, callbackRis) {
   if (!advise)  //  Controllo che l'advise che sto per aggiungere non sia null
   {
-    callbackRis(false, "Impossibile registrare un avviso che non esiste");
+    callbackRis(false, "Impossibile registrare un avviso che non esiste.");
     return;
   }
 
   MongoClient.connect(url, function (err, db) {
     if (err) {
-      callbackRis(false, "Impossibile connettersi al Database");
+      callbackRis(false, "Impossibile connettersi al Database.");
       throw err;
     }
     var myobj = advise;
     db.collection("advises").insertOne(myobj, function (err, res) {
       if (err) {
-        callbackRis(false, "Impossibile trovare lo schema del Database")
+        callbackRis(false, "Impossibile trovare lo schema del Database.")
         throw err;
       }
       db.close();
       console.log("1 advise inserted");
-      callbackRis(true, "Avviso Aggiunto");
+      callbackRis(true, "Avviso Aggiunto.");
     });
   });
 }
@@ -460,7 +464,7 @@ exports.activateAccount = function (user, callbackRis) {
       }
       console.log("1 document updated");
       db.close();
-      callbackRis(true, 'Document modify');
+      callbackRis(true, 'Utente abilitato.');
     });
   });
 }
@@ -480,7 +484,7 @@ exports.disactivateAccount = function (user, callbackRis) {
       }
       console.log("1 document updated");
       db.close();
-      callbackRis(true, 'Document modify');
+      callbackRis(true, 'Utente disabilitato.');
     });
   });
 }
@@ -550,7 +554,7 @@ exports.modifyCredential = function (user, email, password, phone, residence, ca
       if (err) throw err;
       console.log("1 document updated");
       db.close();
-      callbackRis(true, 'Document modify');
+      callbackRis(true, 'Credenziali aggiornate.');
     });
   });
 
@@ -598,18 +602,18 @@ exports.addUserToVerify = function (userToVerify, callbackRis) {
 
   MongoClient.connect(url, function (err, db) {
     if (err) {
-      callbackRis(false, "Impossibile connettersi al Database");
+      callbackRis(false, "Impossibile connettersi al Database.");
       throw err;
     }
     var myobj = userToVerify;
     db.collection("usersToVerify").insertOne(myobj, function (err, res) {
       if (err) {
-        callbackRis(false, "Impossibile trovare lo schema del Database");
+        callbackRis(false, "Impossibile trovare lo schema del Database.");
         throw err;
       }
       db.close();
       console.log("1 userToVerify inserted");
-      callbackRis(true, "Utente Aggiunto a quelli da verificare");
+      callbackRis(true, "Utente Aggiunto a tra quelli da verificare.");
     });
   });
 }
@@ -642,18 +646,18 @@ exports.findUsersByLink = function (link, callbackRis) {
 exports.deleteUserToVerify = function (numberOfAccount, callbackRis) {
   MongoClient.connect(url, function (err, db) {
     if (err) {
-      callbackRis(false, "Utente non cancellato");
+      callbackRis(false, "Utente non cancellato.");
       throw err;
     }
     var myquery = { numberOfAccount: numberOfAccount };
     db.collection("customers").deleteOne(myquery, function (err, obj) {
       if (err) {
-        callbackRis(false, "Utente non cancellato");
+        callbackRis(false, "Utente non cancellato.");
         throw err;
       }
       console.log("1 document deleted");
       db.close();
-      callbackRis(true, "Utente Cancellato")
+      callbackRis(true, "Utente Cancellato.")
     });
   });
 }
@@ -669,16 +673,16 @@ exports.updateCash = function (user, newBalance, callbackRis) {
       if (err) throw err;
       console.log("1 document updated");
       db.close();
-      callbackRis(true, 'Document modify');
+      callbackRis(true, 'Saldo aggiornato.');
     });
   });
 }
 
 //this function return all the advises
-exports.allAdvise = function(callbackRis){
-  MongoClient.connect(url, function(err, db) {
+exports.allAdvise = function (callbackRis) {
+  MongoClient.connect(url, function (err, db) {
     if (err) throw err;
-    db.collection("advises").find({}).toArray(function(err, result) {
+    db.collection("advises").find({}).toArray(function (err, result) {
       if (err) throw err;
       console.log(result.name);
       db.close();
@@ -688,22 +692,25 @@ exports.allAdvise = function(callbackRis){
 }
 
 //this function delete an advise from his number id
-exports.deleteAdvise = function(numberToDelete, callbackRis){
+exports.deleteAdvise = function (numberToDelete, callbackRis) {
   MongoClient.connect(url, function (err, db) {
     if (err) throw err;
     db.collection("advises").deleteOne({ number: numberToDelete }, function (err, result) {
-      if (err) throw err;
+      if (err) {
+        callbackRis(false, "Riscontrati problemi nella cancellazione dell' avviso.");
+        throw err;
+      }
       db.close();
-      callbackRis(true, "Avviso cancellato");
+      callbackRis(true, "Avviso cancellato.");
     });
   });
 }
 
 //this function return the max number of advise
-exports.maxNumberOfAdvise = function(callbackRis){
+exports.maxNumberOfAdvise = function (callbackRis) {
   MongoClient.connect(url, function (err, db) {
     if (err) throw err;
-    var mysort = { number : -1 }; //  -1 vale come ORDER BY DESC
+    var mysort = { number: -1 }; //  -1 vale come ORDER BY DESC
     db.collection("advises").find().sort(mysort).limit(1).toArray(function (err, result) {
       if (err) throw err;
       db.close();
