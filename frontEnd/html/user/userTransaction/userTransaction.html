@@ -8,7 +8,7 @@
             <label class="adminTitle" style="float:left">
                         Conto corrente beneficiario
                 </label>
-            <input type="text" class="form-control" ng-model="countNumber" name="countNumber" required ng-blur="controlCountNumber()" placeholder="Inserisci qui il numero di conto a cui vuoi fare il bonifico"
+            <input type="number" class="form-control" ng-model="countNumber" name="countNumber" required ng-blur="controlCountNumber()" placeholder="Inserisci qui il numero di conto a cui vuoi fare il bonifico"
             />
             <!--Show error if invalid iban-->
             <span class="leftAlignError" ng-show="form.countNumber.$invalid">
