@@ -21,7 +21,7 @@ indexApp.config(function ($routeProvider) {
     })
     .when('/contact', {
       templateUrl: './html/contact/contact.html',
-      controller:'contactUsController'
+      controller: 'contactUsController'
     })
     .when('/signUp', {
       templateUrl: './html/signUp/signUp.html',
@@ -35,8 +35,8 @@ indexApp.config(function ($routeProvider) {
       templateUrl: './html/loading/loading.html',
       controller: 'logOutController'
     })
-    .when('/licence',{
-      templateUrl:'./html/licenceContract/licenceContract.html'
+    .when('/licence', {
+      templateUrl: './html/licenceContract/licenceContract.html'
     })
 });
 
@@ -188,7 +188,6 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location, $window
   }
   //function to control password field and show the errors if user wrong to type 
   $scope.controlPasswordField = function () {
-    //alert("sono nel controllo password, la password è:"+$scope.password);    
     //if length is 0 user has type nothing
     if ($scope.password === undefined) {
       //input value is empty
@@ -196,15 +195,6 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location, $window
       $scope.form.password.$invalid = true;
     }
     else {
-      /** 
-       * parte da riscrivere una volta definito il filtro
-      if (!passwordFilter.test($scope.username)) {
-        $scope.passwordError = { password: "*Password in formato errato" };
-        $scope.form.password.$invalid = true;
-      }
-      else {
-        }
-        */
       $scope.passwordError = { password: "" };
       $scope.form.password.$invalid = false;
     }
@@ -302,18 +292,6 @@ indexApp.controller("signUp", function ($scope, $http, $location, Upload) {
   $scope.btnIMG = "Carica foto";
   //filter used to filter e-mails
   var emailFilter = /^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/;
-  //filter used to filter e-mails
-  /**
-   * should contain at least one digit,
-   * should contain at least one lower case,
-   * should contain at least one upper case,
-   * should contain at least one number,
-   * should contain at least 8 from the mentioned characters:
-   * helloworld = fail;
-   * helloWorld = fail;
-   * helloWorld1 = succes;
-   */
-  var passwordFilter = "";
   //errors
   $scope.emailError = { error: "" };
   $scope.licenceError = { licence: "" };
@@ -361,13 +339,6 @@ indexApp.controller("signUp", function ($scope, $http, $location, Upload) {
     if ($scope.password === undefined) {
       $scope.form.password.$invalid = true;
       $scope.passwordError = { password: "La password deve contenere almeno una lettera;" };
-    }
-    else if (!passwordFilter.test($scope.password)) {
-      $scope.form.password.$invalid = true;
-      $scope.passwordError = {
-        password: "La password deve contenere:-Almeno una lettera minuscola;" +
-        "-Almeno una lettera maiuscola;-Almeno 8 di questi caratteri."
-      };
     }
     else {
       $scope.form.password.$invalid = false;
@@ -461,26 +432,26 @@ indexApp.controller("signUp", function ($scope, $http, $location, Upload) {
     if (!$scope.file) {
       $scope.fileError = "Devi prima selezionare lo screen...";
       return;
-  }
+    }
 
-  $scope.fileError = "";
+    $scope.fileError = "";
 
-  Upload.upload({
+    Upload.upload({
       url: "http://localhost:3001/uploadPic",
       method: 'POST',
       file: $scope.file
-  }).then(function (response) {
+    }).then(function (response) {
       if (response.data.success) {
-          $scope.image = response.data.image;
-          $scope.btnIMG = "Caricata";
-          alert(response.data.message);
-          var modal = $('#imgModal');
-          modal.modal('hide');
-          
+        $scope.image = response.data.image;
+        $scope.btnIMG = "Caricata";
+        alert(response.data.message);
+        var modal = $('#imgModal');
+        modal.modal('hide');
+
       }
       else
-          $scope.fileError = response.data.message || "Errore! Foto non inviata correttamente.";
-  });
+        $scope.fileError = response.data.message || "Errore! Foto non inviata correttamente.";
+    });
   }
 
   //controller della parte dopo il log-in
@@ -851,40 +822,40 @@ indexApp.controller('aboutUsController', function ($scope) {
 });
 
 //controller of contact us page
-indexApp.controller('contactUsController',function($scope){
+indexApp.controller('contactUsController', function ($scope) {
   // Set of users
   $scope.users = [
     {
       name: 'Lorenzo',
       surname: 'Stacchio',
       picProfile: 'CSS/images/Fondatori/Ls.png',
-      instagramUrl:'https://www.instagram.com/lorenzostacchio/',
-      facebookUrl:'https://www.facebook.com/lorenzo.stacchio',
-      mailAddress:'lorenzo.stacchio@studenti.unicam.it'
+      instagramUrl: 'https://www.instagram.com/lorenzostacchio/',
+      facebookUrl: 'https://www.facebook.com/lorenzo.stacchio',
+      mailAddress: 'lorenzo.stacchio@studenti.unicam.it'
     },
     {
       name: 'Luca',
       surname: 'Marasca',
       picProfile: './CSS/images/Fondatori/Lm.png',
-      instagramUrl:'https://www.instagram.com/__r3x__/',
-      facebookUrl:'https://www.facebook.com/luca.m.marasca',
-      mailAddress:'luca.marasca@studenti.unicam.it'
+      instagramUrl: 'https://www.instagram.com/__r3x__/',
+      facebookUrl: 'https://www.facebook.com/luca.m.marasca',
+      mailAddress: 'luca.marasca@studenti.unicam.it'
     },
     {
       name: 'Matteo',
       surname: 'Lupini',
       picProfile: './CSS/images/Fondatori/Ml.png',
-      instagramUrl:'https://www.instagram.com/matteolupini/',
-      facebookUrl:'https://www.facebook.com/matteo.lupin',
-      mailAddress:'matteo.lupini@studenti.unicam.it'
+      instagramUrl: 'https://www.instagram.com/matteolupini/',
+      facebookUrl: 'https://www.facebook.com/matteo.lupin',
+      mailAddress: 'matteo.lupini@studenti.unicam.it'
     },
     {
       name: 'Nicolò',
       surname: 'Ruggeri',
       picProfile: './CSS/images/Fondatori/Nr.png',
-      instagramUrl:'https://www.instagram.com/nicoloRuggeri/',
-      facebookUrl:'https://www.facebook.com/nicolo.ruggeri.12',
-      mailAddress:'nicolo.ruggeri@studenti.unicam.it'
+      instagramUrl: 'https://www.instagram.com/nicoloRuggeri/',
+      facebookUrl: 'https://www.facebook.com/nicolo.ruggeri.12',
+      mailAddress: 'nicolo.ruggeri@studenti.unicam.it'
     }
   ];
 })

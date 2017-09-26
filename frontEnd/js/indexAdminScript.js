@@ -156,8 +156,6 @@ indexAdminApp.controller('adminAlertController', function ($scope, $http, $local
     };
     //define function that delete alert
     $scope.deleteAlert = function (avviso) {
-        alert(avviso.text);
-        alert(avviso.number);
         $http({
             method: 'POST',
             url: 'http://localhost:3001/api/deleteAlert',
@@ -333,7 +331,6 @@ indexAdminApp.controller('adminBonificoController', function ($scope, $http, $wi
     };
 });
 
-
 //define userVisionController
 indexAdminApp.controller('adminUserVisionController', function ($scope, $http) {
     //message
@@ -431,8 +428,9 @@ indexAdminApp.controller('adminUserVisionController', function ($scope, $http) {
     }
 
 });
+
 //define adminAbilitaController
-indexAdminApp.controller('adminAbilitaController', function ($scope, $http) {
+indexAdminApp.controller('adminAbilitaController', function ($scope, $http,$window) {
     //message
     $scope.message = "Benvenuto " + adminProfile.meta.firstName + ", da qui puoi abilitare o disabilitare un correntista. Cosa vuoi fare?";
     //booleans to check admin choose
@@ -543,6 +541,7 @@ indexAdminApp.controller('adminAbilitaController', function ($scope, $http) {
         }).then(function (response) {
             //in every case i print the return message
             alert(response.data.message);
+            $window.location.reload();
         });
     }
     //function to disable user
@@ -559,6 +558,7 @@ indexAdminApp.controller('adminAbilitaController', function ($scope, $http) {
         }).then(function (response) {
             //in every case i print the return message
             alert(response.data.message);
+            $window.location.reload();
         });
     }
 

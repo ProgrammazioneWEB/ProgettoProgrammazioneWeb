@@ -1,8 +1,4 @@
-<!-- chiSiamo.html -->
-<div class="jumbotron text-center blueBackground whiteFont">
-    <h1>Contatti</h1>
-    <h2> Contatti per la banca Unicam </h2>
-</div>
+<!-- contact.html -->
 <div ng-repeat="user in users">
     <table class="table">
         <tr>
@@ -16,15 +12,16 @@
             <td style="width:50%">
                 <div class="jumbotron text-center aboutOneReverse whiteBackGround blueFont" >
                     <!--Social Profile of Lorenzo-->
-                    <a href="{{user.facebookUrl}}" target="_blank">
-                        <img src="CSS/images/Logos/facebook.png">
+                    Puoi trovarmi sui social o contattarmi tramite una mail!<br><br>
+                    <a href="{{user.facebookUrl}}" target="blank">
+                        <img src="CSS/images/Logos/facebook.png"/>
                       </a>
-                    <a href="{{user.instagramUrl}}" target="_blank">
-                        <img src="CSS/images/Logos/instagram.jpg">
+                    <a href="{{user.instagramUrl}}" target="blank">
+                        <img src="CSS/images/Logos/instagram.jpg"/>
                     </a>
                     <!--Contact Lorenzo-->
                     <a href="mailto:{{user.mailAddress}}">
-                        <img src="CSS/images/Logos/gmail.jpg">
+                        <img src="CSS/images/Logos/gmail.jpg"/>
                      </a>
                 </div>
             </td>
