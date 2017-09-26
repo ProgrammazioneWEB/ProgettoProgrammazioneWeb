@@ -6,6 +6,11 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var advise = new Schema({
+    number : {
+        type : Number,
+        required : true,
+        unique : true
+    },
     title : {
         type : String,
         required : true

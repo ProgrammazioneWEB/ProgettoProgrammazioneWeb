@@ -673,3 +673,41 @@ exports.updateCash = function (user, newBalance, callbackRis) {
     });
   });
 }
+
+//this function return all the advises
+exports.allAdvise = function(callbackRis){
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    db.collection("advises").find({}).toArray(function(err, result) {
+      if (err) throw err;
+      console.log(result.name);
+      db.close();
+      callbackRis(result);
+    });
+  });
+}
+
+//this function delete an advise from his number id
+exports.deleteAdvise = function(numberToDelete, callbackRis){
+  MongoClient.connect(url, function (err, db) {
+    if (err) throw err;
+    db.collection("advises").deleteOne({ number: numberToDelete }, function (err, result) {
+      if (err) throw err;
+      db.close();
+      callbackRis(true, "Avviso cancellato");
+    });
+  });
+}
+
+//this function return the max number of advise
+exports.maxNumberOfAdvise = function(callbackRis){
+  MongoClient.connect(url, function (err, db) {
+    if (err) throw err;
+    var mysort = { number : -1 }; //  -1 vale come ORDER BY DESC
+    db.collection("advises").find().sort(mysort).limit(1).toArray(function (err, result) {
+      if (err) throw err;
+      db.close();
+      callbackRis(result);
+    });
+  });
+}
