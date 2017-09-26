@@ -301,6 +301,7 @@ indexApp.controller("logOutController", function ($scope, $location, $window, $l
 indexApp.controller("signUp", function ($scope, $http, $location, Upload) {
   $scope.message = "Benvenuto nella pagina \n di registrazione!";
   $scope.image = "";
+  $scope.btnIMG = "Carica foto";
   //filter used to filter e-mails
   var emailFilter = /^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/;
   //filter used to filter e-mails
@@ -473,9 +474,11 @@ indexApp.controller("signUp", function ($scope, $http, $location, Upload) {
   }).then(function (response) {
       if (response.data.success) {
           $scope.image = response.data.image;
+          $scope.btnIMG = "Caricata";
           alert(response.data.message);
           var modal = $('#imgModal');
           modal.modal('hide');
+          
       }
       else
           $scope.fileError = response.data.message || "Errore! Foto non inviata correttamente.";
