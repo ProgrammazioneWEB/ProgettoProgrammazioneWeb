@@ -1,5 +1,5 @@
 // create the module for the index
-var indexApp = angular.module('indexApp', ['ngRoute', 'ngAnimate', 'ngTouch', 'zingchart-angularjs', 'ngStorage']);
+var indexApp = angular.module('indexApp', ['ngRoute', 'ngAnimate', 'ngTouch', 'zingchart-angularjs', 'ngStorage', 'ngFileUpload']);
 
 // configuring routes
 indexApp.config(function ($routeProvider) {
@@ -296,8 +296,10 @@ indexApp.controller("logOutController", function ($scope, $location, $window, $l
 });
 
 //SIGNUP CONTROLLER
-indexApp.controller("signUp", function ($scope, $http, $location) {
+indexApp.controller("signUp", function ($scope, $http, $location, Upload) {
   $scope.message = "Benvenuto nella pagina \n di registrazione!";
+  $scope.image = "";
+  $scope.btnIMG = "Carica foto";
   //filter used to filter e-mails
   var emailFilter = /^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/;
   //filter used to filter e-mails
@@ -434,7 +436,8 @@ indexApp.controller("signUp", function ($scope, $http, $location) {
     var parametri = {
       email: $scope.email,
       password: $scope.password,
-      pin: $scope.pin
+      pin: $scope.pin,
+      image: $scope.image
     }
     $http({
       method: "POST",
@@ -451,6 +454,33 @@ indexApp.controller("signUp", function ($scope, $http, $location) {
     }, function myError(response) {
       alert("Si è verificato un errore nella richiesta di autenticazione!");
     });
+  }
+
+  //  Funzione per l'invio della foto al server
+  $scope.sendIMG = function () {
+    if (!$scope.file) {
+      $scope.fileError = "Devi prima selezionare lo screen...";
+      return;
+  }
+
+  $scope.fileError = "";
+
+  Upload.upload({
+      url: "http://localhost:3001/uploadPic",
+      method: 'POST',
+      file: $scope.file
+  }).then(function (response) {
+      if (response.data.success) {
+          $scope.image = response.data.image;
+          $scope.btnIMG = "Caricata";
+          alert(response.data.message);
+          var modal = $('#imgModal');
+          modal.modal('hide');
+          
+      }
+      else
+          $scope.fileError = response.data.message || "Errore! Foto non inviata correttamente.";
+  });
   }
 
   //controller della parte dopo il log-in

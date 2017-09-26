@@ -1,6 +1,35 @@
 <div class="jumbotron text-center blueBackground whiteFont">
     <h1>{{message}}</h1>
 </div>
+
+<!-- ModalScreen -->
+<div class="modal" id="imgModal" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Carica la tua foto</h4>
+            </div>
+            <div class="modal-body">
+                <form ng-app="fileUpload" name="form">
+                    <label>Seleziona foto: <small>max 2MB.</small></label>
+                    <br/>
+                    <button class="btn" ngf-select ng-model="file" name="file" ngf-pattern="'image/*'" ngf-accept="'image/*'" ngf-max-size="2MB">
+                    Seleziona
+                </button>
+                    <h5>{{file.name}}</h5>
+                </form>
+                <br/>
+                <p class="text-danger">{{fileError}}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" ng-click="sendIMG()">Invia</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Annulla</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="container">
     <!--Sign-up form-->
     <form class="form-horizontal" ng-model="form" name="form" novalidate>
@@ -39,13 +68,12 @@
         <!--Inserisci immagine di profilo-->
         <div class="form-group">
             <label for="picture">Inserisci un immagine del profilo (non obbligatorio) </label>
-            <input type="file" class="form-control" ng-blur="controlCheckBox()" placeholder="(Inserisci il pin fornito dalla banca)"
-                name="picture" ng-model="picture" />
+            <button id="btnpic" type="button" class="btn" data-toggle="modal" data-target="#imgModal">{{btnIMG}}</button>
         </div>
         <!--checkbox-->
         <div class="checkbox">
-            <input type="checkbox" class="checkbox" ng-model="licence" name="licence" required>
-            Ho letto il <a href="#!/licence" target="_blank">
+            <input type="checkbox" class="checkbox" ng-model="licence" name="licence" required> Ho letto il <a href="#!/licence"
+                target="_blank">
                 contratto di licenza</a>
             </input>
             <span ng-show="form.licence.$invalid" class="leftAlignError">{{licenceError.licence}}</span>
