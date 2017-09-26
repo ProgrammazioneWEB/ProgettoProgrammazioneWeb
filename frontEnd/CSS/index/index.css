@@ -51,18 +51,17 @@ div.photo{
 div.homePageImage{
     text-align: center;
     width: 100%;
-    height: 70%;
+    height: 60%;
     background-color: white;
     animation: 1s ease-out 0s 1 homeImage;
 }
-span.homePageTitle{
+div.homePageTitle{
     text-align: center;
     width: 100%;
-    height: 100%;
+    height: 10%;
     background-color: white;
     color: #3E50F3;
-    animation-name: photoGalleryAnimation;
-    animation-duration: 3s;
+    animation: 1s ease-out 0s 1 homeImageReverse;
 }
 div.homePageDiv{
     text-align: left;
