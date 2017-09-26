@@ -253,8 +253,6 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location, $window
         $localStorage.XToken = curToken;
         $localStorage.Email = $scope.username;
         $localStorage.admin = response.data.admin;
-        alert(curToken.value);
-        alert(response.data.admin);
         if ($localStorage.admin == true) {
           $window.location.href = './indexAdmin.html';
         }
@@ -856,7 +854,7 @@ indexApp.controller('contactUsController',function($scope){
       picProfile: './CSS/images/Fondatori/Nr.png',
       instagramUrl:'https://www.instagram.com/nicoloRuggeri/',
       facebookUrl:'https://www.facebook.com/nicolo.ruggeri.12',
-      mailAddress:'CSS/images/Logos/gmail.jpg'
+      mailAddress:'nicolo.ruggeri@studenti.unicam.it'
     }
   ];
 })

@@ -3,36 +3,31 @@
     <h1>Contatti</h1>
     <h2> Contatti per la banca Unicam </h2>
 </div>
-<div class="container">
-    <table class="table table-bordered">
-        <thead class="thead-default blueBackground">
-            <tr>
-                <th> Nome</th>
-                <th> Cognome</th>
-                <th> Foto Profilo </th>
-                <th> Social Profiles </th>
-                <th> Contattaci</th>
-            </tr>
-        </thead>
-        <tbody ng-repeat="user in users">
-            <tr>
-                <!--Lorenzo-->
-                <td>{{user.name}}</td>
-                <td>{{user.surname}}</td>
-                <td> <img ng-src="{{user.picProfile}}"></td>
-                <!--Social Profile of Lorenzo-->
-                <td>
+<div ng-repeat="user in users">
+    <table class="table">
+        <tr>
+            <td style="width:50%">
+                <div class="jumbotron text-center aboutOne blueBackground whiteFont">
+                    <!--Founder meta-->
+                    {{user.name}} {{user.surname}}
+                    <img ng-src="{{user.picProfile}}">
+                </div>
+            </td>
+            <td style="width:50%">
+                <div class="jumbotron text-center aboutOne whiteBackGround blueFont" >
+                    <!--Social Profile of Lorenzo-->
                     <a href="{{user.facebookUrl}}" target="_blank">
-                    <img src="CSS/images/Logos/facebook.png">
-                </a>
+                        <img src="CSS/images/Logos/facebook.png">
+                      </a>
                     <a href="{{user.instagramUrl}}" target="_blank">
-                    <img src="CSS/images/Logos/instagram.jpg">
-                </a>
-                </td>
-                <!--Contact Lorenzo-->
-                <td><a href="mailto:{{user.mailAddress}}">
-                    <img src="CSS/images/Logos/gmail.jpg">
-                </a></td>
-            </tr>
+                        <img src="CSS/images/Logos/instagram.jpg">
+                    </a>
+                    <!--Contact Lorenzo-->
+                    <a href="mailto:{{user.mailAddress}}">
+                        <img src="CSS/images/Logos/gmail.jpg">
+                     </a>
+                </div>
+            </td>
+        </tr>
     </table>
 </div>

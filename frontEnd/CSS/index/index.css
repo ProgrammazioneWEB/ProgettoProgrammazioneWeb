@@ -1,11 +1,26 @@
-@keyframes example {
+@keyframes photoGalleryAnimation {
     0%   {opacity: 0.1;}
     25%  {opacity: 0.25;}
     50%  {opacity: 0.5;}
     75%  {opacity: 0.75;}
     100% {opacity: 1.0;}
 }
-
+@keyframes homeImage{
+     0% {
+        transform: translateX(-100%);
+      }
+      100% {
+        transform: translateX(0);
+      }
+}
+@keyframes homeImageReverse{
+    0% {
+        transform: translateX(+100%);
+      }
+      100% {
+        transform: translateX(0);
+      }
+}
 .blueBackground{
     background-color: #3E50F3;
 }
@@ -29,19 +44,31 @@ img.iconAbout{
 }
 
 div.photo{
-    animation-name: example;
+    animation-name: photoGalleryAnimation;
+    animation-duration: 3s;
+}
+
+div.homePageImage{
+    text-align: center;
+    width: 100%;
+    height: 70%;
+    background-color: white;
+    animation: 1s ease-out 0s 1 homeImage;
+}
+span.homePageTitle{
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    color: #3E50F3;
+    animation-name: photoGalleryAnimation;
     animation-duration: 3s;
 }
 div.homePageDiv{
     text-align: left;
-    width: 60%;
-    height: 100%;
-    left:0; right:0;
-    top:0; bottom:0;
-    margin:auto;
-    overflow: auto;
+    width: 100%;
+    height: 30%;
     background-color: #3E50F3;
-    border-radius: 2%;
 }
 span.story{
     color: black;
@@ -54,6 +81,12 @@ text-align: center;
 }
 table.photo
 {
-    animation-name: example;
-    animation-duration: 3s;
+    animation-name: photoGalleryAnimation;
+    animation-duration: 2s;
+}
+div.aboutOne{
+    animation: 1s ease-out 0s 1 homeImage;
+}
+div.aboutOneReverse{
+    animation: 1s ease-out 0s 1 homeImageReverse;
 }
