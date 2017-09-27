@@ -41,25 +41,17 @@ indexAdminApp.controller('adminHomeController', function ($scope, $http, $window
     //  Se il token è salvato in locale lo prelevo (sarà sempre salvato in locale dopo il login)
     if ($localStorage.XToken) {
         curToken = $localStorage.XToken;
-        //se i dati dell'utente sono già salvati li prelevo
-        if ($localStorage.adminProfile) {
-            adminProfile = $localStorage.adminProfile;
-        }
-        //  Tutti i dati sottostanti vanno richiesti al server di node (bisogna passargli l'email)
         //in sostanza ho appena fatto login!
-        if ($localStorage.Email) {
             $http({
                 method: "POST",
                 url: "http://localhost:3001/api/userData",
                 headers: { 'Content-Type': 'application/json' },
                 data: {
-                    'email': $localStorage.Email,
                     'token': curToken.value
                 }
             }).then(function (response) {
                 if (response.data.success) {
                     adminProfile = response.data.result;
-                    $localStorage.adminProfile = adminProfile;
                     //profile area
                     $scope.name = adminProfile.meta.firstName;
                     $scope.surname = adminProfile.meta.lastName;
@@ -83,7 +75,6 @@ indexAdminApp.controller('adminHomeController', function ($scope, $http, $window
                 }
 
             });
-        }
     }
     //redirect to other page
     else
@@ -150,7 +141,7 @@ indexAdminApp.controller('adminAlertController', function ($scope, $http, $local
             //if i'm here server response with bad error or not
             alert(response.data.message);
             //reload page
-            $window.location.reload();
+            $window.location.href = "../indexAdmin.html";
         });
     };
     //define function that delete alert
@@ -166,7 +157,7 @@ indexAdminApp.controller('adminAlertController', function ($scope, $http, $local
             if (response.data.success) {
                 //success message
                 alert(response.data.message)
-                $window.location.reload();
+                $window.location.href = "../indexAdmin.html";
             }
             else {
                 //erroro message
@@ -320,7 +311,7 @@ indexAdminApp.controller('adminBonificoController', function ($scope, $http, $wi
             if (response.data.success) {
                 //in case of success reload page
                 alert(response.data.message);
-                $window.location.reload();
+                $window.location.href = "../indexAdmin.html";
             }
             else {
                 //error
@@ -542,7 +533,7 @@ indexAdminApp.controller('adminAbilitaController', function ($scope, $http,$wind
         }).then(function (response) {
             //in every case i print the return message
             alert(response.data.message);
-            $window.location.reload();
+            $window.location.href = "../indexAdmin.html";
         });
     }
     //function to disable user
@@ -559,7 +550,7 @@ indexAdminApp.controller('adminAbilitaController', function ($scope, $http,$wind
         }).then(function (response) {
             //in every case i print the return message
             alert(response.data.message);
-            $window.location.reload();
+            $window.location.href = "../indexAdmin.html";
         });
     }
 
@@ -625,7 +616,7 @@ indexAdminApp.controller('adminRegistraUtente', function ($scope, $http, $window
         }).then(function (response) {
             if (response.data.success) {
                 alert(response.data.message);
-                $window.location.reload();
+                $window.location.href = "../indexAdmin.html";
             }
             else {
                 alert("Errore nel server o nel db");

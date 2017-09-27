@@ -52,29 +52,18 @@ indexUserApp.controller('userHomeController', function ($scope, $http, $window, 
     //  Se il token è salvato in locale lo prelevo (sarà sempre salvato in locale dopo il login)
     if ($localStorage.XToken) {
         curToken = $localStorage.XToken;
-        //se i dati dell'utente sono già salvati li prelevo
-        if ($localStorage.userProfile) {
-            userProfile = $localStorage.userProfile;
-        }
-        //se i dati sui movimenti dell'utente sono già salvati li prelevo
-        if ($localStorage.userMovements) {
-            userMovements = $localStorage.userMovements;
-        }
-        //  Tutti i dati sottostanti vanno richiesti al server di node (bisogna passargli l'email)
+        // Tutti i dati sottostanti vanno richiesti al server di node 
         //in sostanza ho appena fatto login!
-        if ($localStorage.Email) {
             $http({
                 method: "POST",
                 url: "http://localhost:3001/api/userData",
                 headers: { 'Content-Type': 'application/json' },
                 data: {
-                    'email': $localStorage.Email,
                     'token': curToken.value
                 }
             }).then(function (response) {
                 if (response.data.success) {
                     userProfile = response.data.result;
-                    $localStorage.userProfile = userProfile;
                     //assign datas
                     $scope.message = "Benvenuto nel tuo profilo privato!";
                     //profile area
@@ -113,7 +102,6 @@ indexUserApp.controller('userHomeController', function ($scope, $http, $window, 
             }).then(function (response) {
                 if (response.data.success) {
                     userMovements = response.data.result;
-                    $localStorage.userMovements = userMovements;
                 }
                 else {
                     alert("Nessun Movimento trovato");
@@ -147,7 +135,6 @@ indexUserApp.controller('userHomeController', function ($scope, $http, $window, 
                 $scope.showAlertCall = !$scope.showAlertCall;
             }
         }
-    }
     else
     $window.location.href = '../index.html';
 
@@ -544,8 +531,8 @@ indexUserApp.controller('userModifyMetaController', function ($scope, $http, $wi
             }
         }).then(function (response) {
             if (response.data.success) {
-                alert("messaggio di risposta"+response.data.message);
-                $window.location.reload();
+                alert(response.data.message);
+                $window.location.href='../indexUser.html'
             }
             else {
                 alert(response.data.message);
