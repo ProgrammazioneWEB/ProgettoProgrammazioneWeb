@@ -36,7 +36,6 @@ indexAdminApp.config(function ($routeProvider) {
 var adminProfile = {};
 //  variabile contenente il token
 var curToken = { value: "", enable: false };
-
 //controller for admin
 indexAdminApp.controller('adminHomeController', function ($scope, $http, $window, $localStorage) {
     //  Se il token è salvato in locale lo prelevo (sarà sempre salvato in locale dopo il login)
@@ -565,6 +564,7 @@ indexAdminApp.controller('adminAbilitaController', function ($scope, $http,$wind
     }
 
 });
+
 //Define adminRegistraUtente
 indexAdminApp.controller('adminRegistraUtente', function ($scope, $http, $window) {
     //message

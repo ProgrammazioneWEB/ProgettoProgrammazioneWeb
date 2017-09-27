@@ -1,74 +1,85 @@
 //define module
 var indexAdminApp = angular.module('indexAdminApp', ['ngRoute']);
 //controller for transaction
-indexAdminApp.controller('adminBonificoController', function ($scope) {
+indexAdminApp.controller('adminBonificoController', function ($scope, $http, $window) {
     //message
-    $scope.message = "Benvenuto admin, da qui potrai effettuare un bonifico tra due utenti, per accertarti che la somma del bonifico possa essere effettivamente pagata vai nella sezione" +
+    $scope.message = "Benvenuto " + adminProfile.meta.firstName + ", da qui potrai effettuare un bonifico tra due utenti, per accertarti che la somma del bonifico possa essere effettivamente pagata vai nella sezione" +
         "Visiona stato di un utente";
-    //ItalianIbanFilter
-    var ibanFilter = /^IT\d{2}[A-Z]\d{10}[0-9A-Z]{12}$/;
-    //errors that could be thrown
-    $scope.ibanOrdErrors =
-        {
-            error: ""
-        };
-    //errors that could be thrown
-    $scope.ibanBenErrors =
-        {
-            error: ""
-        };
     //errors that could be thrown
     $scope.paymentErrors =
         {
             error: ""
         };
-
-    //function that control validity of iban
-    $scope.controlIbanOrd = function () {
-        if ($scope.ibanOrd == undefined) {
-            //user didn't write nothing yet, it' not an error
-            $scope.form.ibanOrd.$invalid = true;
-            $scope.ibanOrdErrors.error = "";
-        }
-        // alert(ibanFilter.test($scope.iban));
-        else if (!(ibanFilter.test($scope.ibanOrd))) {
-            //error
-            //alert("iban scorretto");
-            $scope.form.ibanOrd.$invalid = true;
-            $scope.ibanOrdErrors.error = "*Iban in formato errato";
-        }
-        else {
-            //error
-            //alert("iban corretto");             
-            $scope.form.ibanOrd.$invalid = false;
-            $scope.ibanOrdErrors.error = "";
-        }
-
-    };
-
-    //function that control validity of iban
-    $scope.controlIbanBen = function () {
-        if ($scope.ibanBen == undefined) {
-            //user didn't write nothing yet, it' not an error
-            $scope.form.ibanBen.$invalid = true;
-            $scope.ibanBenErrors.error = "";
-        }
-        // alert(ibanFilter.test($scope.iban));
-        else if (!(ibanFilter.test($scope.ibanBen))) {
-            //error
-            //alert("iban scorretto");
-            $scope.form.ibanBen.$invalid = true;
-            $scope.ibanBenErrors.error = "*Iban in formato errato";
+    $scope.countOrderErrors =
+        {
+            error: ""
+        };
+    $scope.countBenErrors =
+        {
+            error: ""
+        };
+    //function to controll countNumber
+    $scope.controlCountNumberOrd = function () {
+        if ($scope.countNumberOrd === undefined) {
+            $scope.form.countNumberOrd.$invalid = true;
+            $scope.countOrderErrors = {
+                error: "*Non hai scritto il pin"
+            };
         }
         else {
-            //error
-            //alert("iban corretto");             
-            $scope.form.ibanBen.$invalid = false;
-            $scope.ibanBenErrors.error = "";
+            //save pin like string
+            $scope.countNumberOrdString = $scope.countNumberOrd.toString();
+            if ($scope.countNumberOrdString.length < 6) {
+                $scope.form.countNumberOrd.$invalid = true;
+                $scope.countOrderErrors = {
+                    error: "*Il pin è troppo corto"
+                };
+            }
+            else if ($scope.countNumberOrdString.length > 6) {
+                $scope.form.countNumberOrd.$invalid = true;
+                $scope.countOrderErrors = {
+                    error: "*Il pin è troppo lungo"
+                };
+            }
+            else {
+                $scope.form.countNumberOrd.$invalid = false;
+                $scope.countOrderErrors = {
+                    error: ""
+                };
+            }
         }
-
-    };
-
+    }
+    //function to controll countNumber
+    $scope.controlCountNumberBen = function () {
+        if ($scope.countNumberBen === undefined) {
+            $scope.form.countNumberBen.$invalid = true;
+            $scope.countBenErrors = {
+                error: "*Non hai scritto il pin"
+            };
+        }
+        else {
+            //save pin like string
+            $scope.countNumberBenString = $scope.countNumberBen.toString();
+            if ($scope.countNumberBenString.length < 6) {
+                $scope.form.countNumberBen.$invalid = true;
+                $scope.countBenErrors = {
+                    error: "*Il pin è troppo corto"
+                };
+            }
+            else if ($scope.countNumberBenString.length > 6) {
+                $scope.form.countNumberBen.$invalid = true;
+                $scope.countBenErrors = {
+                    error: "*Il pin è troppo lungo"
+                };
+            }
+            else {
+                $scope.form.countNumberBen.$invalid = false;
+                $scope.countBenErrors = {
+                    error: ""
+                };
+            }
+        }
+    }
     //function that control import
     $scope.checkImport = function () {
         if ($scope.payment == undefined) {
@@ -86,16 +97,31 @@ indexAdminApp.controller('adminBonificoController', function ($scope) {
             $scope.form.payment.$invalid = false;
             $scope.paymentErrors.error = "";
         }
-
     };
-
     //function to make the transaction
     $scope.makeTransaction = function () {
-        var transaction = {
-            ordinante: $scope.ibanOrd,
-            beneficiario: $scope.ibanBen,
-            importo: $scope.importo
-        }
-    };
+        //call server api    
+        $http({
+            method: 'POST',
+            url: 'http://localhost:3001/api/invio-bonifico-admin',
+            headers: { 'Content-Type': 'application/json' },
+            data: {
+                'token': curToken.value,
+                'from': $scope.countNumberOrd,
+                'to': $scope.countNumberBen,
+                'quantity': $scope.payment
+            }
+        }).then(function (response) {
+            if (response.data.success) {
+                //in case of success reload page
+                alert(response.data.message);
+                $window.location.reload();
+            }
+            else {
+                //error
+                alert(response.data.message)
+            }
 
+        });
+    };
 });

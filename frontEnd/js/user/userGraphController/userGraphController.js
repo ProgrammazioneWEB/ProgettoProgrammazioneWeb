@@ -1,13 +1,14 @@
 // create the module for the indexUser
 var indexUserApp = angular.module('indexUserApp', ['ngRoute', 'ngAnimate', 'ngTouch', 'zingchart-angularjs']);
-//user movements controller
+
+//user graph controller
 indexUserApp.controller('userGraphController', function ($scope) {
     //GRAPH AREA
     //GRAPH VARIABLES 
     //Function to show graph
     //data of user entrance 
     $scope.userEntrance = [];
-    $scope.message = "Benvenuto nella sezione dei grafici";
+    $scope.message = "Sezione grafici";
 
     //ENTRANCE GRAPH
     //boolean to show entrace graph
@@ -17,8 +18,8 @@ indexUserApp.controller('userGraphController', function ($scope) {
 
     //Function to show activeEntranceGraph
     $scope.activeEntranceGraph = function () {
-        for (i = 0; i < userProfile.movimenti.length; i++) {
-            $scope.userEntrance[i] = userProfile.movimenti[i].entrata;
+        for (i = 0; i < userMovements.length; i++) {
+            $scope.userEntrance[i] = userMovements[i].entrata;
         }
         $scope.exitBGraphClicked = false;
         $scope.versusBGraphClicked = false;
@@ -53,8 +54,8 @@ indexUserApp.controller('userGraphController', function ($scope) {
     $scope.exitBGraphClicked = false;
     //Function to show activeExitGraph
     $scope.activeExitGraph = function () {
-        for (i = 0; i < userProfile.movimenti.length; i++) {
-            $scope.userExit[i] = userProfile.movimenti[i].spesa * -1;
+        for (i = 0; i < userMovements.length; i++) {
+            $scope.userExit[i] = userMovements[i].uscita;
         }
         $scope.entranceBGraphClicked = false;
         $scope.versusBGraphClicked = false;
@@ -90,9 +91,9 @@ indexUserApp.controller('userGraphController', function ($scope) {
     $scope.versusBGraphClicked = false;
     //Function to show activeExitGraph
     $scope.activeVersusGraph = function () {
-        for (i = 0; i < userProfile.movimenti.length; i++) {
-            $scope.userEntrance[i] = userProfile.movimenti[i].entrata;
-            $scope.userExit[i] = userProfile.movimenti[i].spesa * -1;
+        for (i = 0; i < userMovements.length; i++) {
+            $scope.userEntrance[i] = userMovements[i].entrata;
+            $scope.userExit[i] = userMovements[i].uscita;
         }
         $scope.entranceBGraphClicked = false;
         $scope.exitBGraphClicked = false;

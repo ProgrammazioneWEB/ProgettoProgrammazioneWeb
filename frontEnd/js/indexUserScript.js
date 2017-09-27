@@ -37,7 +37,6 @@ indexUserApp.config(function ($routeProvider) {
 
 //  variabile contenente il token
 var curToken = { value: "", enable: false };
-
 //user dates
 var userProfile = null;
 //user movements
@@ -541,7 +540,7 @@ indexUserApp.controller('userModifyMetaController', function ($scope, $http, $wi
             }
         }).then(function (response) {
             if (response.data.success) {
-                alert(response.data);
+                alert(response.data.message);
                 $window.location.reload();
             }
             else {

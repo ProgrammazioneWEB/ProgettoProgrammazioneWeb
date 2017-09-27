@@ -123,7 +123,6 @@ indexApp.controller('photoGalleryController', function ($scope) {
 });
 
 
-
 /**
  * Username is the e-mail of the persone who want to access in it's personal profile
  */
@@ -137,17 +136,6 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location, $window
   //filter used to filter e-mails
   var emailFilter = /^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/;
   //filter to filter password
-  /**
-  * should contain at least one digit,
-  * should contain at least one lower case,
-  * should contain at least one upper case,
-  * should contain at least one number,
-  * should contain at least 8 from the mentioned characters:
-  * helloworld = fail;
-  * helloWorld = fail;
-  * helloWorld1 = succes;
-  */
-  var passwordFilter = "";
   //Autenticazione via token (se si è precedentementi loggati)
   if (curToken.enable == true) {
     $http({
@@ -168,7 +156,7 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location, $window
   $scope.controlUsernameField = function () {
     // alert("sono nel controllo username, la password è:"+$scope.password);    
     //if length is 0 user has type nothing
-    if ($scope.username === undefined) {
+    if ($scope.username === undefined || scope.username=="") {
       //username value is empty
       $scope.usernameError = { username: "*E-mail non scritta" };
       $scope.form.username.$invalid = true;
@@ -210,16 +198,6 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location, $window
       //if i am here checkbox is clicked
       $scope.licenceError = { licence: "" };
       $scope.form.licence.$invalid = false;
-    }
-  }
-  //functio to control i form is valid
-  $scope.formNotValid = function () {
-    if ($scope.form.$invalid || $scope.form.licence.$invalid ||
-      $scope.form.password.$invalid || $scope.form.username.$invalid) {
-      return true;
-    }
-    else {
-      return false;
     }
   }
   // function to send data to server node
@@ -271,7 +249,7 @@ indexApp.controller("filterUserController", function ($scope, $http, $window, $l
 
     }
   }
-  //non sono loggato, eseguo il redirect alla pagina di login
+  //i'm not logged so redirect to other page
   else {
     $location.path("/login");
   }

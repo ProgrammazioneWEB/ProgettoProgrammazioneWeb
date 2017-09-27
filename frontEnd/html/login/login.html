@@ -1,6 +1,5 @@
 
 <div class="container">
-    <!--Ricorda che per mostare gli errori bisogna usare i name nell'html e utilizzare gli scope dei nomi/ng-model nel js-->
     <!--Metto tutti i campi della form con required per fare in modo che vengano riempiti per forza per poter inviare i propri dati-->
     <!--Login form-->
     <form class="form-horizontal" ng-model="form" name="form" novalidate>
@@ -8,7 +7,7 @@
         <div class="form-group">
             <label for="nome">E-mail</label>
             <input type="e-mail" class="form-control" name="username" ng-model="username" placeholder="(inserisci l'email associata al tuo account)"
-                required ng-blur="controlUsernameField();controlPasswordField();controlCheckBox();" />
+                required ng-blur="controlUsernameField()" />
             <!-- Mostro gli errori nel caso in cui ci sia qualcosa di invalido nei campi-->
             <span ng-show="form.username.$invalid" class="leftAlignError"> {{usernameError.username}} </span>
         </div>
@@ -16,13 +15,13 @@
         <div class="form-group">
             <label for="psw">Password</label>
             <input type="password" name="password" class="form-control" placeholder="(inserisci la password associata allo username)"
-                ng-model="password" required ng-blur="controlUsernameField();controlPasswordField();controlCheckBox();" />
+                ng-model="password" required ng-blur="controlPasswordField()" />
             <span ng-show="form.password.$invalid" class="leftAlignError">{{passwordError.password}}</span>
         </div>
         <!--checkbox-->
         <div class="checkbox">
             <input type="checkbox" class="checkbox" ng-model="licence" name="licence"
-             ng-checked="controlUsernameField();controlPasswordField();controlCheckBox();" required>
+             ng-checked="controlCheckBox();" required>
             Ho letto il <a href="#!/licence" target="_blank">
                 contratto di licenza</a>
             </input>
@@ -30,7 +29,7 @@
         </div>
         <!--submit button-->
         <div style="text-align:center;">
-            <button type="submit" ng-click="login()" class="btn btn-primary" ng-disabled="formNotValid()">Login</button>
+            <button type="submit" ng-click="login()" class="btn btn-primary">Login</button>
         </div>
     </form>
 </div>
