@@ -167,6 +167,7 @@ indexAdminApp.controller('adminAlertController', function ($scope, $http, $local
             if (response.data.success) {
                 //success message
                 alert(response.data.message)
+                $window.location.reload();
             }
             else {
                 //erroro message

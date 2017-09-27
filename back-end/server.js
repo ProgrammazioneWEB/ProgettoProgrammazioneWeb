@@ -655,14 +655,14 @@ apiRoutes.post('/invio-bonifico-admin', function (req, res) {
           database.findUserByAccount(bonifico.to, function (success2, result_admin2) {
             if (success1 == false) {
               res.json({
-                message: "Numero di conto inesistente!!",
+                message: "Numero di conto ordinante inesistente!!",
                 success: false
               });
               return
             }
             if (success2 == false) {
               res.json({
-                message: "Numero di conto inesistente!!",
+                message: "Numero di conto beneficiario inesistente!!",
                 success: false
               });
               return
