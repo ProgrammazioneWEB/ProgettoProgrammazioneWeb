@@ -135,7 +135,10 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location, $window
   $scope.licenceError = { licence: "" };
   //filter used to filter e-mails
   var emailFilter = /^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/;
-  //filter to filter password
+  //boolean to check login fields
+  $scope.validUsernameB = false;
+  $scope.validPasswordB = false;
+  $scope.validcheckBoxB = false;
   //Autenticazione via token (se si è precedentementi loggati)
   if (curToken.enable == true) {
     $http({
@@ -156,22 +159,23 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location, $window
   $scope.controlUsernameField = function () {
     // alert("sono nel controllo username, la password è:"+$scope.password);    
     //if length is 0 user has type nothing
-    if ($scope.username === undefined || scope.username=="") {
+    if ($scope.username === undefined) {
       //username value is empty
       $scope.usernameError = { username: "*E-mail non scritta" };
       $scope.form.username.$invalid = true;
+      $scope.validUsernameB = false;
+    }
+    else if (!emailFilter.test($scope.username)) {
+      //username value fail the test 
+      $scope.usernameError = { username: "*Mail in formato errato" };
+      $scope.form.username.$invalid = true;
+      $scope.validUsernameB = false;
     }
     else {
-      if (!emailFilter.test($scope.username)) {
-        //username value fail the test 
-        $scope.usernameError = { username: "*Mail in formato errato" };
-        $scope.form.username.$invalid = true;
-      }
-      else {
-        //username is in an acceptable structure
-        $scope.usernameError = { username: "" };
-        $scope.form.username.$invalid = false;
-      }
+      //username is in an acceptable structure
+      $scope.usernameError = { username: "" };
+      $scope.form.username.$invalid = false;
+      $scope.validUsernameB = true;
     }
   }
   //function to control password field and show the errors if user wrong to type 
@@ -181,10 +185,12 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location, $window
       //input value is empty
       $scope.passwordError = { password: "*Password non scritta" };
       $scope.form.password.$invalid = true;
+      $scope.validPasswordB = false;
     }
     else {
       $scope.passwordError = { password: "" };
       $scope.form.password.$invalid = false;
+      $scope.validPasswordB = true;
     }
   }
   //function to control checkbox field 
@@ -193,11 +199,22 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location, $window
       //if i am here checkbox is not clicked
       $scope.licenceError = { licence: "*Non hai letto la nostra licenza?" };
       $scope.form.password.$invalid = true;
+      $scope.validcheckBoxB = false;
     }
     else {
       //if i am here checkbox is clicked
       $scope.licenceError = { licence: "" };
       $scope.form.licence.$invalid = false;
+      $scope.validcheckBoxB = true;
+    }
+  }
+  //function to control if form is valid
+  $scope.formValidity = function () {
+    if ($scope.validUsernameB == true && $scope.validcheckBoxB == true && $scope.validPasswordB == true) {
+      return false;
+    }
+    else {
+      return true;
     }
   }
   // function to send data to server node

@@ -478,7 +478,8 @@ indexUserApp.controller('userModifyMetaController', function ($scope, $http, $wi
     $scope.mailError = { mail: "" };
     //filter used to filter e-mails
     var emailFilter = /^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/;
-
+    //boolean used to know if email is correct or not
+    $scope.validEmailB = false;
     //function to control username field and show the errors if user wrong to type 
     $scope.controlMailField = function () {
         //if length is 0 user has type nothing
@@ -486,24 +487,27 @@ indexUserApp.controller('userModifyMetaController', function ($scope, $http, $wi
             //username value is empty
             $scope.mailError = { mail: "*E-mail non scritta" };
             $scope.form.newMail.$invalid = true;
+            $scope.validEmailB = false;
         }
         else {
             if (!emailFilter.test($scope.newMail)) {
                 //username value fail the test 
                 $scope.mailError = { mail: "*Mail in formato errato" };
                 $scope.form.newMail.$invalid = true;
+                $scope.validEmailB = false;
             }
             else {
                 //username is in an acceptable structure
                 $scope.mailError = { mail: "" };
                 $scope.form.newMail.$invalid = false;
+                $scope.validEmailB = true;
             }
         }
     }
     //function that active button to modify data if at least one field is compiled
     $scope.activeForm = function () {
         //user have to compile at least one form field
-        if (($scope.newMail != undefined && $scope.newMail != "")
+        if (($scope.newMail != undefined && $scope.newMail != "" && $scope.validEmailB == true)
             || ($scope.newResidence != undefined && $scope.newResidence != "")
             || ($scope.newPassword != undefined && $scope.newPassword != "")
             || ($scope.newPhoneNumber != undefined && $scope.newPhoneNumber != "")) {
@@ -513,9 +517,8 @@ indexUserApp.controller('userModifyMetaController', function ($scope, $http, $wi
     }
     //function to modify data, contact with server and db
     $scope.modifyData = function () {
-        alert("prima cascata if"+$scope.newMail);
         //control data, if field are empty i declare it null for backend reason
-        if ($scope.newEmail == undefined || $scope.newEmail == "") {
+        if ($scope.newMail == undefined || $scope.newMail == "") {
             $scope.newEmail = null;
         }
         if ($scope.newPassword == undefined || $scope.newPassword == "") {
@@ -527,7 +530,6 @@ indexUserApp.controller('userModifyMetaController', function ($scope, $http, $wi
         if ($scope.newPhoneNumber == undefined || $scope.newPhoneNumber == "") {
             $scope.newPhoneNumber = null;
         }
-        alert("dopo cascata if"+$scope.newMail);
         //call server api
         $http({
             method: 'POST',
@@ -542,7 +544,7 @@ indexUserApp.controller('userModifyMetaController', function ($scope, $http, $wi
             }
         }).then(function (response) {
             if (response.data.success) {
-                alert(response.data.message);
+                alert("messaggio di risposta"+response.data.message);
                 $window.location.reload();
             }
             else {
