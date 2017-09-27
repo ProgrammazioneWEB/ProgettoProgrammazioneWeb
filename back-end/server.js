@@ -25,6 +25,7 @@ var DataStoreController = require('./dataStore');
 // ==== configuration ====
 // =======================
 var port = 3001 || process.env.PORT; // used to create, sign, and verify tokens
+var ip = "localhost";
 mongoose.connect(config.database); // connect to database
 app.set('superSecret', config.secret); // secret variable (prelevata da config.js)
 
@@ -199,6 +200,7 @@ app.get('/', function (req, res) {
     });
   });
 });
+
 //email validation
 app.get('/verify', function (req, res) {
   if (!req.query.code)
@@ -235,8 +237,6 @@ app.get('/verify', function (req, res) {
         });
     });
 });
-
-
 
 //  return the users list
 app.get('/list', function (req, res) {
@@ -324,7 +324,7 @@ app.post('/singup', function (req, res) {
             //  Dinamic Link creation
             var date = new Date();
             var milliseconds = date.getMilliseconds();
-            var indirizzo = "http://localhost:3001/verify/?code=" + (milliseconds + req.body.pin);  //  ######## invece di localhost andrà inserita una variabile contenente l'ip in rete della macchina ############################
+            var indirizzo = "http://" + ip + ":3001/verify/?code=" + (milliseconds + req.body.pin);  //  ######## invece di localhost andrà inserita una variabile contenente l'ip in rete della macchina ############################
 
             var utente = new UserToVerify({
               numberOfAccount: nAccount,
@@ -416,30 +416,27 @@ apiRoutes.post('/authenticate', function (req, res) {
         message: messaggio
       });
     else {
-      // create a token (come dato di creazione del token viene utilizzata l'email associata)
-      var token = jwt.sign(req.body.email, app.get('superSecret'), {
-        //expiresInMinutes: 1440 // expires in 24 hours (ATTENZIONE non funziona su windows)
-      });
-
-      // Save the token in user's browser
-      //res.cookie('authToken',token);          
-
       // return the information including token as JSON
       database.findUserByEmail(req.body.email, function (risultato) {
-        // return the information including token as JSON
-        if (risultato) {
-          res.json({
-            success: true,
-            message: 'Successfull!',
-            token: token,
-            admin: risultato.admin
-          });
-        }
-        else
+        if (!risultato) {
           res.json({
             success: false,
             message: 'Authentication failed. User not found.'
           });
+          return;
+        }
+        // create a token (come dato di creazione del token viene utilizzata l'email associata)
+        var token = jwt.sign(risultato.numberOfAccount, app.get('superSecret'), {
+          //expiresInMinutes: 1440 // expires in 24 hours (ATTENZIONE non funziona su windows)
+        });
+
+        res.json({
+          success: true,
+          message: 'Successfull!',
+          token: token,
+          admin: risultato.admin
+        });
+
       });
     }
   });
@@ -459,8 +456,8 @@ apiRoutes.use(function (req, res, next) {
       if (err) {
         return res.json({ success: false, message: 'Failed to authenticate token.' });
       } else {
-        // if everything is good, save to request for use in other routes
-        req.decoded = decoded;  //  Salvo l'email del possessore del token in memoria
+        // if everything is good, save the number of account to request for use in other routes
+        req.decoded = parseInt(decoded);
         next();
       }
     });
@@ -485,14 +482,11 @@ apiRoutes.post('/', function (req, res) {
 
 //  Return the user data 
 apiRoutes.post('/userData', function (req, res) {
-  database.findUserByEmail(req.body.email, function (result1) {
-
+  database.findUserByAccount(req.decoded, function (ris, result) {
     var risposta = {
-      success: false,
-      result: result1
+      success: ris,
+      result: result
     };
-    if (result1)
-      risposta.success = true;
     res.json(risposta);
   });
 });
@@ -509,8 +503,8 @@ apiRoutes.post('/userDataNAccount', function (req, res) {
 
 //  modify user's personal data
 apiRoutes.post('/updateUserData', function (req, res) {
-  database.findUserByEmail(req.decoded, function (result) {
-    if (result) {
+  database.findUserByAccount(req.decoded, function (ris, result) {
+    if (ris) {
       database.modifyCredential(result, req.body.email, req.body.password, req.body.phone, req.body.residence, function (ris, message) {
         res.json({
           success: ris,
@@ -529,8 +523,8 @@ apiRoutes.post('/updateUserData', function (req, res) {
 //  Return the list of all the movements
 apiRoutes.post('/movements', function (req, res) {
   // req.decoded  Contains logged user's email
-  database.findUserByEmail(req.decoded, function (result) {
-    if (result) {
+  database.findUserByAccount(req.decoded, function (ris, result) {
+    if (ris) {
       var nAccount = result.numberOfAccount;
       //  im asking for exit movements
       database.allMovementsReceive(nAccount, function (result) {
@@ -540,7 +534,6 @@ apiRoutes.post('/movements', function (req, res) {
           movIn = result;
           database.allMovementsSend(nAccount, function (result) {
             var movOut;
-
 
             if (result) {
               movOut = result;
@@ -558,7 +551,6 @@ apiRoutes.post('/movements', function (req, res) {
                 };
                 i++;
               }
-
               var j = 0;
 
               //  I take all the expense movements
@@ -578,7 +570,6 @@ apiRoutes.post('/movements', function (req, res) {
                 success: true,
                 result: allMov
               });
-
             }
             else {
               res.json({
@@ -611,8 +602,8 @@ apiRoutes.post('/invio-bonifico-admin', function (req, res) {
   var today = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
 
   //  Ceck if the user is admin
-  database.findUserByEmail(req.decoded, function (result) {
-    if (result) {
+  database.findUserByAccount(req.decoded, function (ris, result) {
+    if (ris) {
       if (result.admin) {
         var bonifico = new Movimento({
           from: req.body.from,
@@ -688,8 +679,8 @@ apiRoutes.post('/invio-bonifico-user', function (req, res) {
   var today = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
 
   //  im looking for user's email (logged user)
-  database.findUserByEmail(req.decoded, function (result) {
-    if (result) {
+  database.findUserByAccount(req.decoded, function (ris, result) {
+    if (ris) {
       var bonifico = new Movimento({
         from: result.numberOfAccount,
         to: req.body.to,
@@ -743,8 +734,8 @@ apiRoutes.post('/invio-bonifico-user', function (req, res) {
 
 //  this function return the media of the cash sent in transaction
 apiRoutes.post('/CalcolaMediaUscite', function (req, res) {
-  database.findUserByEmail(req.decoded, function (user) {
-    if (user)
+  database.findUserByAccount(req.decoded, function (ris, user) {
+    if (ris)
       database.sumCashOutside(user.numberOfAccount, function (result, data) {
 
         if (!result) {
@@ -802,8 +793,8 @@ apiRoutes.post('/CalcolaMediaUscite', function (req, res) {
 
 //  this function return the media of the cash recieve in transaction
 apiRoutes.post('/CalcolaMediaEntrate', function (req, res) {
-  database.findUserByEmail(req.decoded, function (user) {
-    if (user)
+  database.findUserByAccount(req.decoded, function (ris, user) {
+    if (ris)
       database.sumCashInside(user.numberOfAccount, function (result, data) {
 
         if (!result) {
@@ -861,8 +852,8 @@ apiRoutes.post('/CalcolaMediaEntrate', function (req, res) {
 
 //  Send alert
 apiRoutes.post('/invio-avviso', function (req, res) {
-  database.findUserByEmail(req.decoded, function (result) {
-    if (result)
+  database.findUserByAccount(req.decoded, function (ris, result) {
+    if (ris)
       if (result.admin) {
         var date = new Date();
         var today = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + (date.getDate() + 1 + "-" + date.getHours());
@@ -943,8 +934,8 @@ apiRoutes.post('/invio-avviso', function (req, res) {
 
 //  delete alert
 apiRoutes.post('/deleteAlert', function (req, res) {
-  database.findUserByEmail(req.decoded, function (result) {
-    if (result)
+  database.findUserByAccount(req.decoded, function (ris, result) {
+    if (ris)
       if (result.admin) {
         if (req.body.number != undefined) {
           database.deleteAdvise(req.body.number, function (ris, message) {
@@ -976,8 +967,8 @@ apiRoutes.post('/deleteAlert', function (req, res) {
 
 //  disable an account
 apiRoutes.post('/off', function (req, res) {
-  database.findUserByEmail(req.decoded, function (result) {
-    if (result)
+  database.findUserByAccount(req.decoded, function (ris, result) {
+    if (ris)
       if (result.admin)
         database.findUserByAccount(req.body.n_account, function (ris, result) {
           if (ris)
@@ -1014,8 +1005,8 @@ apiRoutes.post('/off', function (req, res) {
 
 //  enable an account
 apiRoutes.post('/on', function (req, res) {
-  database.findUserByEmail(req.decoded, function (result) {
-    if (result)
+  database.findUserByAccount(req.decoded, function (ris, result) {
+    if (ris)
       if (result.admin)
         database.findUserByAccount(req.body.n_account, function (ris, result) {
           if (ris)
@@ -1095,5 +1086,5 @@ app.use('/api', apiRoutes);
 // =======================
 // start the server ======
 // =======================
-app.listen(port);
-console.log('Node è in funzione su http://localhost:' + port);
+app.listen(port, ip);
+console.log("Node è in funzione su http://" + ip + ":" + port);
