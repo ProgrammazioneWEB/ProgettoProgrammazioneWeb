@@ -1,8 +1,8 @@
-var express = require('express');
+var express = require('express'); // Used for the route
 var app = express();
-var bodyParser = require('body-parser');
-var morgan = require('morgan');
-var mongoose = require('mongoose');
+var bodyParser = require('body-parser'); // Parsing middleware
+var morgan = require('morgan'); // Logger middleware
+var mongoose = require('mongoose'); // MongoDB
 
 var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('./config'); // get our config file
@@ -11,8 +11,8 @@ var Movimento = require('./app/models/movement'); // get our mongoose model
 var Pin = require('./app/models/pin'); // get our mongoose model
 var Advise = require('./app/models/advise'); // get our mongoose model
 var UserToVerify = require('./app/models/userToVerify'); // get our mongoose model
-var database = require('./database'); // Importo il file per la gestione del database
-var moment = require('moment');
+var database = require('./database'); // get database gestion file
+var moment = require('moment'); // used for date's calculating
 
 // Requires multiparty 
 var multiparty = require('connect-multiparty');
@@ -35,24 +35,24 @@ app.use(bodyParser.json());
 // use morgan to log requests to the console
 app.use(morgan('dev'));
 
-// Creo una funzione per abilitare i CORS (sono i permessi per essere acceduti da server web con porta e/o indirizzo diverso)
+// enable CORS 
 var allowCrossDomain = function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*'); // Vanno poi indicate le origini specifiche prima della consegna
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');  // non mi servono tutti
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
 
-  //  Vado avanti solo se non è stata richiesta l'opzione dei cors
+  //  i can go on only if cores are not required
   if ('OPTIONS' === req.method) {
-    res.send(200);//  altrimenti restituisco OK come status di rispsota html
+    res.send(200);
   } else {
     next();
   }
 };
 
-// Abilito i CORS
+// enable CORS
 app.use(allowCrossDomain);
 
-// Inizializzo il database tramite la funzione init presente in database.js
+// inizialize DB
 database.init();
 
 // ==============
@@ -63,22 +63,22 @@ database.init();
 app.get('/', function (req, res) {
   var date = new Date();
   var today = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
-  // creo il nuovo utente con i dati 
+  // creating a new user
   var user1 = new User({
     email: 'nicolo.ruggeri@studenti.unicam.it',
     password: 'password',
     meta: {
-      //Nome dell'utente
+      //Name
       firstName: 'Nicolò',
-      //Cognome dell'utente
+      //Surname
       lastName: 'Ruggeri',
-      //Data di nascita dell'utente
+      //Date of birth
       dateOfBirth: '24-10-1995',
-      //numero di telefono dell'utente
+      //phone number
       numberOfPhone: '0345753978',
-      //Residenza dell'utente
+      //Residence
       residence: 'Loc. Casa N.1',
-      //Codice fiscale dell'utente
+      //Fiscal Code
       fiscalCode: 'FWEF43G453G43'
     },
     numberOfAccount: 100002,
@@ -87,22 +87,22 @@ app.get('/', function (req, res) {
     dateOfCreation: today
   });
 
-  // creo il nuovo utente con i dati 
+  //creating a new user
   var user2 = new User({
     email: 'lorenzo.stacchio@studenti.unicam.it',
     password: 'password',
     meta: {
-      //Nome dell'utente
+      //Name
       firstName: 'Lorenzo',
-      //Cognome dell'utente
+      //Surname
       lastName: 'Stacchio',
-      //Data di nascita dell'utente
+      //Date of birth
       dateOfBirth: '21-09-1992',
-      //numero di telefono dell'utente
+      //phone number
       numberOfPhone: '0345753978',
-      //Residenza dell'utente
+      //Residence
       residence: 'casa mia',
-      //Codice fiscale dell'utente
+      //Fiscal code
       fiscalCode: '3g43q4g465g'
     },
     numberOfAccount: 100001,
@@ -116,17 +116,17 @@ app.get('/', function (req, res) {
     password: 'password',
     admin: true,
     meta: {
-      //Nome dell'utente
+      //Name
       firstName: 'Luca',
-      //Cognome dell'utente
+      //Surname
       lastName: 'Marasca',
-      //Data di nascita dell'utente
+      //Date of birth
       dateOfBirth: '23-04-1990',
-      //numero di telefono dell'utente
+      //phone number
       numberOfPhone: '0345753978',
-      //Residenza dell'utente
+      //Residence
       residence: 'casa mia',
-      //Codice fiscale dell'utente
+      //Fiscal code
       fiscalCode: '3g43q4g465g'
     },
     numberOfAccount: 100000,
@@ -143,7 +143,7 @@ app.get('/', function (req, res) {
   });
 
   database.findUserByEmail(user2.email, function (result) {
-    //  Se è già registrata non posso registrarla nuovamente
+    //  if it's already registred i can't 
     if (result) {
       res.json({
         success: false,
@@ -199,7 +199,7 @@ app.get('/', function (req, res) {
     });
   });
 });
-
+//email validation
 app.get('/verify', function (req, res) {
   if (!req.query.code)
     res.json({
@@ -236,32 +236,9 @@ app.get('/verify', function (req, res) {
     });
 });
 
-//  Test invio email
-app.get('/provaposta', function (req, res) {
-  var servizioPosta = require('nodemailer');
 
-  var postino = servizioPosta.createTransport({
-    service: 'gmail',
-    auth: {
-      user: 'banca.unicam@gmail.com',
-      pass: 'programmazioneweb'
-    }
-  });
 
-  postino.sendMail({
-    from: 'banca.unicam@gmail.com',
-    to: 'luca.marasca@studenti.unicam.it',
-    subject: 'hello',
-    text: 'hello world from node.js!'
-  }, function (err, info) {
-    if (err)
-      console.log(err);
-    if (info)
-      console.log(info);
-  });
-});
-
-//  Test vedere utenti ( Da cancellare ? )
+//  return the users list
 app.get('/list', function (req, res) {
   database.sortUsersByNumberOfAccount(function (result) {
     result.forEach(function (user) {
@@ -271,14 +248,14 @@ app.get('/list', function (req, res) {
   });
 });
 
-//  arrivo ultimi 5 avvisi
+//  return last five alert
 app.get('/get-avvisi', function (req, res) {
   database.returnLastFiveAdvises(function (result) {
     res.json(result);
   });
 });
 
-//  Registra un nuovo utente
+//  Sign up a new user
 app.post('/singup', function (req, res) {
 
   if (!req.body.pin || !req.body.email || !req.body.password) {
@@ -288,9 +265,9 @@ app.post('/singup', function (req, res) {
     });
     return;
   }
-
+  // Looking for the PIN
   database.verifyPin(req.body.pin, function (result) {
-    if (!result)  // Se il pin non esiste rispondo con un errore
+    if (!result)  // If PIN doesn't exist --> throw error
     {
       res.json({
         success: false,
@@ -299,13 +276,13 @@ app.post('/singup', function (req, res) {
       return;
     }
 
-    //  Se invece il pin esiste, prelevo i dati personali dell' utente da associare all' email
+    //  If PIN exists, i take the user data 
     var metadata = result.meta;
     var saldoDefault = result.availableBalance;
 
-    //  Controllo che l'email non sia già stata registrata
+    //  Verify if email is already used
     database.findUserByEmail(req.body.email, function (result) {
-      //  Se è già registrata non posso registrarla nuovamente
+
       if (result) {
         res.json({
           success: false,
@@ -314,9 +291,9 @@ app.post('/singup', function (req, res) {
         return;
       }
 
-      //  Calcolo il numero del conto del nuovo utente
+      //  Calculated the account number of the new user
       database.findMaxNumberOfAccount(function (result) {
-        var nAccount = 100000; //  Se non esistono altri conti sarà il numero 100000
+        var nAccount = 100000; // 100000 is the default account number (if DB is empty)
 
         if (result.length > 0)
           if (result[0].numberOfAccount != undefined)
@@ -325,7 +302,7 @@ app.post('/singup', function (req, res) {
         var date = new Date();
         var today = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
 
-        //  Creo il nuovo utente
+        //  Creating new user
         var user = new User({
           email: req.body.email,
           password: req.body.password,
@@ -338,13 +315,13 @@ app.post('/singup', function (req, res) {
           admin: false
         });
 
-        //  Lo aggiungo al database
+        //  I can it to the DB
         database.addUser(user, function (result, messaggio) {
           if (result) {
-            //  Elimino il pin dalla lista
+            //  Delete PIN from the list
             database.deleteRecordPin(req.body.pin);
 
-            //  Creo il link dinamico
+            //  Dinamic Link creation
             var date = new Date();
             var milliseconds = date.getMilliseconds();
             var indirizzo = "http://localhost:3001/verify/?code=" + (milliseconds + req.body.pin);  //  ######## invece di localhost andrà inserita una variabile contenente l'ip in rete della macchina ############################
@@ -355,7 +332,7 @@ app.post('/singup', function (req, res) {
             });
 
             database.addUserToVerify(utente, function (result) {
-              //  Se è già registrata non posso registrarla nuovamente
+              //  if it's already used 
               if (!result) {
                 res.json({
                   success: false,
@@ -363,7 +340,7 @@ app.post('/singup', function (req, res) {
                 });
               }
               else {
-                //  Invio la mail di registrazione
+                //  send convalidation email
                 var servizioPosta = require('nodemailer');
 
                 var postino = servizioPosta.createTransport({
@@ -410,6 +387,7 @@ app.post('/singup', function (req, res) {
   });
 });
 
+// Upload images
 app.post('/uploadPic', multipartyMiddleware, DataStoreController.uploadFile, function (req, res) {
   if (req.success)
     res.json({
@@ -443,7 +421,7 @@ apiRoutes.post('/authenticate', function (req, res) {
         //expiresInMinutes: 1440 // expires in 24 hours (ATTENZIONE non funziona su windows)
       });
 
-      // Salvo il token nel browser del utente autenticato (sotto il nome di authToken)
+      // Save the token in user's browser
       //res.cookie('authToken',token);          
 
       // return the information including token as JSON
@@ -505,10 +483,10 @@ apiRoutes.post('/', function (req, res) {
   });
 });
 
-//  Ritorna alla parte front-end l'utente corrispondente al token
+//  Return the user data 
 apiRoutes.post('/userData', function (req, res) {
   database.findUserByEmail(req.body.email, function (result1) {
-    //  Creo la variabile con i parametri di risposta al front-end
+
     var risposta = {
       success: false,
       result: result1
@@ -519,7 +497,7 @@ apiRoutes.post('/userData', function (req, res) {
   });
 });
 
-//  Ritorna alla parte front-end l'utente corrispondente al token
+//  Return the logged user
 apiRoutes.post('/userDataNAccount', function (req, res) {
   database.findUserByAccount(req.body.n_account, function (ris, result) {
     res.json({
@@ -529,7 +507,7 @@ apiRoutes.post('/userDataNAccount', function (req, res) {
   });
 });
 
-//  Modifico i dati personali dell' utente
+//  modify user's personal data
 apiRoutes.post('/updateUserData', function (req, res) {
   database.findUserByEmail(req.decoded, function (result) {
     if (result) {
@@ -547,13 +525,13 @@ apiRoutes.post('/updateUserData', function (req, res) {
   });
 });
 
-//  Restituisce la lista di tutti i movimenti di un utente (non necessita di parametri in ingresso)
+//  Return the list of all the movements
 apiRoutes.post('/movements', function (req, res) {
-  // req.decoded  Contiene l'email di chi ha fatto la richiesta
+  // req.decoded  Contains logged user's email
   database.findUserByEmail(req.decoded, function (result) {
     if (result) {
       var nAccount = result.numberOfAccount;
-      //  Richiedo i movimenti in uscita
+      //  im asking for exit movements
       database.allMovementsReceive(nAccount, function (result) {
         var movIn;
 
@@ -562,14 +540,14 @@ apiRoutes.post('/movements', function (req, res) {
           database.allMovementsSend(nAccount, function (result) {
             var movOut;
 
-            //  Se tutto va a buon fine formatto i dati e li restituisco
+
             if (result) {
               movOut = result;
 
               var allMov = [];
               var i = 0;
 
-              //  Prendo tutti i movimenti in ingresso
+              //  I take all the entrance movements
               while (i < movIn.length) {
                 allMov[i] = {
                   data: movIn[i].date,
@@ -582,7 +560,7 @@ apiRoutes.post('/movements', function (req, res) {
 
               var j = 0;
 
-              //  Prendo tutti i movimenti in uscita
+              //  I take all the expense movements
               while (j < movOut.length) {
                 allMov[i] = {
                   data: movOut[j].date,
@@ -594,7 +572,7 @@ apiRoutes.post('/movements', function (req, res) {
                 j++;
               }
 
-              //  Ritorno la lista dei movimenti all' utente
+              // return movements list
               res.json({
                 success: true,
                 result: allMov
@@ -617,8 +595,7 @@ apiRoutes.post('/movements', function (req, res) {
         }
       });
     }
-    else  //  Questo errore si verifica solo in caso di perdida di dati nel db 
-    {
+    else {
       res.json({
         message: 'Errore interno, la tua email non è più presente nel database.',
         success: false
@@ -627,12 +604,12 @@ apiRoutes.post('/movements', function (req, res) {
   });
 });
 
-//Test transazione e bonifico da amministratore
+//Bank transfer and transation by admin
 apiRoutes.post('/invio-bonifico-admin', function (req, res) {
   var date = new Date();
   var today = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
 
-  //  Controllo se l'utente loggato è amministratore
+  //  Ceck if the user is admin
   database.findUserByEmail(req.decoded, function (result) {
     if (result) {
       if (result.admin) {
@@ -643,7 +620,7 @@ apiRoutes.post('/invio-bonifico-admin', function (req, res) {
           quantity: req.body.quantity
         });
 
-        //Controllo che l'utente non effettui un bonifico a se stesso
+        //Control function ----
         if (bonifico.from == bonifico.to) {
           res.json({
             message: "ERRORE, non è possibile inviare bonifico tra due account con lo stesso numero di conto",
@@ -651,6 +628,7 @@ apiRoutes.post('/invio-bonifico-admin', function (req, res) {
           });
           return;
         }
+        //Ceck if number of account exist
         database.findUserByAccount(bonifico.from, function (success1, result_admin1) {
           database.findUserByAccount(bonifico.to, function (success2, result_admin2) {
             if (success1 == false) {
@@ -667,7 +645,7 @@ apiRoutes.post('/invio-bonifico-admin', function (req, res) {
               });
               return
             }
-            //Controllo che l'utente a cui sto mandando denaro sia admin
+            //Ceck if users is admin
             if (result_admin1.admin || result_admin2.admin) {
               res.json({
                 message: "Non è possibile effettuare transazioni verso o da un admin, in quando l'admin non contiene un conto bancario",
@@ -676,7 +654,7 @@ apiRoutes.post('/invio-bonifico-admin', function (req, res) {
               return;
             }
             else {
-              //  Aggiungo la transazione al db e rispondo all' utente il messaggio di riuscita o errore
+              //  add transiction and response 
               database.addTransaction(bonifico, function (result, messaggio) {
                 res.json({
                   message: messaggio,
@@ -687,14 +665,14 @@ apiRoutes.post('/invio-bonifico-admin', function (req, res) {
           });
         });
       }
-      else {  //  Se non è admin restituisco errore
+      else {  //  if user's not admin ---> throw error
         res.json({
           message: 'Impossible accedere a questa sezione senza essere admin.',
           success: false
         });
       }
     }
-    else {  //  Se non trovo l'user nel db
+    else {  //  if user is not in DB
       res.json({
         message: 'Errore interno al database, utente non trovato.',
         success: false
@@ -703,12 +681,12 @@ apiRoutes.post('/invio-bonifico-admin', function (req, res) {
   });
 });
 
-//Test transazione e bonifico da user
+//Test Transation and bank transfer by user
 apiRoutes.post('/invio-bonifico-user', function (req, res) {
   var date = new Date();
   var today = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
 
-  //  Cerco il numero di conto di chi ha richiesto il bonifico (req.decoded contiene l'email del user loggato)
+  //  im looking for user's email (logged user)
   database.findUserByEmail(req.decoded, function (result) {
     if (result) {
       var bonifico = new Movimento({
@@ -718,7 +696,7 @@ apiRoutes.post('/invio-bonifico-user', function (req, res) {
         quantity: req.body.quantity
       });
 
-      //Controllo che l'utente non effettui un bonifico a se stesso
+      //Ceck that user can't do a transaction to himself
       if (bonifico.from == bonifico.to) {
         res.json({
           message: "ERRORE, non è possibile inviare bonifico tra due account con lo stesso numero di conto",
@@ -734,7 +712,7 @@ apiRoutes.post('/invio-bonifico-user', function (req, res) {
           });
           return
         }
-        //Controllo che l'utente a cui sto mandando denaro sia admin
+        //Ceck if recived user is admin
         if (result_admin1.admin) {
           res.json({
             message: "Non è possibile effettuare transazioni verso un admin, in quando l'admin non contiene un conto bancario",
@@ -743,7 +721,7 @@ apiRoutes.post('/invio-bonifico-user', function (req, res) {
           return;
         }
         else {
-          //  Aggiungo la transazione al db e rispondo all' utente il messaggio di riuscita o errore
+          //  adding the transation to the DB
           database.addTransaction(bonifico, function (result, messaggio) {
             res.json({
               message: messaggio,
@@ -753,7 +731,7 @@ apiRoutes.post('/invio-bonifico-user', function (req, res) {
         }
       });
     }
-    else {  //  Se non trovo il numero di conto (si dovrebbe verificare solo in caso di errori nel db)
+    else {  // If i don't find account number
       res.json({
         message: 'Errore interno al database, il suo numero conto non è stato trovato.',
         success: false
@@ -787,10 +765,10 @@ apiRoutes.post('/CalcolaMediaUscite', function (req, res) {
 
             var then = moment(user.dateOfCreation, "YYYY-MM-DD");
             var now = moment(today, "YYYY-MM-DD");
-            //  Ottengo la differenza in giorni
+            //  get the difference in days
             var days = moment.duration(now.diff(then)).asDays();
 
-            //  Se la differenza è negativa ci sono errori con le dati
+            //  if the difference is negative
             if (days < 0) {
               res.json({
                 success: false,
@@ -798,11 +776,11 @@ apiRoutes.post('/CalcolaMediaUscite', function (req, res) {
               });
             }
             else {
-              //  Se sono passati zero giorni
-              if (days == 0)
-                days = 1; //  Non posso dividere per zero
 
-              //  Calcolo la spesa giornaliera
+              if (days == 0)
+                days = 1;
+
+              //  Calculating spend average
               var ris = data.sumQuantity / days;
 
               res.json({
@@ -834,7 +812,7 @@ apiRoutes.post('/CalcolaMediaEntrate', function (req, res) {
           });
         }
         else
-          if (!data)  //  Se non sono mai stati fatti movimenti
+          if (!data)  //  if there's no movements
             res.json({
               success: true,
               message: 'Dati inviati correttamente.',
@@ -846,10 +824,10 @@ apiRoutes.post('/CalcolaMediaEntrate', function (req, res) {
 
             var then = moment(user.dateOfCreation, "YYYY-MM-DD");
             var now = moment(today, "YYYY-MM-DD");
-            //  Ottengo la differenza in giorni
+            //  get the difference in days
             var days = moment.duration(now.diff(then)).asDays();
 
-            //  Se la differenza è negativa ci sono errori con le dati
+            //  if the difference is negative
             if (days < 0) {
               res.json({
                 success: false,
@@ -857,11 +835,11 @@ apiRoutes.post('/CalcolaMediaEntrate', function (req, res) {
               });
             }
             else {
-              //  Se sono passati zero giorni
-              if (days == 0)
-                days = 1; //  Non posso dividere per zero
 
-              //  Calcolo la spesa giornaliera
+              if (days == 0)
+                days = 1;
+
+              //  calculating spend average
               var ris = data.sumQuantity / days;
 
               res.json({
@@ -880,13 +858,13 @@ apiRoutes.post('/CalcolaMediaEntrate', function (req, res) {
   });
 });
 
-//  invio avvisi
+//  Send alert
 apiRoutes.post('/invio-avviso', function (req, res) {
   database.findUserByEmail(req.decoded, function (result) {
     if (result)
       if (result.admin) {
         var date = new Date();
-        var today = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+        var today = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + (date.getDate() + 1 + "-" + date.getHours());
 
         database.maxNumberOfAdvise(function (num) {
           var numero = 0;
@@ -906,7 +884,7 @@ apiRoutes.post('/invio-avviso', function (req, res) {
 
           database.addAdvise(avviso, function (result, messaggio) {
             if (result) {
-              //  Invio la mail alle persone interessate
+              //  Sending email to interested people
               var servizioPosta = require('nodemailer');
               var postino = servizioPosta.createTransport({
                 service: 'gmail',
@@ -921,9 +899,9 @@ apiRoutes.post('/invio-avviso', function (req, res) {
                 message: messaggio
               });
 
-              //  Richiedo al db la lista degli utenti presenti  
+              //  Asking the DB for users list
               database.sortUsersByNumberOfAccount(function (result) {
-                //  Con un foreach invio una e-mail contenente l'avviso a tutte le persone interessate
+                //  send email to every user
                 result.forEach(function (user) {
                   postino.sendMail({
                     from: 'BANCA UNICAM',
@@ -962,7 +940,7 @@ apiRoutes.post('/invio-avviso', function (req, res) {
   });
 });
 
-//  invio avvisi
+//  delete alert
 apiRoutes.post('/deleteAlert', function (req, res) {
   database.findUserByEmail(req.decoded, function (result) {
     if (result)
@@ -995,7 +973,7 @@ apiRoutes.post('/deleteAlert', function (req, res) {
   });
 });
 
-//  Funzione per disabilitazione account
+//  disable an account
 apiRoutes.post('/off', function (req, res) {
   database.findUserByEmail(req.decoded, function (result) {
     if (result)
@@ -1033,7 +1011,7 @@ apiRoutes.post('/off', function (req, res) {
   });
 });
 
-//  Funzione per abilitazione account
+//  enable an account
 apiRoutes.post('/on', function (req, res) {
   database.findUserByEmail(req.decoded, function (result) {
     if (result)
@@ -1071,7 +1049,7 @@ apiRoutes.post('/on', function (req, res) {
   });
 });
 
-//  Inserimento Pin da amministratore
+//  Insert PIN by administrator
 apiRoutes.post('/InserisciPin-admin', function (req, res) {
   if (!req.body.pin) {
     res.json({
@@ -1086,20 +1064,20 @@ apiRoutes.post('/InserisciPin-admin', function (req, res) {
     number: req.body.pin,
 
     meta: {
-      //  Nome dell'utente
+      //  Name
       firstName: req.body.firstName,
-      //  Cognome dell'utente
+      //  Surname
       lastName: req.body.lastName,
-      //  Data di nascita dell'utente
+      //  Date of birth
       dateOfBirth: req.body.dateOfBirth,
-      //  Numero di telefono dell'utente
+      //  Phone number
       numberOfPhone: req.body.numberOfPhone,
-      //  Residenza dell'utente
+      //  Residece
       residence: req.body.residence,
-      //  Codice fiscale dell'utente
+      //  Fiscal Code
       fiscalCode: req.body.fiscalCode
     },
-    //  Assegno i fondi di default o 0 se non sono stati specificati
+
     availableBalance: req.body.quantity || 0
   });
 
