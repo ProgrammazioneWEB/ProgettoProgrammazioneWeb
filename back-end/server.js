@@ -511,9 +511,10 @@ apiRoutes.post('/userDataNAccount', function (req, res) {
 apiRoutes.post('/updateUserData', function (req, res) {
   database.findUserByEmail(req.decoded, function (result) {
     if (result) {
-      database.modifyCredential(result, req.body.email, req.body.password, req.body.phone, req.body.residence, function (ris) {
+      database.modifyCredential(result, req.body.email, req.body.password, req.body.phone, req.body.residence, function (ris, message) {
         res.json({
-          success: ris
+          success: ris,
+          message: message
         });
       });
     }
