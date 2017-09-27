@@ -40,12 +40,16 @@
                     <li class="list-group-item">
                         Indirizzo
                     </li>
+                    
                     <li class="list-group-item">
                         Numero di telefono
                     </li>
                     <li class="list-group-item">
                         Conto abilitato
                     </li>
+                    <li class="list-group-item">
+                        Data creazione conto
+                     </li>
                 </ul>
             </td>
             <!--secondo column-->
@@ -71,6 +75,9 @@
                     </li>
                     <li class="list-group-item">
                         {{userEnable}}
+                    </li>
+                    <li class="list-group-item">
+                        {{userDateOfCreation | date}}
                     </li>
                 </ul>
             </td>

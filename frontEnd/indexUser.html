@@ -99,7 +99,7 @@
             <ul class="list-group" ng-show="showAlertCall" ng-repeat="avviso in alerts">
                 <li class="list-group-item adminAlertTitle">{{avviso.title}}</li>
                 <li class="list-group-item adminAlertDescription">{{avviso.text}}</li>
-                <li class="list-group-item adminAlertDate">{{avviso.date}}</li>
+                <li class="list-group-item adminAlertDate">{{avviso.date | date}}</li>
             </ul>
         </div>
     </div>

@@ -98,7 +98,7 @@ indexAdminApp.controller('changeSite', function ($scope, $window) {
 });
 
 //define alert controller
-indexAdminApp.controller('adminAlertController', function ($scope, $http, $localStorage, $window) {
+indexAdminApp.controller('adminAlertController', function ($scope, $http, $localStorage, $window,$filter) {
     //message
     $scope.message = "Benvenuto " + adminProfile.meta.firstName + ", nella sezione avvisi! Cosa vuoi fare?";
     //alert to create
@@ -397,6 +397,7 @@ indexAdminApp.controller('adminUserVisionController', function ($scope, $http) {
                 $scope.userResidence = $scope.userData.meta.residence;
                 $scope.userPhoneNumber = $scope.userData.meta.numberOfPhone;
                 $scope.userEnable = $scope.userData.active;
+                $scope.userDateOfCreation =$scope.userData.dateOfCreation;
                 //control user image path, if string contains nothing replace it 
                 if ($scope.userData.image == "") {
                     //give a default image
