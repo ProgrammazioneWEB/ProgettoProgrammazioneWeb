@@ -535,7 +535,7 @@ indexUserApp.controller('userModifyMetaController', function ($scope, $http, $wi
             headers: { 'Content-Type': 'application/json' },
             data: {
                 'token': curToken.value,
-                'email': $scope.newEmail,
+                'email': $scope.newMail,
                 'password': $scope.newPassword,
                 'phone': $scope.newPhoneNumber,
                 'residence': $scope.newResidence
