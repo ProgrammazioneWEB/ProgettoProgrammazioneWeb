@@ -513,6 +513,7 @@ indexUserApp.controller('userModifyMetaController', function ($scope, $http, $wi
     }
     //function to modify data, contact with server and db
     $scope.modifyData = function () {
+        alert("prima cascata if"+$scope.newMail);
         //control data, if field are empty i declare it null for backend reason
         if ($scope.newEmail == undefined || $scope.newEmail == "") {
             $scope.newEmail = null;
@@ -526,6 +527,7 @@ indexUserApp.controller('userModifyMetaController', function ($scope, $http, $wi
         if ($scope.newPhoneNumber == undefined || $scope.newPhoneNumber == "") {
             $scope.newPhoneNumber = null;
         }
+        alert("dopo cascata if"+$scope.newMail);
         //call server api
         $http({
             method: 'POST',
