@@ -61,7 +61,7 @@ database.init();
 // ==============
 
 // route for test
-app.get('/test', function (req, res) {
+app.get('/', function (req, res) {
   var date = new Date();
   var today = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
   // creating a new user
