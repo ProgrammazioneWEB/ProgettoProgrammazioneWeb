@@ -46,7 +46,7 @@ var curToken = { value: "", enable: false };
 // variable that contains boolean admin
 var BooleanAdmin = { value: "" };
 // create the controller and inject Angular's $scope
-var herokuserver = "localhost/";
+var herokuserver = "localhost:3001/";
 
 indexApp.controller('homeController', function ($scope, $localStorage) {
   //if exist a token

@@ -2,8 +2,6 @@ var express = require('express'); // Used for the route
 var app = express();
 var bodyParser = require('body-parser'); // Parsing middleware
 var morgan = require('morgan'); // Logger middleware
-
-
 var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('./config'); // get our config file
 var User = require('./app/models/user'); // get our mongoose model
