@@ -60,8 +60,8 @@ database.init();
 // === routes ===
 // ==============
 
-// basic route (momentaneamente solo di test)
-app.get('/', function (req, res) {
+// route for test
+app.get('/test', function (req, res) {
   var date = new Date();
   var today = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
   // creating a new user
@@ -238,7 +238,7 @@ app.get('/verify', function (req, res) {
     });
 });
 
-//  return the users list
+//  return the users list (for test)
 app.get('/list', function (req, res) {
   database.sortUsersByNumberOfAccount(function (result) {
     result.forEach(function (user) {
@@ -470,14 +470,6 @@ apiRoutes.use(function (req, res, next) {
       message: 'No token provided.'
     });
   }
-});
-
-// route to show a random message
-apiRoutes.post('/', function (req, res) {
-  res.json({
-    message: 'Welcome to the API!',
-    success: true
-  });
 });
 
 //  Return the user data 
