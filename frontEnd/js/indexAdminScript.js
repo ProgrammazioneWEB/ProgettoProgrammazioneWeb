@@ -36,6 +36,8 @@ indexAdminApp.config(function ($routeProvider) {
 var adminProfile = {};
 //  variabile contenente il token
 var curToken = { value: "", enable: false };
+// Link heroku
+var serverheroku = "https://bancaunicamserver.herokuapp.com/";
 //controller for admin
 indexAdminApp.controller('adminHomeController', function ($scope, $http, $window, $localStorage) {
     //  Se il token è salvato in locale lo prelevo (sarà sempre salvato in locale dopo il login)
@@ -44,7 +46,7 @@ indexAdminApp.controller('adminHomeController', function ($scope, $http, $window
         //in sostanza ho appena fatto login!
             $http({
                 method: "POST",
-                url: "http://localhost:3001/api/userData",
+                url: serverheroku + "api/userData",
                 headers: { 'Content-Type': 'application/json' },
                 data: {
                     'token': curToken.value
@@ -130,7 +132,7 @@ indexAdminApp.controller('adminAlertController', function ($scope, $http, $local
         //function to send alerts to users
         $http({
             method: "POST",
-            url: "http://localhost:3001/api/invio-avviso",
+            url: serverheroku + "api/invio-avviso",
             headers: { 'Content-Type': 'application/json' },
             data: {
                 'token': curToken.value,
@@ -148,7 +150,7 @@ indexAdminApp.controller('adminAlertController', function ($scope, $http, $local
     $scope.deleteAlert = function (avviso) {
         $http({
             method: 'POST',
-            url: 'http://localhost:3001/api/deleteAlert',
+            url: serverheroku + 'api/deleteAlert',
             data: {
                 'token': curToken.value,
                 'number': avviso.number
@@ -171,7 +173,7 @@ indexAdminApp.controller('adminAlertController', function ($scope, $http, $local
     $scope.getAlerts = function () {
         $http({
             method: "GET",
-            url: "http://localhost:3001/get-avvisi",
+            url: serverheroku + "get-avvisi",
             headers: { 'Content-Type': 'application/json' },
             data: {
                 'token': curToken.value,
@@ -299,7 +301,7 @@ indexAdminApp.controller('adminBonificoController', function ($scope, $http, $wi
         //call server api    
         $http({
             method: 'POST',
-            url: 'http://localhost:3001/api/invio-bonifico-admin',
+            url: serverheroku + 'api/invio-bonifico-admin',
             headers: { 'Content-Type': 'application/json' },
             data: {
                 'token': curToken.value,
@@ -367,7 +369,7 @@ indexAdminApp.controller('adminUserVisionController', function ($scope, $http) {
         //get user data from server
         $http({
             method: 'POST',
-            url: 'http://localhost:3001/api/userDataNAccount',
+            url: serverheroku + 'api/userDataNAccount',
             headers: { 'Content-Type': 'application/json' },
             data: {
                 'token': curToken.value,
@@ -524,7 +526,7 @@ indexAdminApp.controller('adminAbilitaController', function ($scope, $http,$wind
         //call the api
         $http({
             method: 'POST',
-            url: 'http://localhost:3001/api/on',
+            url: serverheroku + 'api/on',
             headers: { 'Content-Type': 'application/json' },
             data: {
                 'token': curToken.value,
@@ -541,7 +543,7 @@ indexAdminApp.controller('adminAbilitaController', function ($scope, $http,$wind
         //call the api
         $http({
             method: 'POST',
-            url: 'http://localhost:3001/api/off',
+            url: serverheroku + 'api/off',
             headers: { 'Content-Type': 'application/json' },
             data: {
                 'token': curToken.value,
@@ -600,7 +602,7 @@ indexAdminApp.controller('adminRegistraUtente', function ($scope, $http, $window
     $scope.registerUser = function () {
         $http({
             method: 'POST',
-            url: 'http://localhost:3001/api/InserisciPin-admin',
+            url: serverheroku + 'api/InserisciPin-admin',
             headers: { 'Content-Type': 'application/json' },
             data: {
                 'token': curToken.value,
