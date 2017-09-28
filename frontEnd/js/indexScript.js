@@ -46,6 +46,8 @@ var curToken = { value: "", enable: false };
 // variable that contains boolean admin
 var BooleanAdmin = { value: "" };
 // create the controller and inject Angular's $scope
+var herokuserver = "https://bancaunicamserver.herokuapp.com/";
+
 indexApp.controller('homeController', function ($scope, $localStorage) {
   //if exist a token
   if ($localStorage.XToken) {
@@ -143,7 +145,7 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location, $window
   if (curToken.enable == true) {
     $http({
       method: "POST",
-      url: "http://localhost:3001/api",
+      url: herokuserver + "/api",
       headers: { 'Content-Type': 'application/json' },
       data: { 'token': curToken.value }
     }).then(function SuccessoInfinito(response) {
@@ -225,7 +227,7 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location, $window
     };
     $http({
       method: "POST",
-      url: "http://localhost:3001/api/authenticate",
+      url: herokuserver + "/api/authenticate",
       headers: { 'Content-Type': 'application/json' },
       data: parametri
     }).then(function mySuccess(response) {
@@ -296,7 +298,7 @@ indexApp.controller("signUp", function ($scope, $http, $location, Upload) {
   if (curToken.enable == true) {
     $http({
       method: "POST",
-      url: "http://localhost:3001/api",
+      url: herokuserver + "/api",
       headers: { 'Content-Type': 'application/json' },
       data: { 'token': curToken.value }
     }).then(function SuccessoInfinito(response) {
@@ -407,7 +409,7 @@ indexApp.controller("signUp", function ($scope, $http, $location, Upload) {
     }
     $http({
       method: "POST",
-      url: "http://localhost:3001/singup",
+      url: herokuserver + "/singup",
       headers: { 'Content-Type': 'application/json' },
       data: parametri
     }).then(function mySuccess(response) {
@@ -432,7 +434,7 @@ indexApp.controller("signUp", function ($scope, $http, $location, Upload) {
     $scope.fileError = "";
 
     Upload.upload({
-      url: "http://localhost:3001/uploadPic",
+      url: herokuserver + "/uploadPic",
       method: 'POST',
       file: $scope.file
     }).then(function (response) {
@@ -853,4 +855,4 @@ indexApp.controller('contactUsController', function ($scope) {
       mailAddress: 'nicolo.ruggeri@studenti.unicam.it'
     }
   ];
-})
+});
