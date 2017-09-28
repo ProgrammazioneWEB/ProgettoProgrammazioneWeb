@@ -46,7 +46,7 @@ var curToken = { value: "", enable: false };
 // variable that contains boolean admin
 var BooleanAdmin = { value: "" };
 // create the controller and inject Angular's $scope
-var herokuserver = "localhost";
+var herokuserver = "localhost/";
 
 indexApp.controller('homeController', function ($scope, $localStorage) {
   //if exist a token
@@ -58,6 +58,7 @@ indexApp.controller('homeController', function ($scope, $localStorage) {
     BooleanAdmin = $localStorage.BooleanAdmin;
   }
   $scope.message = "Home Page";
+  $scope.unicampath = "./CSS/images/Logos/unicam.png";
   /**
  * DEFINE FUNCTION TO CONTROLL IF USER HAS LOGGED IN
  * return true if user logged in and false if not
@@ -227,7 +228,7 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location, $window
     };
     $http({
       method: "POST",
-      url: herokuserver + "/api/authenticate",
+      url: herokuserver + "api/authenticate",
       headers: { 'Content-Type': 'application/json' },
       data: parametri
     }).then(function mySuccess(response) {
@@ -409,7 +410,7 @@ indexApp.controller("signUp", function ($scope, $http, $location, Upload) {
     }
     $http({
       method: "POST",
-      url: herokuserver + "/singup",
+      url: herokuserver + "singup",
       headers: { 'Content-Type': 'application/json' },
       data: parametri
     }).then(function mySuccess(response) {
@@ -434,7 +435,7 @@ indexApp.controller("signUp", function ($scope, $http, $location, Upload) {
     $scope.fileError = "";
 
     Upload.upload({
-      url: herokuserver + "/uploadPic",
+      url: herokuserver + "uploadPic",
       method: 'POST',
       file: $scope.file
     }).then(function (response) {
