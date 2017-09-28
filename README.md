@@ -1,4 +1,4 @@
-## Progetto programmazione web
+# Progetto programmazione web
 
 Qui ci sono i file originali del progetto principale, sia il lato front che quello end.
 
