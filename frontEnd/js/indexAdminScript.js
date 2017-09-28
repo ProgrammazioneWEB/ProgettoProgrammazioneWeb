@@ -37,7 +37,7 @@ var adminProfile = {};
 //  variabile contenente il token
 var curToken = { value: "", enable: false };
 // Link heroku
-var serverheroku = "https://bancaunicamserver.herokuapp.com/";
+var serverheroku = "localhost";
 //controller for admin
 indexAdminApp.controller('adminHomeController', function ($scope, $http, $window, $localStorage) {
     //  Se il token è salvato in locale lo prelevo (sarà sempre salvato in locale dopo il login)

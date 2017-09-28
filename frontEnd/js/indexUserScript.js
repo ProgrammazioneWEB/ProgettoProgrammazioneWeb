@@ -45,7 +45,7 @@ var userMovements = null;
 //user alerts
 var userAlerts = null;
 //link heroku
-var serverheroku = "https://bancaunicamserver.herokuapp.com/";
+var serverheroku = "localhost";
 //user home controller
 /**
  * Dato che questo è il primo controller utilizzato richiamerò tutte le funzioni del server per salvare
@@ -59,7 +59,7 @@ indexUserApp.controller('userHomeController', function ($scope, $http, $window, 
         //in sostanza ho appena fatto login!
             $http({
                 method: "POST",
-                url: serverheroku + "api/userData",
+                url: serverheroku + "/api/userData",
                 headers: { 'Content-Type': 'application/json' },
                 data: {
                     'token': curToken.value
@@ -97,7 +97,7 @@ indexUserApp.controller('userHomeController', function ($scope, $http, $window, 
             //prendo i movimenti bancari
             $http({
                 method: "POST",
-                url: serverheroku + "api/movements",
+                url: serverheroku + "/api/movements",
                 headers: { 'Content-Type': 'application/json' },
                 data: {
                     'token': curToken.value
@@ -119,7 +119,7 @@ indexUserApp.controller('userHomeController', function ($scope, $http, $window, 
             //take alerts from database
             $http({
                 method: "GET",
-                url: serverheroku + "get-avvisi",
+                url: serverheroku + "/get-avvisi",
                 headers: { 'Content-Type': 'application/json' },
                 data: {
                     'token': curToken.value,
@@ -261,7 +261,7 @@ indexUserApp.controller('userTransactionController', function ($scope, $http, $w
     $scope.pay = function () {
         $http({
             method: "POST",
-            url: serverheroku + "api/invio-bonifico-user",
+            url: serverheroku + "/api/invio-bonifico-user",
             headers: { 'Content-Type': 'application/json' },
             data: {
                 'token': curToken.value,
@@ -293,7 +293,7 @@ indexUserApp.controller('userAverageController', function ($scope, $http) {
     //take the average of spent and entrance
     $http({
         method: 'POST',
-        url: serverheroku + 'api/CalcolaMediaUscite',
+        url: serverheroku + '/api/CalcolaMediaUscite',
         headers: { 'Content-Type': 'application/json' },
         data: {
             'token': curToken.value,
@@ -310,7 +310,7 @@ indexUserApp.controller('userAverageController', function ($scope, $http) {
 
     $http({
         method: 'POST',
-        url: serverheroku + 'api/CalcolaMediaEntrate',
+        url: serverheroku + '/api/CalcolaMediaEntrate',
         headers: { 'Content-Type': 'application/json' },
         data: {
             'token': curToken.value,
@@ -523,7 +523,7 @@ indexUserApp.controller('userModifyMetaController', function ($scope, $http, $wi
         //call server api
         $http({
             method: 'POST',
-            url: serverheroku + 'api/updateUserData',
+            url: serverheroku + '/api/updateUserData',
             headers: { 'Content-Type': 'application/json' },
             data: {
                 'token': curToken.value,
