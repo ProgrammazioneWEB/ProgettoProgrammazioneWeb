@@ -16,7 +16,7 @@
   "scripts": {
     "start": "node server.js"
   },
-  "version": "1.0.0",
+  "version": "6.11.2",
   "description": "home-banking application",
   "devDependencies": {},
   "repository": {
