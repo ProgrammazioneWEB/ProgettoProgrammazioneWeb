@@ -24,10 +24,7 @@ var DataStoreController = require('./dataStore');
 // =======================
 // ==== configuration ====
 // =======================
-//var port = 5000 || process.env.PORT; // used to create, sign, and verify tokens
-app.set( 'port', ( process.env.PORT || 5000 ));
-
-
+var port = process.env.PORT || 3001; // used to create, sign, and verify tokens
 var ip = "localhost";
 
 app.set('superSecret', config.secret); // secret variable (prelevata da config.js)
@@ -1081,9 +1078,5 @@ app.use('/api', apiRoutes);
 // =======================
 // start the server ======
 // =======================
-// app.listen(port, ip);
-// Start node server
-app.listen( app.get( 'port' ), function() {
-  console.log( 'Node server is running on port ' + app.get( 'port' ));
-  });
+app.listen(port, ip);
 console.log("Node è in funzione su http://" + ip + ":" + port);
