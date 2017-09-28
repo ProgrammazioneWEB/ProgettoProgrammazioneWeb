@@ -1078,5 +1078,5 @@ app.use('/api', apiRoutes);
 // =======================
 // start the server ======
 // =======================
-app.listen(port, ip);
+app.listen(port);
 console.log("Node è in funzione su http://" + ip + ":" + port);
