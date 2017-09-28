@@ -24,7 +24,7 @@ var DataStoreController = require('./dataStore');
 // =======================
 // ==== configuration ====
 // =======================
-var port = 3001 || process.env.PORT; // used to create, sign, and verify tokens
+var port = 5000 || process.env.PORT; // used to create, sign, and verify tokens
 var ip = "localhost";
 
 app.set('superSecret', config.secret); // secret variable (prelevata da config.js)
