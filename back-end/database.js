@@ -4,7 +4,7 @@
 
 var mongoose = require('mongoose');
 var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://localhost:27017/DBMongos";
+var url = "mongodb://root:password@ds151004.mlab.com:51004/bancaunicam";
 
 // this function find a user from his number of account
 var findByNumberOfAccount = function (numberOfAccount, callback) {
